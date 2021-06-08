@@ -1,0 +1,88 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Sprite Atlas
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 0
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: DefaultTexturePlatform
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: -1
+      m_TextureCompression: 0
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 0
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 8
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: 2800000, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
+    totalSpriteSurfaceArea: 6644
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 1775686116614827342, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
+  - {fileID: 848483762394598852, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
+  - {fileID: 1515622694917723629, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
+  - {fileID: -620117825420460677, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
+  - {fileID: 4893722272501744342, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
+  - {fileID: -6615166614792116592, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
+  - {fileID: 6979630779368465708, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
+  - {fileID: -5474853141888705257, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
+  - {fileID: -8137063433491503359, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
+  - {fileID: -7641105520071801511, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
+  - {fileID: -102654197464639098, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
+  - {fileID: 1833374003608817324, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
+  - {fileID: 894039873071032581, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
+  - {fileID: -1511360000684178966, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
+  - {fileID: 959900962684980225, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
+  - {fileID: 4627212743430372070, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - StumpRight
+  - Stumpleft
+  - Treetop1
+  - MiddleStumpwithrightstump
+  - Red Flower
+  - PlayerIdle
+  - Grass1
+  - Grass2
+  - grass5
+  - grass4
+  - grass6
+  - Yellow Flower
+  - grass3
+  - TrunkMiddle
+  - MiddleStumpwithleftstump
+  - StumpMiddle
+  m_RenderDataMap: {}
+  m_Tag: Sprite Atlas
+  m_IsVariant: 0
