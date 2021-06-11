@@ -98,23 +98,23 @@ public class CalculateColorLighting : MonoBehaviour
                 lightValues[x, y] = Color.black;
                 toEmit[x, y] = false;
 
-                BlockType tile = wg.blockMap[x, y];
+                byte tile = wg.blockMap[x, y];
 
                 switch (tile)
                 {
-                    case BlockType.air:
+                    case 0:
                         lightValues[x, y] = ambientColor;
                         toEmit[x, y] = true;
                         break;
-                    case BlockType.bluetorch:
+                    case 6:
                         lightValues[x, y] = Color.blue;
                         toEmit[x, y] = true;
                         break;
-                    case BlockType.redtorch:
+                    case 7:
                         lightValues[x, y] = Color.red;
                         toEmit[x, y] = true;
                         break;
-                    case BlockType.greentorch:
+                    case 8:
                         lightValues[x, y] = Color.green;
                         toEmit[x, y] = true;
                         break;
@@ -150,23 +150,23 @@ public class CalculateColorLighting : MonoBehaviour
     List<Vector2Int> newLightSources = new List<Vector2Int>();
     List<Vector2Int> removedLightSources = new List<Vector2Int>();
 
-    public void AddLightSource(int x, int y, BlockType blocktype)
+    public void AddLightSource(int x, int y)
     {
         toEmit[x, y] = true;
         newLightSources.Add(new Vector2Int(x, y));
     }
 
-    Color ColorFromBlockType(BlockType blocktype)
+    Color ColorFromBlockType(byte blocktype)
     {
         switch (blocktype)
         {
-            case BlockType.air:
+            case 0:
                 return ambientColor;
-            case BlockType.bluetorch:
+            case 6:
                 return Color.blue;
-            case BlockType.redtorch:
+            case 7:
                 return Color.red;
-            case BlockType.greentorch:
+            case 8:
                 return Color.green;
         }
 
@@ -220,7 +220,7 @@ public class CalculateColorLighting : MonoBehaviour
         for (int i = 0; i < newLightSources.Count; i++)
         {
             var pos = newLightSources[i];
-            BlockType tile = wg.blockMap[pos.x, pos.y];
+            byte tile = wg.blockMap[pos.x, pos.y];
             EmitLight(pos.x, pos.y, ColorFromBlockType(tile));
             newLightSources.Remove(pos);
         }

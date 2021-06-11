@@ -32,8 +32,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _UnitInUV: -0.016075611
-    - _XOffset: 0.0144274235
-    - _YOffset: 0.017807364
+    - _UnitInUV: -0.016057968
+    - _XOffset: 0.00021362305
+    - _YOffset: 0.010852814
     m_Colors: []
   m_BuildTextureStacks: []

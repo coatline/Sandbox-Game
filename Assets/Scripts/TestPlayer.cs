@@ -44,7 +44,7 @@ public class TestPlayer : MonoBehaviour
         rb.velocity = new Vector2(moveInputs * movementSpeed, rb.velocity.y);
     }
 
-    BlockType currentblocktype=BlockType.bluetorch;
+    byte currentblocktype=6;
     bool placingTorch = false;
 
     void Update()
@@ -70,20 +70,20 @@ public class TestPlayer : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            currentblocktype = BlockType.bluetorch;
+            currentblocktype = 6;
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            currentblocktype = BlockType.redtorch;
+            currentblocktype = 7;
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            currentblocktype = BlockType.greentorch;
+            currentblocktype = 8;
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            currentblocktype = BlockType.torch;
-        }
+        //else if (Input.GetKeyDown(KeyCode.Alpha4))
+        //{
+        //    currentblocktype = 9;
+        //}
 
         if (Input.GetMouseButton(0))
         {
@@ -96,8 +96,8 @@ public class TestPlayer : MonoBehaviour
                 //why do i do this check?
                 if (blockTilemap.GetTile(new Vector3Int(blockPosition.x, blockPosition.y, 0)) != null)
                 {
-                    wg.ModifyBlock(blockPosition.x, blockPosition.y, BlockType.air);
-                    ccl.AddLightSource(blockPosition.x, blockPosition.y, BlockType.air);
+                    wg.ModifyBlock(blockPosition.x, blockPosition.y, 0);
+                    ccl.AddLightSource(blockPosition.x, blockPosition.y);
                 }
             }
         }
@@ -113,13 +113,13 @@ public class TestPlayer : MonoBehaviour
                 {
                     //wg.blockMap[blockPosition.x, blockPosition.y] = currentblocktype;
                     wg.ModifyBlock(blockPosition.x, blockPosition.y, currentblocktype);
-                    ccl.AddLightSource(blockPosition.x, blockPosition.y, currentblocktype);
+                    ccl.AddLightSource(blockPosition.x, blockPosition.y);
                 }
                 else
                 {
                     //if (Vector2.Distance(blockPosition, transform.position) > .8f && CanPlace(0, new Vector3Int(blockPosition.x, blockPosition.y, 0)))
                     {
-                        wg.ModifyBlock(blockPosition.x, blockPosition.y, BlockType.dirt);
+                        wg.ModifyBlock(blockPosition.x, blockPosition.y,2);
                         ccl.RemoveLightSource(blockPosition.x, blockPosition.y);
                     }
                 }
@@ -132,7 +132,7 @@ public class TestPlayer : MonoBehaviour
     //0-1-2
     bool CanPlace(int depth, Vector3Int pos)
     {
-        var air = BlockType.air;
+        var air =0;
 
         if (depth == 0 && wg.blockMap[pos.x, pos.y] == air)
         {

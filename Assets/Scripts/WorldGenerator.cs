@@ -4,19 +4,19 @@ using UnityEngine.Tilemaps;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public enum BlockType
-{
-    air,
-    grass,
-    dirt,
-    stone,
-    wood,
-    iron,
-    redtorch,
-    greentorch,
-    bluetorch,
-    torch
-}
+//public enum BlockType
+//{
+//    air,
+//    grass,
+//    dirt,
+//    stone,
+//    wood,
+//    iron,
+//    redtorch,
+//    greentorch,
+//    bluetorch,
+//    torch
+//}
 
 public class WorldGenerator : MonoBehaviour
 {
@@ -86,7 +86,8 @@ public class WorldGenerator : MonoBehaviour
     List<TreeData> trees;
     Dictionary<Vector2Int, Chunk> chunks;
     public List<int> highestTiles;
-    public BlockType[,] blockMap;
+//0air1grass2dirt3stone4wood5iron6redtorch7greentorch8bluetorch9torch
+    public byte[,] blockMap;
 
     void Awake()
     {
@@ -99,7 +100,7 @@ public class WorldGenerator : MonoBehaviour
         mainCamera = Camera.main;
 
         viewDistance = new Vector3((mainCamera.orthographicSize * 1.78f), mainCamera.orthographicSize + .01f, 0);
-        blockMap = new BlockType[worldWidth, worldHeight];
+        blockMap = new byte[worldWidth, worldHeight];
         chunks = new Dictionary<Vector2Int, Chunk>();
         highestTiles = new List<int>();
         trees = new List<TreeData>();
@@ -138,13 +139,13 @@ public class WorldGenerator : MonoBehaviour
 
                 if (usePerlinCaves && (surfaceTerrainHeight + terrainStartingHeight) - y >= stoneStartOffset)
                 {
-                    blockMap[x, y] = BlockType.stone;
+                    blockMap[x, y] = 3;
                 }
                 else
                 {
                     if ((surfaceTerrainHeight + terrainStartingHeight) - y > sprinkleStoneStartOffset && Random.Range(0, 3) == 0)
                     {
-                        blockMap[x, y] = BlockType.stone;
+                        blockMap[x, y] = 3;
                     }
                     else
                     {
@@ -152,11 +153,11 @@ public class WorldGenerator : MonoBehaviour
 
                         if (y == surfaceTerrainHeight + terrainStartingHeight)
                         {
-                            blockMap[x, y] = BlockType.grass;
+                            blockMap[x, y] = 1;
                         }
                         else
                         {
-                            blockMap[x, y] = BlockType.dirt;
+                            blockMap[x, y] = 2;
                         }
                     }
                 }
@@ -164,7 +165,7 @@ public class WorldGenerator : MonoBehaviour
         }
     }
 
-    public void ModifyBlock(int x, int y, BlockType blockType)
+    public void ModifyBlock(int x, int y, byte blockType)
     {
         if (x >= worldWidth || x < 0 || y < 0 || y >= worldHeight) { return; }
 
@@ -173,7 +174,7 @@ public class WorldGenerator : MonoBehaviour
         if (blockTilemap.GetTile(belowBlock) == grassTile)
         {
             blockTilemap.SetTile(belowBlock, dirtTile);
-            blockMap[belowBlock.x, belowBlock.y] = BlockType.dirt;
+            blockMap[belowBlock.x, belowBlock.y] = 2;
         }
 
         blockTilemap.SetTile(new Vector3Int(x, y, 0), TileFromBlockType(blockType));
@@ -185,7 +186,7 @@ public class WorldGenerator : MonoBehaviour
         for (int x = 2; x < terrainWidth - 3; x += 3)
         {
             //do not put on uneven block
-            if (blockMap[x - 1, highestTiles[x]] == BlockType.air || blockMap[x + 1, highestTiles[x]] == BlockType.air)
+            if (blockMap[x - 1, highestTiles[x]] == 0 || blockMap[x + 1, highestTiles[x]] == 0)
             {
                 continue;
             }
@@ -196,11 +197,11 @@ public class WorldGenerator : MonoBehaviour
                 bool spawnLeftStump = true;
                 bool spawnRightStump = true;
 
-                if (blockMap[x - 2, highestTiles[x]] == BlockType.air)
+                if (blockMap[x - 2, highestTiles[x]] == 0)
                 {
                     spawnLeftStump = false;
                 }
-                if (blockMap[x + 2, highestTiles[x]] == BlockType.air)
+                if (blockMap[x + 2, highestTiles[x]] == 0)
                 {
                     spawnRightStump = false;
                 }
@@ -389,7 +390,7 @@ public class WorldGenerator : MonoBehaviour
                     if (noise < caveSize)
                     {
                         //if (y < 0 || y >= worldHeight || x < 0 || x >= terrainWidth) { print("INVALIDE POSITION"); break; }
-                        blockMap[x, y] = BlockType.air;
+                        blockMap[x, y] = 0;
                     }
                 }
             }
@@ -407,11 +408,11 @@ public class WorldGenerator : MonoBehaviour
                         {
                             if (Random.Range(0, 2) == 0)
                             {
-                                blockMap[x, y] = BlockType.stone;
+                                blockMap[x, y] = 3;
                             }
                             else
                             {
-                                blockMap[x, y] = BlockType.air;
+                                blockMap[x, y] = 0;
                             }
                         }
                         //Create order from madness
@@ -419,47 +420,47 @@ public class WorldGenerator : MonoBehaviour
                         {
                             if (x == 0 || y == 0 || y >= worldHeight - 1 || x >= worldWidth - 1)
                             {
-                                blockMap[x, y] = BlockType.stone;
+                                blockMap[x, y] = 3;
                                 continue;
                             }
 
                             int faces = 0;
 
-                            if (blockMap[x - 1, y] != BlockType.air)
+                            if (blockMap[x - 1, y] != 0)
                             {
                                 faces++;
                             }
-                            if (blockMap[x + 1, y] != BlockType.air)
+                            if (blockMap[x + 1, y] != 0)
                             {
                                 faces++;
                             }
-                            if (blockMap[x, y + 1] != BlockType.air)
+                            if (blockMap[x, y + 1] !=0)
                             {
                                 faces++;
                             }
-                            if (blockMap[x, y - 1] != BlockType.air)
+                            if (blockMap[x, y - 1] != 0)
                             {
                                 faces++;
                             }
-                            if (blockMap[x - 1, y - 1] != BlockType.air)
+                            if (blockMap[x - 1, y - 1] != 0)
                             {
                                 faces++;
                             }
-                            if (blockMap[x + 1, y + 1] != BlockType.air)
+                            if (blockMap[x + 1, y + 1] != 0)
                             {
                                 faces++;
                             }
-                            if (blockMap[x - 1, y + 1] != BlockType.air)
+                            if (blockMap[x - 1, y + 1] != 0)
                             {
                                 faces++;
                             }
-                            if (blockMap[x + 1, y - 1] != BlockType.air)
+                            if (blockMap[x + 1, y - 1] != 0)
                             {
                                 faces++;
                             }
                             if (faces < 4)
                             {
-                                blockMap[x, y] = BlockType.air;
+                                blockMap[x, y] = 0;
                             }
                             else if (faces > 4)
                             {
@@ -469,7 +470,7 @@ public class WorldGenerator : MonoBehaviour
                                 //}
                                 //else
                                 {
-                                    blockMap[x, y] = BlockType.stone;
+                                    blockMap[x, y] = 3;
                                 }
                             }
                         }
@@ -491,7 +492,7 @@ public class WorldGenerator : MonoBehaviour
 
                 if (noise < .4f)
                 {
-                    blockMap[x, y] = BlockType.stone;
+                    blockMap[x, y] = 3;
                 }
                 else if (noise < .1f)
                 {
@@ -629,17 +630,25 @@ public class WorldGenerator : MonoBehaviour
 
     }
 
-    RuleTile TileFromBlockType(BlockType blockType)
+    RuleTile TileFromBlockType(byte blockType)
     {
         switch (blockType)
         {
-            case BlockType.air: return null;
-            case BlockType.grass: return grassTile;
-            case BlockType.dirt: return dirtTile;
-            case BlockType.stone: return stoneTile;
-            case BlockType.redtorch: return redTorch;
-            case BlockType.bluetorch: return blueTorch;
-            case BlockType.greentorch: return greenTorch;
+            //air
+            case 0: return null;
+            //grass
+            case 1: return grassTile;
+            //dirt
+            case 2: return dirtTile;
+            //stone
+            case 3: return stoneTile;
+            //redtorch
+            //4wood5iron
+            case 6: return redTorch;
+            //bluetorch
+            case 7: return blueTorch;
+            //greentorch
+            case 8: return greenTorch;
         }
 
         return null;

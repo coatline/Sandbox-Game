@@ -462,6 +462,8 @@ GameObject:
   - component: {fileID: 377442536}
   - component: {fileID: 377442535}
   - component: {fileID: 377442537}
+  - component: {fileID: 377442539}
+  - component: {fileID: 377442538}
   m_Layer: 3
   m_Name: BlockTilemap
   m_TagString: Untagged
@@ -677,10 +679,55 @@ TilemapCollider2D:
   m_Material: {fileID: 6200000, guid: 3444e67ab5a749c42a0238a06f0b1f04, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
+  m_UsedByComposite: 1
+  m_Offset: {x: 0, y: 0}
+  m_MaximumTileChangeCount: 250
+  m_ExtrusionFactor: 0.00001
+--- !u!66 &377442538
+CompositeCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 377442533}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_MaximumTileChangeCount: 1000
-  m_ExtrusionFactor: 0.00001
+  m_GeometryType: 0
+  m_GenerationType: 0
+  m_EdgeRadius: 0
+  m_ColliderPaths:
+  - m_Collider: {fileID: 377442537}
+    m_ColliderPaths: []
+  m_CompositePaths:
+    m_Paths: []
+  m_VertexDistance: 0.0005
+  m_OffsetDistance: 0.00005
+--- !u!50 &377442539
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 377442533}
+  m_BodyType: 2
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &439862292
 GameObject:
   m_ObjectHideFlags: 0
@@ -1186,8 +1233,8 @@ MonoBehaviour:
   treeStumpM: {fileID: 11400000, guid: 7cfdd985970046f48b201f84e8ed0c2c, type: 2}
   treeTrunk: {fileID: 11400000, guid: 11d019861782c374a8d65a00a82aa4e3, type: 2}
   treeLeaves: {fileID: 11400000, guid: e0b1e2bb460b30e408dda981838fd6ca, type: 2}
-  worldWidth: 251
-  worldHeight: 108
+  worldWidth: 3840
+  worldHeight: 1836
   chunkSize: 6
   stoneStartOffset: 22
   sprinkleStoneStartOffset: 6

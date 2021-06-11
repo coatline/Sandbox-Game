@@ -85,7 +85,7 @@ public class Player : MonoBehaviour
                 if (blockTilemap.GetTile(new Vector3Int(blockPosition.x, blockPosition.y, 0)) != null)
                 {
                     cl.ModifyBlock(blockPosition, false);
-                    wg.ModifyBlock(blockPosition.x, blockPosition.y, BlockType.air);
+                    wg.ModifyBlock(blockPosition.x, blockPosition.y, 0);
                 }
             }
         }
@@ -106,7 +106,7 @@ public class Player : MonoBehaviour
                     if (Vector2.Distance(blockPosition, transform.position) > .8f && CanPlace(0, new Vector3Int(blockPosition.x, blockPosition.y, 0)))
                     {
                         cl.ModifyBlock(blockPosition, true);
-                        wg.ModifyBlock(blockPosition.x, blockPosition.y, BlockType.dirt);
+                        wg.ModifyBlock(blockPosition.x, blockPosition.y, 2);
                     }
                 }
             }
@@ -118,7 +118,7 @@ public class Player : MonoBehaviour
     //0-1-2
     bool CanPlace(int depth, Vector3Int pos)
     {
-        var air = BlockType.air;
+        var air = 0;
 
         if (depth == 0 && wg.blockMap[pos.x, pos.y] == air)
         {
