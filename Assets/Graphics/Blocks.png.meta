@@ -7,13 +7,13 @@ TextureImporter:
     second: Treetop1
   - first:
       213: 1503016370545623098
-    second: Dirt_Tile_2
+    second: redtorch
   - first:
       213: 1489830567317918739
-    second: Dirt_Tile_3
+    second: greentorch
   - first:
       213: 38433539612607256
-    second: Dirt_Tile_4
+    second: bluetorch
   - first:
       213: 5937300090042828850
     second: Dirt_Tile_5
@@ -575,6 +575,69 @@ TextureImporter:
       bones: []
       spriteID: de557189fc2980510800000000000000
       internalID: 1515622694917723629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: redtorch
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 624
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a3008f9fc69cbd410800000000000000
+      internalID: 1503016370545623098
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: greentorch
+      rect:
+        serializedVersion: 2
+        x: 34
+        y: 624
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 314d08ce101fca410800000000000000
+      internalID: 1489830567317918739
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: bluetorch
+      rect:
+        serializedVersion: 2
+        x: 51
+        y: 624
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8130214c91b888000800000000000000
+      internalID: 38433539612607256
       vertices: []
       indices: 
       edges: []

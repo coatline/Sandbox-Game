@@ -4,6 +4,20 @@ using UnityEngine.Tilemaps;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+public enum BlockType
+{
+    air,
+    grass,
+    dirt,
+    stone,
+    wood,
+    iron,
+    redtorch,
+    greentorch,
+    bluetorch,
+    torch
+}
+
 public class WorldGenerator : MonoBehaviour
 {
     [Header("Tree Tile References")]
@@ -13,18 +27,7 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField] Tile treeTrunk;
     [SerializeField] Tile treeLeaves;
     Camera mainCamera;
-    Player player;
-
-    public enum BlockType
-    {
-        air,
-        grass,
-        dirt,
-        stone,
-        wood,
-        iron,
-        torch
-    }
+    TestPlayer player;
 
     [Header("World Height")]
     public int worldWidth;
@@ -63,9 +66,12 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField] RuleTile grassTile;
     [SerializeField] RuleTile dirtTile;
     [SerializeField] RuleTile stoneTile;
+    [SerializeField] RuleTile blueTorch;
+    [SerializeField] RuleTile redTorch;
+    [SerializeField] RuleTile greenTorch;
     [SerializeField] Tile redFlowerTile;
     [SerializeField] Tile yellowFlowerTile;
-    [SerializeField] Player playerPrefab;
+    [SerializeField] TestPlayer playerPrefab;
 
 
     [Header("Settings")]
@@ -166,7 +172,6 @@ public class WorldGenerator : MonoBehaviour
 
         if (blockTilemap.GetTile(belowBlock) == grassTile)
         {
-            //More performant than calling modifyblock for this tile
             blockTilemap.SetTile(belowBlock, dirtTile);
             blockMap[belowBlock.x, belowBlock.y] = BlockType.dirt;
         }
@@ -632,6 +637,9 @@ public class WorldGenerator : MonoBehaviour
             case BlockType.grass: return grassTile;
             case BlockType.dirt: return dirtTile;
             case BlockType.stone: return stoneTile;
+            case BlockType.redtorch: return redTorch;
+            case BlockType.bluetorch: return blueTorch;
+            case BlockType.greentorch: return greenTorch;
         }
 
         return null;
@@ -639,7 +647,7 @@ public class WorldGenerator : MonoBehaviour
 
     void Update()
     {
-        if (Vector3.Distance(mainCamera.transform.position, lastCameraPositionUpdate) >= chunkSize / 2f)
+        if (Vector3.Distance(mainCamera.transform.position, lastCameraPositionUpdate) >= chunkSize)
         {
             LoadChunks();
         }

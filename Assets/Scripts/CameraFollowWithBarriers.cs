@@ -8,6 +8,7 @@ public class CameraFollowWithBarriers : MonoBehaviour
     public Transform bottomLeftBarrier;
     public Transform topRightBarrier;
     public Transform followObject;
+    public Vector2 cameraSizeInUnits;
 
 
     [Range(.01f,1f)]
@@ -17,8 +18,10 @@ public class CameraFollowWithBarriers : MonoBehaviour
     {
         var cam = GetComponent<Camera>();
 
-        bottomLeftBarrier.transform.position += new Vector3((cam.orthographicSize * 1.78f), cam.orthographicSize + .01f, 0);
-        topRightBarrier.transform.position -= new Vector3((cam.orthographicSize * 1.78f), cam.orthographicSize + .01f, 0);
+        cameraSizeInUnits.x = cam.orthographicSize * cam.aspect;
+        cameraSizeInUnits.y = cam.orthographicSize;
+        bottomLeftBarrier.transform.position += new Vector3((cameraSizeInUnits.x), cameraSizeInUnits.y, 0);
+        topRightBarrier.transform.position -= new Vector3((cameraSizeInUnits.x), cameraSizeInUnits.y, 0);
     }
 
     void LateUpdate()

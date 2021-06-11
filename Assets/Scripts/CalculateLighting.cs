@@ -63,7 +63,7 @@ public class CalculateLighting : MonoBehaviour
         {
             for (int y = 0; y < wg.worldHeight; y++)
             {
-                if (y > wg.highestTiles[x] - wg.caveStartingOffset && wg.blockMap[x, y] == WorldGenerator.BlockType.air)
+                if (y > wg.highestTiles[x] - wg.caveStartingOffset && wg.blockMap[x, y] == BlockType.air)
                 {
                     LightBlock(new Vector2Int(x, y), new Vector2Int(x, y), 1, 1);
                 }
@@ -80,7 +80,7 @@ public class CalculateLighting : MonoBehaviour
 
         var dropoff = airDropoff;
 
-        if (wg.blockMap[pos.x, pos.y] != WorldGenerator.BlockType.air) { dropoff = inBlockDropoff; }
+        if (wg.blockMap[pos.x, pos.y] != BlockType.air) { dropoff = inBlockDropoff; }
 
         lightValues[pos.x, pos.y] = intensity;
 
