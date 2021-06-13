@@ -33,6 +33,19 @@ public class CalculateColorLighting : MonoBehaviour
         blockDiagonalDropOff = Mathf.Pow(blockDropoff, Mathf.Sqrt(2));
         airDiagonalDropOff = Mathf.Pow(airDropoff, Mathf.Sqrt(2));
 
+        print(airDiagonalDropOff);
+
+        float dropoff = 1;
+        int radius = 0;
+
+        while (dropoff > lowestLightLevel)
+        {
+            dropoff *= airDropoff;
+            radius++;
+        }
+
+        lightRadius = radius;
+
         //cameraTexturePropertyID = Shader.PropertyToID("_CameraTex");
         lightValuesPropertyID = Shader.PropertyToID("_LightValues");
         //lr.shaderMaterial.SetTexture(cameraTexturePropertyID, cameraRenderTexture);
@@ -47,6 +60,8 @@ public class CalculateColorLighting : MonoBehaviour
         size = new Vector2Int((int)viewDistance.x * 2, (int)viewDistance.y * 2) + overlap;
         frameSize = size + overlap;
 
+        toReEmit = new List<Vector2Int>();
+        toReEmitColors = new List<Color>();
         lightValues = new Color[wg.worldWidth, wg.worldHeight];
         toEmit = new bool[wg.worldWidth, wg.worldHeight];
 
@@ -85,11 +100,11 @@ public class CalculateColorLighting : MonoBehaviour
             CalculateLighting();
             UpdateTexture();
         }
-
-        if (transform.position != previousCamPosition)
+        else if (transform.position != previousCamPosition)
         {
             UpdateTexture();
         }
+
 
         previousCamPosition = cam.transform.position;
     }
@@ -129,7 +144,7 @@ public class CalculateColorLighting : MonoBehaviour
                         toEmit[x, y] = true;
                         break;
                     case 9:
-                        lightValues[x, y] = new Color(1, .647f, 0);
+                        lightValues[x, y] = new Color(1, .99f, .95f);
                         toEmit[x, y] = true;
                         break;
                 }
@@ -150,6 +165,8 @@ public class CalculateColorLighting : MonoBehaviour
 
     public void RemoveLightSource(int x, int y)
     {
+        if (!WithinBounds(x, y)) { return; }
+
         if (toEmit[x, y])
         {
             toEmit[x, y] = false;
@@ -158,6 +175,7 @@ public class CalculateColorLighting : MonoBehaviour
         {
             return;
         }
+
         removedLightSources.Add(new Vector2Int(x, y));
     }
 
@@ -169,7 +187,7 @@ public class CalculateColorLighting : MonoBehaviour
         if (!placingBlock)
         {
             //if there is a wall behind it then do not emit light
-            if(y < wg.highestTiles[x] - wg.caveStartingOffset)
+            if (y < wg.highestTiles[x] - wg.caveStartingOffset)
             {
                 return;
             }
@@ -179,6 +197,7 @@ public class CalculateColorLighting : MonoBehaviour
         newLightSources.Add(new Vector2Int(x, y));
     }
 
+    //Temporary
     Color ColorFromBlockType(byte blocktype)
     {
         switch (blocktype)
@@ -192,7 +211,7 @@ public class CalculateColorLighting : MonoBehaviour
             case 8:
                 return Color.green;
             case 9:
-                return new Color(1, .647f, 0);
+                return new Color(1, .9f, .9f);
         }
 
         return Color.black;
@@ -207,14 +226,14 @@ public class CalculateColorLighting : MonoBehaviour
         {
             for (int ny = y - lightRadius; ny <= y + lightRadius; ny++)
             {
+                if (!WithinBounds(nx, ny)) { continue; }
+
                 if (nx == x && ny == y) { lightValues[nx, ny] = Color.black; continue; }
 
                 if (toEmit[nx, ny])
                 {
                     toReEmitColors.Add(lightValues[nx, ny]);
                     toReEmit.Add(new Vector2Int(nx, ny));
-                    toEmit[nx, ny] = false;
-                    ResetSurroundingBlocks(x, y);
                 }
 
                 lightValues[nx, ny] = Color.black;
@@ -224,8 +243,8 @@ public class CalculateColorLighting : MonoBehaviour
 
     void CalculateLighting()
     {
-        toReEmit = new List<Vector2Int>();
-        toReEmitColors = new List<Color>();
+        toReEmit.Clear();
+        toReEmitColors.Clear();
 
         for (int k = 0; k < removedLightSources.Count; k++)
         {
@@ -237,7 +256,6 @@ public class CalculateColorLighting : MonoBehaviour
         {
             var pos = toReEmit[j];
             EmitLight(pos.x, pos.y, toReEmitColors[j]);
-            toEmit[pos.x, pos.y] = true;
         }
 
         for (int i = 0; i < newLightSources.Count; i++)
@@ -245,8 +263,10 @@ public class CalculateColorLighting : MonoBehaviour
             var pos = newLightSources[i];
             byte tile = wg.blockMap[pos.x, pos.y];
             EmitLight(pos.x, pos.y, ColorFromBlockType(tile));
-            newLightSources.Remove(pos);
         }
+
+        newLightSources.Clear();
+        removedLightSources.Clear();
     }
 
     Color[,] singleLightEmmision;
@@ -321,45 +341,6 @@ public class CalculateColorLighting : MonoBehaviour
                 }
             }
         }
-
-
-
-
-        //for (int x = rootX - lightRadius; x <= rootX + lightRadius; x++)
-        //{
-        //    for (int y = rootY - lightRadius; y <= rootY + lightRadius; y++)
-        //    {
-        //        if (!WithinBounds(x, y)) { continue; }
-
-        //        //int currentLayer = Mathf.Max(Mathf.Abs(x - rootX), Mathf.Abs(y - rootY));
-
-        //        var coordsX = Mathf.Abs(x - rootX);
-        //        var coordsY = Mathf.Abs(y - rootY);
-
-        //        float dropOff = (coordsX == coordsY) ? diagonalDropOff : blockDropoff;
-
-        //        color *= new Color(dropOff,dropOff,dropOff,1);
-        //        //print(color);
-        //        //Color targetColor=Color.black;
-
-        //        //for (int i = 0; i < currentLayer; i++)
-        //        //{
-        //        //    targetColor = color * new Color(dropOff, dropOff, dropOff);
-        //        //}
-
-        //        //Color currentColor = lightValues[x, y];
-
-        //        //if ((targetColor.r > lowestLightLevel || targetColor.g > lowestLightLevel || targetColor.b > lowestLightLevel) &&
-        //        //        (targetColor.r > currentColor.r || targetColor.g > currentColor.g || targetColor.b > currentColor.b))
-        //        //{
-        //        //    lightValues[x, y] = (new Color(Mathf.Max(currentColor.r, targetColor.r), Mathf.Max(currentColor.g, targetColor.g), Mathf.Max(currentColor.b, targetColor.b)));
-        //        //}
-
-
-
-        //        lightValues[x, y] = color;
-        //    }
-        //}
     }
 
     bool WithinBounds(int x, int y)
