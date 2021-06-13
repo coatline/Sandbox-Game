@@ -80,10 +80,10 @@ public class TestPlayer : MonoBehaviour
         {
             currentblocktype = 8;
         }
-        //else if (Input.GetKeyDown(KeyCode.Alpha4))
-        //{
-        //    currentblocktype = 9;
-        //}
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            currentblocktype = 9;
+        }
 
         if (Input.GetMouseButton(0))
         {
@@ -97,7 +97,7 @@ public class TestPlayer : MonoBehaviour
                 if (blockTilemap.GetTile(new Vector3Int(blockPosition.x, blockPosition.y, 0)) != null)
                 {
                     wg.ModifyBlock(blockPosition.x, blockPosition.y, 0);
-                    ccl.AddLightSource(blockPosition.x, blockPosition.y);
+                    ccl.AddLightSource(blockPosition.x, blockPosition.y, false);
                 }
             }
         }
@@ -113,7 +113,7 @@ public class TestPlayer : MonoBehaviour
                 {
                     //wg.blockMap[blockPosition.x, blockPosition.y] = currentblocktype;
                     wg.ModifyBlock(blockPosition.x, blockPosition.y, currentblocktype);
-                    ccl.AddLightSource(blockPosition.x, blockPosition.y);
+                    ccl.AddLightSource(blockPosition.x, blockPosition.y, true);
                 }
                 else
                 {

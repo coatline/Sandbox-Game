@@ -86,7 +86,7 @@ public class WorldGenerator : MonoBehaviour
     List<TreeData> trees;
     Dictionary<Vector2Int, Chunk> chunks;
     public List<int> highestTiles;
-//0air1grass2dirt3stone4wood5iron6redtorch7greentorch8bluetorch9torch
+    //0air1grass2dirt3stone4wood5iron6redtorch7greentorch8bluetorch9torch
     public byte[,] blockMap;
 
     void Awake()
@@ -343,7 +343,7 @@ public class WorldGenerator : MonoBehaviour
             {
                 var middleOfChunk = new Vector3Int((x * chunkSize) + chunkSize / 2, (y * chunkSize) + chunkSize / 2, 0);
                 //maybe only plug in middle value save memory
-                chunks.Add(new Vector2Int(x, y), new Chunk(new Vector3Int((middleOfChunk.x - chunkSize / 2), (middleOfChunk.y + chunkSize / 2), 0), new Vector3Int(middleOfChunk.x + chunkSize / 2, middleOfChunk.y - chunkSize / 2, 0)));
+                chunks.Add(new Vector2Int(x, y), new Chunk(new Vector2Int((middleOfChunk.x - chunkSize / 2), (middleOfChunk.y + chunkSize / 2))/*, new Vector3Int(middleOfChunk.x + chunkSize / 2, middleOfChunk.y - chunkSize / 2, 0)*/));
             }
     }
 
@@ -361,12 +361,16 @@ public class WorldGenerator : MonoBehaviour
             {
                 Color color = Color.red;
 
+
                 Vector2Int chunkPos = new Vector2Int(x, y);
 
-                Debug.DrawLine(chunks[chunkPos].bottomRightBlock, chunks[chunkPos].bottomRightBlock + new Vector3Int(0, chunkSize, 0), color, Mathf.Infinity);
-                Debug.DrawLine(chunks[chunkPos].bottomRightBlock, chunks[chunkPos].bottomRightBlock - new Vector3Int(chunkSize, 0, 0), color, Mathf.Infinity);
-                Debug.DrawLine(chunks[chunkPos].topLeftBlock, chunks[chunkPos].topLeftBlock - new Vector3Int(0, chunkSize, 0), color, Mathf.Infinity);
-                Debug.DrawLine(chunks[chunkPos].topLeftBlock, chunks[chunkPos].topLeftBlock + new Vector3Int(chunkSize, 0, 0), color, Mathf.Infinity);
+                Vector3Int bottomRightBlock = new Vector3Int(chunks[chunkPos].topLeftBlock.x + chunkSize, chunks[chunkPos].topLeftBlock.y - chunkSize, 0);
+                Vector3Int topLeftBlock = new Vector3Int(chunks[chunkPos].topLeftBlock.x, chunks[chunkPos].topLeftBlock.y, 0);
+
+                Debug.DrawLine(bottomRightBlock, bottomRightBlock + new Vector3Int(0, chunkSize, 0), color, Mathf.Infinity);
+                Debug.DrawLine(bottomRightBlock, bottomRightBlock - new Vector3Int(chunkSize, 0, 0), color, Mathf.Infinity);
+                Debug.DrawLine(topLeftBlock, topLeftBlock - new Vector3Int(0, chunkSize, 0), color, Mathf.Infinity);
+                Debug.DrawLine(topLeftBlock, topLeftBlock + new Vector3Int(chunkSize, 0, 0), color, Mathf.Infinity);
 
             }
         }
@@ -434,7 +438,7 @@ public class WorldGenerator : MonoBehaviour
                             {
                                 faces++;
                             }
-                            if (blockMap[x, y + 1] !=0)
+                            if (blockMap[x, y + 1] != 0)
                             {
                                 faces++;
                             }
@@ -552,9 +556,11 @@ public class WorldGenerator : MonoBehaviour
 
                 Chunk chunk = chunks[chunkCoord];
 
-                for (int x = chunk.topLeftBlock.x; x < chunk.topLeftBlock.x + (chunk.bottomRightBlock.x - chunk.topLeftBlock.x); x++)
+                var bottomRightBlock = chunk.topLeftBlock + new Vector2Int(chunkSize, -chunkSize);
+
+                for (int x = chunk.topLeftBlock.x; x < chunk.topLeftBlock.x + (bottomRightBlock.x - chunk.topLeftBlock.x); x++)
                 {
-                    for (int y = chunk.bottomRightBlock.y; y < chunk.bottomRightBlock.y + (chunk.topLeftBlock.y - chunk.bottomRightBlock.y); y++)
+                    for (int y = bottomRightBlock.y; y < bottomRightBlock.y + (chunk.topLeftBlock.y - bottomRightBlock.y); y++)
                     {
                         if (x >= worldWidth)
                         {
@@ -595,9 +601,11 @@ public class WorldGenerator : MonoBehaviour
             {
                 Chunk unloadChunk = chunks[previousIndicies[i]];
 
-                for (int x = unloadChunk.topLeftBlock.x; x < unloadChunk.topLeftBlock.x + (unloadChunk.bottomRightBlock.x - unloadChunk.topLeftBlock.x); x++)
+                var bottomRightBlock = unloadChunk.topLeftBlock + new Vector2Int(chunkSize, -chunkSize);
+
+                for (int x = unloadChunk.topLeftBlock.x; x < unloadChunk.topLeftBlock.x + (bottomRightBlock.x - unloadChunk.topLeftBlock.x); x++)
                 {
-                    for (int y = unloadChunk.bottomRightBlock.y; y < unloadChunk.bottomRightBlock.y + (unloadChunk.topLeftBlock.y - unloadChunk.bottomRightBlock.y); y++)
+                    for (int y = bottomRightBlock.y; y < bottomRightBlock.y + (unloadChunk.topLeftBlock.y - bottomRightBlock.y); y++)
                     {
                         if (x >= worldWidth)
                         {
@@ -649,6 +657,8 @@ public class WorldGenerator : MonoBehaviour
             case 7: return blueTorch;
             //greentorch
             case 8: return greenTorch;
+            //normal torch
+            case 9: return greenTorch;
         }
 
         return null;

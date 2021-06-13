@@ -10,12 +10,18 @@ public class CalculateColorLighting : MonoBehaviour
     [SerializeField] WorldGenerator wg;
     [SerializeField] Color ambientColor;
     [SerializeField] int lightRadius;
+    [Range(.6f, .99f)]
+    [SerializeField] float airDropoff;
+    [Range(.6f, .9f)]
+    [SerializeField] float blockDropoff;
+    [SerializeField] float lowestLightLevel;
+    float blockDiagonalDropOff;
+    float airDiagonalDropOff;
     SpriteRenderer sr;
     int lightValuesPropertyID;
-    int xOffsetPropertyID;
-    int yOffsetPropertyID;
     Vector2Int frameSize;
 
+    //TODO: maybe use alpha of this array to depict whether or not it will emit light for a nice memory saving
     Color[,] lightValues;
     Vector3 viewDistance;
     bool[,] toEmit;
@@ -24,10 +30,11 @@ public class CalculateColorLighting : MonoBehaviour
 
     void Start()
     {
+        blockDiagonalDropOff = Mathf.Pow(blockDropoff, Mathf.Sqrt(2));
+        airDiagonalDropOff = Mathf.Pow(airDropoff, Mathf.Sqrt(2));
+
         //cameraTexturePropertyID = Shader.PropertyToID("_CameraTex");
         lightValuesPropertyID = Shader.PropertyToID("_LightValues");
-        xOffsetPropertyID = Shader.PropertyToID("_XOffset");
-        yOffsetPropertyID = Shader.PropertyToID("_YOffset");
         //lr.shaderMaterial.SetTexture(cameraTexturePropertyID, cameraRenderTexture);
         sr = GetComponent<SpriteRenderer>();
         cam = Camera.main;
@@ -95,16 +102,19 @@ public class CalculateColorLighting : MonoBehaviour
             {
                 if (!WithinBounds(x, y)) { continue; }
 
-                lightValues[x, y] = Color.black;
-                toEmit[x, y] = false;
+                //lightValues[x, y] = Color.black;
+                //toEmit[x, y] = false;
 
                 byte tile = wg.blockMap[x, y];
 
                 switch (tile)
                 {
                     case 0:
-                        lightValues[x, y] = ambientColor;
-                        toEmit[x, y] = true;
+                        if (y > wg.highestTiles[x] - wg.caveStartingOffset)
+                        {
+                            lightValues[x, y] = ambientColor;
+                            toEmit[x, y] = true;
+                        }
                         break;
                     case 6:
                         lightValues[x, y] = Color.blue;
@@ -116,6 +126,10 @@ public class CalculateColorLighting : MonoBehaviour
                         break;
                     case 8:
                         lightValues[x, y] = Color.green;
+                        toEmit[x, y] = true;
+                        break;
+                    case 9:
+                        lightValues[x, y] = new Color(1, .647f, 0);
                         toEmit[x, y] = true;
                         break;
                 }
@@ -150,8 +164,17 @@ public class CalculateColorLighting : MonoBehaviour
     List<Vector2Int> newLightSources = new List<Vector2Int>();
     List<Vector2Int> removedLightSources = new List<Vector2Int>();
 
-    public void AddLightSource(int x, int y)
+    public void AddLightSource(int x, int y, bool placingBlock)
     {
+        if (!placingBlock)
+        {
+            //if there is a wall behind it then do not emit light
+            if(y < wg.highestTiles[x] - wg.caveStartingOffset)
+            {
+                return;
+            }
+        }
+
         toEmit[x, y] = true;
         newLightSources.Add(new Vector2Int(x, y));
     }
@@ -168,6 +191,8 @@ public class CalculateColorLighting : MonoBehaviour
                 return Color.red;
             case 8:
                 return Color.green;
+            case 9:
+                return new Color(1, .647f, 0);
         }
 
         return Color.black;
@@ -195,8 +220,6 @@ public class CalculateColorLighting : MonoBehaviour
                 lightValues[nx, ny] = Color.black;
             }
         }
-
-
     }
 
     void CalculateLighting()
@@ -224,79 +247,124 @@ public class CalculateColorLighting : MonoBehaviour
             EmitLight(pos.x, pos.y, ColorFromBlockType(tile));
             newLightSources.Remove(pos);
         }
-
-
-        //for (int x = 0; x < size.x; x++)
-        //{
-        //    for (int y = 0; y < size.y; y++)
-        //    {
-        //        if (!WithinFrame(x, y)) { continue; }
-
-        //        lightValues[x, y] = Color.black;
-        //        toEmit[x, y] = false;
-
-        //        BlockType tile = wg.blockMap[x + (int)transform.position.x, y + (int)transform.position.y];
-
-        //        switch (tile)
-        //        {
-        //            case BlockType.air:
-        //                lightValues[x, y] = ambientColor;
-        //                toEmit[x, y] = true;
-        //                break;
-        //            case BlockType.bluetorch:
-        //                lightValues[x, y] = Color.blue;
-        //                toEmit[x, y] = true;
-        //                break;
-        //            case BlockType.redtorch:
-        //                lightValues[x, y] = Color.red;
-        //                toEmit[x, y] = true;
-        //                break;
-        //            case BlockType.greentorch:
-        //                lightValues[x, y] = Color.green;
-        //                toEmit[x, y] = true;
-        //                break;
-        //        }
-        //    }
-        //}
-
-        ////Vector2Int pos = new Vector2Int((int)transform.position.x, (int)transform.position.y);
-
-        //for (int x = 0; x < size.x; x++)
-        //{
-        //    for (int y = 0; y < size.y; y++)
-        //    {
-        //        if (toEmit[x, y])
-        //        {
-        //            EmitLight(x, y, lightValues[x, y]);
-        //            //Color color = GetLight(x, y);
-        //            //EmitLight(x, y, color);
-        //        }
-        //    }
-        //}
     }
+
+    Color[,] singleLightEmmision;
+    List<int[]> lightFillQueue = new List<int[]>();
 
     void EmitLight(int rootX, int rootY, Color color)
     {
-        for (int x = rootX - lightRadius; x <= rootX + lightRadius; x++)
+        lightFillQueue.Clear();
+
+        //probably do not do this but just set all values to zero
+        singleLightEmmision = new Color[lightRadius * 2 + 1, lightRadius * 2 + 1];
+
+
+        singleLightEmmision[lightRadius, lightRadius] = color;
+        lightFillQueue.Add(new int[] { rootX, rootY });
+
+        while (lightFillQueue.Count > 0)
         {
-            for (int y = rootY - lightRadius; y <= rootY + lightRadius; y++)
+            int[] currentTile = lightFillQueue[0];
+            lightFillQueue.RemoveAt(0);
+            int x = currentTile[0];
+            int y = currentTile[1];
+
+            int currentLayer = Mathf.Max(Mathf.Abs(x - rootX), Mathf.Abs(y - rootY));
+
+            bool willPassOn = false;
+            Color currentColor = lightValues[x, y];
+            Color targetColor = singleLightEmmision[lightRadius + x - rootX, lightRadius + y - rootY];
+
+            if ((targetColor.r > lowestLightLevel || targetColor.g > lowestLightLevel || targetColor.b > lowestLightLevel) &&
+                (targetColor.r > currentColor.r || targetColor.g > currentColor.g || targetColor.b > currentColor.b))
             {
-                SetLight(x, y, color);
+                lightValues[x, y] = (new Color(Mathf.Max(currentColor.r, targetColor.r), Mathf.Max(currentColor.g, targetColor.g), Mathf.Max(currentColor.b, targetColor.b)));
+                willPassOn = true;
+            }
+
+            if (!(x == rootX && y == rootY) && !willPassOn) { continue; }
+
+            for (int nx = x - 1; nx <= x + 1; nx++)
+            {
+                for (int ny = y - 1; ny <= y + 1; ny++)
+                {
+                    if (!WithinBounds(nx, ny)) { continue; }
+
+                    int neighborLayer = Mathf.Max(Mathf.Abs(nx - rootX), Mathf.Abs(ny - rootY));
+
+                    if (neighborLayer <= lightRadius && neighborLayer == currentLayer + 1)
+                    {
+                        float dropOff = 0;
+
+                        if (wg.blockMap[nx, ny] == 0)
+                        {
+                            dropOff = (nx != x && ny != y) ? airDiagonalDropOff : airDropoff;
+                        }
+                        else
+                        {
+                            dropOff = (nx != x && ny != y) ? blockDiagonalDropOff : blockDropoff;
+                        }
+
+                        int emitX = lightRadius + nx - rootX;
+                        int emitY = lightRadius + ny - rootY;
+
+                        if (singleLightEmmision[emitX, emitY].r + singleLightEmmision[emitX, emitY].g + singleLightEmmision[emitX, emitY].b == 0)
+                        {
+                            lightFillQueue.Add(new int[] { nx, ny });
+                        }
+
+                        singleLightEmmision[emitX, emitY].r = Mathf.Max(targetColor.r * dropOff, singleLightEmmision[emitX, emitY].r);
+                        singleLightEmmision[emitX, emitY].g = Mathf.Max(targetColor.g * dropOff, singleLightEmmision[emitX, emitY].g);
+                        singleLightEmmision[emitX, emitY].b = Mathf.Max(targetColor.b * dropOff, singleLightEmmision[emitX, emitY].b);
+                    }
+                }
             }
         }
+
+
+
+
+        //for (int x = rootX - lightRadius; x <= rootX + lightRadius; x++)
+        //{
+        //    for (int y = rootY - lightRadius; y <= rootY + lightRadius; y++)
+        //    {
+        //        if (!WithinBounds(x, y)) { continue; }
+
+        //        //int currentLayer = Mathf.Max(Mathf.Abs(x - rootX), Mathf.Abs(y - rootY));
+
+        //        var coordsX = Mathf.Abs(x - rootX);
+        //        var coordsY = Mathf.Abs(y - rootY);
+
+        //        float dropOff = (coordsX == coordsY) ? diagonalDropOff : blockDropoff;
+
+        //        color *= new Color(dropOff,dropOff,dropOff,1);
+        //        //print(color);
+        //        //Color targetColor=Color.black;
+
+        //        //for (int i = 0; i < currentLayer; i++)
+        //        //{
+        //        //    targetColor = color * new Color(dropOff, dropOff, dropOff);
+        //        //}
+
+        //        //Color currentColor = lightValues[x, y];
+
+        //        //if ((targetColor.r > lowestLightLevel || targetColor.g > lowestLightLevel || targetColor.b > lowestLightLevel) &&
+        //        //        (targetColor.r > currentColor.r || targetColor.g > currentColor.g || targetColor.b > currentColor.b))
+        //        //{
+        //        //    lightValues[x, y] = (new Color(Mathf.Max(currentColor.r, targetColor.r), Mathf.Max(currentColor.g, targetColor.g), Mathf.Max(currentColor.b, targetColor.b)));
+        //        //}
+
+
+
+        //        lightValues[x, y] = color;
+        //    }
+        //}
     }
 
     bool WithinBounds(int x, int y)
     {
         return x < wg.worldWidth && x >= 0 && y < wg.worldHeight && y >= 0;
-    }
-
-    void SetLight(int x, int y, Color color)
-    {
-        if (WithinBounds(x, y))
-        {
-            lightValues[x, y] = color;
-        }
     }
 
     Color[] nearbyLightData;
@@ -331,7 +399,5 @@ public class CalculateColorLighting : MonoBehaviour
 
         //lr.shaderMaterial.SetTexture("_CameraTex", texture);
         lr.shaderMaterial.SetTexture(lightValuesPropertyID, texture);
-        lr.shaderMaterial.SetFloat(xOffsetPropertyID, offset.x);
-        lr.shaderMaterial.SetFloat(yOffsetPropertyID, offset.y);
     }
 }

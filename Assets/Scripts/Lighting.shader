@@ -5,9 +5,6 @@ Shader "Custom/Lighting"
 		_MainTex("_MainTex", 2D) = "white" {}
 		_CameraTex("_CameraTex", 2D) = "white" {}
 		_LightValues("_LightValues", 2D) = "white" {}
-		_XOffset("_XOffset", Float) = 0.5
-		_YOffset("_YOffset", Float) = 0.5
-		_UnitInUV("_UnitInUV", Float) = 0.5
 	}
 		SubShader
 		{
@@ -47,9 +44,6 @@ Shader "Custom/Lighting"
 				sampler2D _MainTex;
 				sampler2D _LightValues;
 				sampler2D _CameraTex;
-				float _XOffset;
-				float _YOffset;
-				float _UnitInUV;
 
 				fixed4 frag(v2f i) : SV_Target
 				{
