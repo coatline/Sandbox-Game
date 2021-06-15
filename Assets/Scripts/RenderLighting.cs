@@ -12,6 +12,7 @@ public class RenderLighting : MonoBehaviour
     [SerializeField] WorldGenerator wg;
     [SerializeField] Color ambientColor;
     [SerializeField] int lightRadius;
+    [SerializeField] int fps;
 
     [Header("Light Settings")]
     [Range(.6f, .99f)]
@@ -33,13 +34,14 @@ public class RenderLighting : MonoBehaviour
         lightValuesPropertyID = Shader.PropertyToID("_LightValues");
         cam = Camera.main;
 
+        SetMinLightRadius();
+        overlap =new Vector2Int((lightRadius-4)*2,(lightRadius-4) * 2);
+
         Vector3 viewDistance = cam.GetComponent<CameraFollowWithBarriers>().cameraSizeInUnits;
         size = new Vector2Int((int)viewDistance.x * 2, (int)viewDistance.y * 2) + overlap;
         frameSize = size;
 
         transform.position = new Vector3Int((int)cam.transform.position.x - size.x / 2, (int)cam.transform.position.y - size.y / 2, 0);
-
-        SetMinLightRadius();
 
         InitializeSprite();
 
@@ -99,26 +101,26 @@ public class RenderLighting : MonoBehaviour
 
     Vector2Int theoreticalPosition;
     Stopwatch sw = new Stopwatch();
+
     void Update()
     {
-
         theoreticalPosition = new Vector2Int((int)cam.transform.position.x - size.x / 2, (int)cam.transform.position.y - size.y / 2);
 
         if (ccl.drawTiles)
         {
-            print(sw.ElapsedMilliseconds);
+            //print(sw.ElapsedMilliseconds);
             sw.Reset();
-            if (ccl.lightingPosition != theoreticalPosition)
-            {
-                ccl.lightingPosition = theoreticalPosition;
-            }
-            else
+
+            if (transform.position != new Vector3(theoreticalPosition.x, theoreticalPosition.y) && ccl.lightingPosition == theoreticalPosition)
             {
                 transform.position = new Vector3(theoreticalPosition.x, theoreticalPosition.y);
-                ccl.lightingPosition = theoreticalPosition;
             }
 
-            UpdateTexture(ccl.pixels);
+            if (ccl.lightingPosition == theoreticalPosition)
+            {
+                UpdateTexture(ccl.pixels);
+            }
+            ccl.lightingPosition = theoreticalPosition;
             ccl.blockMap = wg.blockMap;
             ccl.drawTiles = false;
             sw.Start();

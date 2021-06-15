@@ -1604,15 +1604,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21c961202eb7f2c42b5ee9a5ac464a71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  filterMode: 0
+  filterMode: 2
   lr: {fileID: 1473898469}
   overlap: {x: 10, y: 10}
   wg: {fileID: 1338082158}
   ambientColor: {r: 1, g: 1, b: 1, a: 0}
   lightRadius: -1119
-  airDropoff: 0.7
-  blockDropoff: 0.6
-  lowestLightLevel: 0.05
+  fps: 0
+  airDropoff: 0.8
+  blockDropoff: 0.662
+  lowestLightLevel: 0.015
 --- !u!1 &1578126800
 GameObject:
   m_ObjectHideFlags: 0

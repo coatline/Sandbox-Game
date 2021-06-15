@@ -97,7 +97,6 @@ public class TestPlayer : MonoBehaviour
                 if (blockTilemap.GetTile(new Vector3Int(blockPosition.x, blockPosition.y, 0)) != null)
                 {
                     wg.ModifyBlock(blockPosition.x, blockPosition.y, 0);
-                    //ccl.AddLightSource(blockPosition.x, blockPosition.y, false);
                 }
             }
         }
@@ -111,16 +110,13 @@ public class TestPlayer : MonoBehaviour
 
                 if (placingTorch)
                 {
-                    //wg.blockMap[blockPosition.x, blockPosition.y] = currentblocktype;
                     wg.ModifyBlock(blockPosition.x, blockPosition.y, currentblocktype);
-                    //ccl.AddLightSource(blockPosition.x, blockPosition.y, true);
                 }
                 else
                 {
                     //if (Vector2.Distance(blockPosition, transform.position) > .8f && CanPlace(0, new Vector3Int(blockPosition.x, blockPosition.y, 0)))
                     {
                         wg.ModifyBlock(blockPosition.x, blockPosition.y,2);
-                        //ccl.RemoveLightSource(blockPosition.x, blockPosition.y);
                     }
                 }
             }

@@ -652,10 +652,10 @@ public class WorldGenerator : MonoBehaviour
             //redtorch
             //4wood5iron
             case 6: return redTorch;
-            //bluetorch
-            case 7: return blueTorch;
             //greentorch
-            case 8: return greenTorch;
+            case 7: return greenTorch;
+            //bluetorch
+            case 8: return blueTorch;
             //normal torch
             case 9: return greenTorch;
         }
