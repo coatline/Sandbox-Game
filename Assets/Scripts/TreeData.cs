@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TreeData : MonoBehaviour
+public class TreeData
 {
     public bool isActive = false;
     public int height;

@@ -361,7 +361,6 @@ public class WorldGenerator : MonoBehaviour
             {
                 Color color = Color.red;
 
-
                 Vector2Int chunkPos = new Vector2Int(x, y);
 
                 Vector3Int bottomRightBlock = new Vector3Int(chunks[chunkPos].topLeftBlock.x + chunkSize, chunks[chunkPos].topLeftBlock.y - chunkSize, 0);

@@ -1270,7 +1270,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1019905923
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1434,8 +1434,8 @@ MonoBehaviour:
   treeStumpM: {fileID: 11400000, guid: 7cfdd985970046f48b201f84e8ed0c2c, type: 2}
   treeTrunk: {fileID: 11400000, guid: 11d019861782c374a8d65a00a82aa4e3, type: 2}
   treeLeaves: {fileID: 11400000, guid: e0b1e2bb460b30e408dda981838fd6ca, type: 2}
-  worldWidth: 100
-  worldHeight: 80
+  worldWidth: 150
+  worldHeight: 150
   chunkSize: 6
   stoneStartOffset: 22
   sprinkleStoneStartOffset: 6
@@ -1489,9 +1489,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1473898465}
   - component: {fileID: 1473898466}
-  - component: {fileID: 1473898467}
-  - component: {fileID: 1473898468}
   - component: {fileID: 1473898469}
+  - component: {fileID: 1473898470}
+  - component: {fileID: 1473898467}
   m_Layer: 6
   m_Name: Lighting
   m_TagString: Untagged
@@ -1554,7 +1554,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -1571,39 +1571,14 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1473898464}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 663e58813fbb4e44ba78c20ac05c414a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  wg: {fileID: 1338082158}
-  overlap: {x: 1, y: 1}
-  airDropoff: 0.816
-  inBlockDropoff: 0.664
-  lowestLightLevel: 0.01
-  filterMode: 0
-  lightRadius: 0
---- !u!114 &1473898468
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1473898464}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 85531a256f64a594992e954573af8876, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  filterMode: 2
-  lr: {fileID: 1473898469}
-  overlap: {x: 2, y: 2}
-  wg: {fileID: 1338082158}
-  ambientColor: {r: 1, g: 1, b: 1, a: 1}
-  lightRadius: 26
-  airDropoff: 0.771
-  blockDropoff: 0.64
-  lowestLightLevel: 0.05
+  drawTiles: 0
+  pixels: []
+  lightingPosition: {x: 0, y: 0}
 --- !u!114 &1473898469
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1617,6 +1592,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shaderMaterial: {fileID: 2100000, guid: 65d3149592079aa4cb6bfa870a52dcfe, type: 2}
+--- !u!114 &1473898470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1473898464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21c961202eb7f2c42b5ee9a5ac464a71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  filterMode: 0
+  lr: {fileID: 1473898469}
+  overlap: {x: 10, y: 10}
+  wg: {fileID: 1338082158}
+  ambientColor: {r: 1, g: 1, b: 1, a: 0}
+  lightRadius: -1119
+  airDropoff: 0.7
+  blockDropoff: 0.6
+  lowestLightLevel: 0.05
 --- !u!1 &1578126800
 GameObject:
   m_ObjectHideFlags: 0
