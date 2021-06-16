@@ -115,26 +115,24 @@ public class CalculateColorLighting : MonoBehaviour
                         }
                         break;
                     case 6:
-                        lightValues[x, y] = Color.blue;
-                        toEmit[x, y] = 1;
-                        break;
-                    case 7:
                         lightValues[x, y] = Color.red;
                         toEmit[x, y] = 1;
                         break;
-                    case 8:
+                    case 7:
                         lightValues[x, y] = Color.green;
                         toEmit[x, y] = 1;
                         break;
+                    case 8:
+                        lightValues[x, y] = Color.blue;
+                        toEmit[x, y] = 1;
+                        break;
                     case 9:
-                        lightValues[x, y] = Color.white;
+                        lightValues[x, y] = new Color(1f, .8f, .4f);
                         toEmit[x, y] = 1;
                         break;
                 }
             }
         }
-
-        //print("Light Sources Flagged. Starting Light Emission.");
 
         for (int x = 0; x < frameSize.x; x++)
         {
@@ -190,7 +188,8 @@ public class CalculateColorLighting : MonoBehaviour
                 }
             }
 
-            if(skys >= 8)
+            //9 because it counts itself
+            if(skys >= 9)
             {
                 return;
             }

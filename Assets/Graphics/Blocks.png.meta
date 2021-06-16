@@ -16,16 +16,16 @@ TextureImporter:
     second: bluetorch
   - first:
       213: 5937300090042828850
-    second: Dirt_Tile_5
+    second: PlayerWalk1
   - first:
       213: -2230640015494873224
-    second: Dirt_Tile_6
+    second: PlayerWalk2
   - first:
       213: -8506558392696655332
-    second: Dirt_Tile_7
+    second: PlayerWalk3
   - first:
       213: 6608634889621467271
-    second: Dirt_Tile_8
+    second: PlayerWalk4
   - first:
       213: -2445883823613288998
     second: Dirt_Tile_9
@@ -541,9 +541,9 @@ TextureImporter:
       name: PlayerIdle
       rect:
         serializedVersion: 2
-        x: 237
+        x: 230
         y: 1
-        width: 18
+        width: 16
         height: 48
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
@@ -638,6 +638,90 @@ TextureImporter:
       bones: []
       spriteID: 8130214c91b888000800000000000000
       internalID: 38433539612607256
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayerWalk1
+      rect:
+        serializedVersion: 2
+        x: 247
+        y: 1
+        width: 16
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 238c5e789f6856250800000000000000
+      internalID: 5937300090042828850
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayerWalk2
+      rect:
+        serializedVersion: 2
+        x: 264
+        y: 1
+        width: 16
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 87ff7ae69bc2b01e0800000000000000
+      internalID: -2230640015494873224
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayerWalk3
+      rect:
+        serializedVersion: 2
+        x: 281
+        y: 1
+        width: 16
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c12b2362632a2f980800000000000000
+      internalID: -8506558392696655332
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PlayerWalk4
+      rect:
+        serializedVersion: 2
+        x: 298
+        y: 1
+        width: 16
+        height: 48
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 780f3260b6696bb50800000000000000
+      internalID: 6608634889621467271
       vertices: []
       indices: 
       edges: []

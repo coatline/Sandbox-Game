@@ -6,7 +6,7 @@ using UnityEngine.Tilemaps;
 
 public class Player : MonoBehaviour
 {
-    [Range(5, 20)]
+    [Range(5, 50)]
     [SerializeField] float movementSpeed;
     [Range(1, 20)]
     [SerializeField] float jumpForce;
@@ -17,8 +17,7 @@ public class Player : MonoBehaviour
     [SerializeField] Transform feetPosition;
     [SerializeField] LayerMask terrainLayer;
     [SerializeField] float reach;
-    [SerializeField] Color color;
-    CalculateLighting cl;
+    CalculateColorLighting ccl;
     WorldGenerator wg;
     Rigidbody2D rb;
     Camera cam;
@@ -34,7 +33,7 @@ public class Player : MonoBehaviour
         cam = Camera.main;
         rb = GetComponent<Rigidbody2D>();
         wg = FindObjectOfType<WorldGenerator>();
-        cl = FindObjectOfType<CalculateLighting>();
+        ccl = FindObjectOfType<CalculateColorLighting>();
     }
 
     float moveInputs;
@@ -45,14 +44,7 @@ public class Player : MonoBehaviour
         rb.velocity = new Vector2(moveInputs * movementSpeed, rb.velocity.y);
     }
 
-    private void OnDrawGizmos()
-    {
-        //Debug.DrawLine(feetPosition.position, feetPosition.position + new Vector3(0, .1f, 0), Color.red);
-        //Debug.DrawLine(feetPosition.position, feetPosition.position + new Vector3(0, -.1f, 0), Color.red);
-        //Debug.DrawLine(feetPosition.position, feetPosition.position + new Vector3(-.1f, 0, 0), Color.red);
-        //Debug.DrawLine(feetPosition.position, feetPosition.position + new Vector3(.1f, 0, 0), Color.red);
-    }
-
+    byte currentblocktype=6;
     bool placingTorch = false;
 
     void Update()
@@ -71,7 +63,27 @@ public class Player : MonoBehaviour
             rb.velocity = new Vector2(rb.velocity.x, -fallingSpeedCap);
         }
 
-        if (Input.GetKeyDown(KeyCode.E)) { placingTorch = !placingTorch; }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            placingTorch = !placingTorch;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            currentblocktype = 6;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            currentblocktype = 7;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            currentblocktype = 8;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            currentblocktype = 9;
+        }
 
         if (Input.GetMouseButton(0))
         {
@@ -84,7 +96,6 @@ public class Player : MonoBehaviour
                 //why do i do this check?
                 if (blockTilemap.GetTile(new Vector3Int(blockPosition.x, blockPosition.y, 0)) != null)
                 {
-                    cl.ModifyBlock(blockPosition, false);
                     wg.ModifyBlock(blockPosition.x, blockPosition.y, 0);
                 }
             }
@@ -99,14 +110,13 @@ public class Player : MonoBehaviour
 
                 if (placingTorch)
                 {
-                    cl.LightBlock(blockPosition, blockPosition, 1, 1);
+                    wg.ModifyBlock(blockPosition.x, blockPosition.y, currentblocktype);
                 }
                 else
                 {
-                    if (Vector2.Distance(blockPosition, transform.position) > .8f && CanPlace(0, new Vector3Int(blockPosition.x, blockPosition.y, 0)))
+                    //if (Vector2.Distance(blockPosition, transform.position) > .8f && CanPlace(0, new Vector3Int(blockPosition.x, blockPosition.y, 0)))
                     {
-                        cl.ModifyBlock(blockPosition, true);
-                        wg.ModifyBlock(blockPosition.x, blockPosition.y, 2);
+                        wg.ModifyBlock(blockPosition.x, blockPosition.y,2);
                     }
                 }
             }
@@ -118,7 +128,7 @@ public class Player : MonoBehaviour
     //0-1-2
     bool CanPlace(int depth, Vector3Int pos)
     {
-        var air = 0;
+        var air =0;
 
         if (depth == 0 && wg.blockMap[pos.x, pos.y] == air)
         {

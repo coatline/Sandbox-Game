@@ -11,22 +11,26 @@ public class CameraFollowWithBarriers : MonoBehaviour
     public Vector2 cameraSizeInUnits;
 
 
-    [Range(.01f,1f)]
+    [Range(.01f, 1f)]
     [SerializeField] float speed;
 
-    private void Start()
+    private void Awake()
     {
         var cam = GetComponent<Camera>();
 
         cameraSizeInUnits.x = cam.orthographicSize * cam.aspect;
         cameraSizeInUnits.y = cam.orthographicSize;
+    }
+
+    private void Start()
+    {
         bottomLeftBarrier.transform.position += new Vector3((cameraSizeInUnits.x), cameraSizeInUnits.y, 0);
         topRightBarrier.transform.position -= new Vector3((cameraSizeInUnits.x), cameraSizeInUnits.y, 0);
     }
 
     void LateUpdate()
     {
-        if(!bottomLeftBarrier) { return; }
+        if (!bottomLeftBarrier) { return; }
 
         Vector3 movement = new Vector3(followObject.position.x - transform.position.x, followObject.position.y - transform.position.y);
 
@@ -34,7 +38,7 @@ public class CameraFollowWithBarriers : MonoBehaviour
         {
             if (movement.x < 0)
             {
-                transform.position = new Vector3(bottomLeftBarrier.position.x,transform.position.y, -10);
+                transform.position = new Vector3(bottomLeftBarrier.position.x, transform.position.y, -10);
                 movement.x = 0;
             }
         }

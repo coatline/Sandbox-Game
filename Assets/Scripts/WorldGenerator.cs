@@ -21,13 +21,13 @@ using UnityEngine.SceneManagement;
 public class WorldGenerator : MonoBehaviour
 {
     [Header("Tree Tile References")]
-    [SerializeField] RuleTile treeStumpBL;
-    [SerializeField] RuleTile treeStumpBR;
-    [SerializeField] RuleTile treeStumpM;
+    [SerializeField] ExtendedRuleTile treeStumpBL;
+    [SerializeField] ExtendedRuleTile treeStumpBR;
+    [SerializeField] ExtendedRuleTile treeStumpM;
     [SerializeField] Tile treeTrunk;
     [SerializeField] Tile treeLeaves;
     Camera mainCamera;
-    TestPlayer player;
+    Player player;
 
     [Header("World Height")]
     public int worldWidth;
@@ -63,16 +63,15 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField] Tilemap blockTilemap;
     [SerializeField] Tilemap midgroundTilemap;
     [SerializeField] Tilemap backgroundTilemap;
-    [SerializeField] RuleTile grassTile;
-    [SerializeField] RuleTile dirtTile;
-    [SerializeField] RuleTile stoneTile;
-    [SerializeField] RuleTile blueTorch;
-    [SerializeField] RuleTile redTorch;
-    [SerializeField] RuleTile greenTorch;
+    [SerializeField] ExtendedRuleTile grassTile;
+    [SerializeField] ExtendedRuleTile dirtTile;
+    [SerializeField] ExtendedRuleTile stoneTile;
+    [SerializeField] ExtendedRuleTile blueTorch;
+    [SerializeField] ExtendedRuleTile redTorch;
+    [SerializeField] ExtendedRuleTile greenTorch;
     [SerializeField] Tile redFlowerTile;
     [SerializeField] Tile yellowFlowerTile;
-    [SerializeField] TestPlayer playerPrefab;
-
+    [SerializeField] Player playerPrefab;
 
     [Header("Settings")]
     [SerializeField] int excessChunksToLoad;
@@ -80,7 +79,8 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField] float chanceForTreeToSpawn;
     [Range(6, 20f)]
     [SerializeField] int maxTreeHeight;
-
+    int chunksOnX;
+    int chunksOnY;
 
     Vector3 viewDistance;
     List<TreeData> trees;
@@ -91,6 +91,9 @@ public class WorldGenerator : MonoBehaviour
 
     void Awake()
     {
+        chunksOnX = Mathf.CeilToInt(((float)worldWidth / chunkSize));
+        chunksOnY = Mathf.CeilToInt(((float)worldHeight / chunkSize));
+
         viewDistance.x += chunkSize / 2;
         viewDistance.y += chunkSize / 2;
 
@@ -98,21 +101,30 @@ public class WorldGenerator : MonoBehaviour
         terrainStartingHeight = worldHeight / 2;
 
         mainCamera = Camera.main;
-
-        viewDistance = new Vector3((mainCamera.orthographicSize * 1.78f), mainCamera.orthographicSize + .01f, 0);
+         
+        viewDistance = new Vector3((mainCamera.orthographicSize * mainCamera.aspect), mainCamera.orthographicSize, 0);
         blockMap = new byte[worldWidth, worldHeight];
+
         chunks = new Dictionary<Vector2Int, Chunk>();
+        chunksToUnload = new List<Vector2Int>();
         highestTiles = new List<int>();
         trees = new List<TreeData>();
 
-        AddChunks();
         GenerateInitalTerrain();
+
         GenerateTrees();
+
         //GenerateFlowers();
+
         //GenerateOres();
-        GenerateCaves();
+
+        //GenerateCaves();
+
+        AddChunks();
+
         SpawnPlayer();
-        LoadChunks();
+
+        InitializeWorld();
     }
 
     //Generate height map for terrain
@@ -311,7 +323,7 @@ public class WorldGenerator : MonoBehaviour
         var camerabarriers = new GameObject("Camera Barriers");
 
         var topright = new GameObject("Top Right Camera Barrier");
-        topright.transform.position = new Vector3(worldWidth - ((worldWidth % chunkSize)), worldHeight);
+        topright.transform.position = new Vector3(worldWidth, worldHeight);
         var bottomleft = new GameObject("Bottom Left Camera Barrier");
         bottomleft.transform.position = new Vector3(0, 0);
 
@@ -319,6 +331,7 @@ public class WorldGenerator : MonoBehaviour
         bottomleft.transform.SetParent(camerabarriers.transform);
 
         player = Instantiate(playerPrefab, new Vector3(worldWidth / 2, highestTiles[worldWidth / 2] + 3, 0), Quaternion.identity);
+        playerRb = player.GetComponent<Rigidbody2D>();
 
         player.blockTilemap = blockTilemap;
         player.backgroundTilemap = midgroundTilemap;
@@ -332,22 +345,6 @@ public class WorldGenerator : MonoBehaviour
 
     }
 
-    //Define chunks
-    void AddChunks()
-    {
-        float chunksOnY = (float)worldHeight / chunkSize;
-        float chunksOnX = (float)worldWidth / chunkSize;
-
-        for (int x = 0; x < chunksOnX; x++)
-            for (int y = 0; y < chunksOnY; y++)
-            {
-                var middleOfChunk = new Vector3Int((x * chunkSize) + chunkSize / 2, (y * chunkSize) + chunkSize / 2, 0);
-                //maybe only plug in middle value save memory
-                chunks.Add(new Vector2Int(x, y), new Chunk(new Vector2Int((middleOfChunk.x - chunkSize / 2), (middleOfChunk.y + chunkSize / 2))/*, new Vector3Int(middleOfChunk.x + chunkSize / 2, middleOfChunk.y - chunkSize / 2, 0)*/));
-            }
-    }
-
-
     bool drawn = false;
     private void OnDrawGizmos()
     {
@@ -355,14 +352,14 @@ public class WorldGenerator : MonoBehaviour
 
         drawn = true;
 
-        for (int x = 0; x < (float)worldWidth / chunkSize; x++)
+        for (int x = 0; x < chunksOnX; x++)
         {
-            for (int y = 0; y < (float)worldHeight / chunkSize; y++)
+            for (int y = 0; y < chunksOnY; y++)
             {
                 Color color = Color.red;
 
                 Vector2Int chunkPos = new Vector2Int(x, y);
-
+                if (!chunks.TryGetValue(chunkPos, out Chunk chunk)) { return; }
                 Vector3Int bottomRightBlock = new Vector3Int(chunks[chunkPos].topLeftBlock.x + chunkSize, chunks[chunkPos].topLeftBlock.y - chunkSize, 0);
                 Vector3Int topLeftBlock = new Vector3Int(chunks[chunkPos].topLeftBlock.x, chunks[chunkPos].topLeftBlock.y, 0);
 
@@ -505,21 +502,139 @@ public class WorldGenerator : MonoBehaviour
         }
     }
 
-    List<Vector2Int> previousIndicies = new List<Vector2Int>();
-    //List<Vector2Int> chunksToUnload = new List<Vector2Int>();
-    //List<Chunk> chunksToLoad = new List<Chunk>();
+    //Define chunks
+    void AddChunks()
+    {
+        for (int x = 0; x < chunksOnX; x++)
+            for (int y = 0; y < chunksOnY; y++)
+            {
+                var topLeftBlock = new Vector2Int((x * chunkSize), (y * chunkSize) + chunkSize);
 
-    //MAYBE ONLY EXTRA CHUNKS IN DIRECTION MOVING
+                Vector3Int[] positions = new Vector3Int[chunkSize * chunkSize];
+                TileBase[] nullTiles = new TileBase[chunkSize * chunkSize];
+                TileBase[] tiles = new TileBase[chunkSize * chunkSize];
+                int iterations = 0;
 
-    //Load larger chunks of tiles to decrease draw calls
+                for (int wx = topLeftBlock.x; wx < topLeftBlock.x + chunkSize; wx++)
+                {
+                    for (int wy = topLeftBlock.y; wy < topLeftBlock.y + chunkSize; wy++)
+                    {
+                        if (!WithinWorldBounds(wx, wy)) { continue; }
+
+                        positions[iterations] = new Vector3Int(wx, wy, 0);
+                        tiles[iterations] = TileFromBlockType(blockMap[wx, wy]);
+                        //nullTiles[iterations] = null;
+                        iterations++;
+                    }
+                }
+
+                Chunk chunk = new Chunk(topLeftBlock, positions, tiles, nullTiles);
+                chunks.Add(new Vector2Int(x, y), chunk);
+            }
+    }
 
     Vector2Int WorldCoordinatesToNearestChunkCoordinate(Vector2 input)
     {
-        Vector2Int chunkCoords = new Vector2Int((int)input.x / chunkSize, (int)input.y / chunkSize);
+        Vector2Int chunkCoords = new Vector2Int(Mathf.FloorToInt(input.x / chunkSize), Mathf.FloorToInt((int)input.y / chunkSize));
         return chunkCoords;
     }
 
-    Vector3 lastCameraPositionUpdate;
+    bool WithinWorldBounds(int x, int y)
+    {
+        return x >= 0 && x < worldWidth && y >= 0 && y < worldHeight;
+    }
+
+    void LoadTrees(Vector3 bottomLeftLoadPosition, Vector3 topRightLoadPosition)
+    {
+        //SHOULD DO THIS IN A MORE OPTIMIZED WAY
+        //Load and Unload Trees
+        for (int k = 0; k < trees.Count; k++)
+        {
+            TreeData tree = trees[k];
+
+            //Tree is active 
+            if ((tree.trunkPosition.x <= bottomLeftLoadPosition.x || tree.trunkPosition.x >= topRightLoadPosition.x))
+            {
+                if (tree.isActive)
+                {
+                    //Hide tree it is out of view
+                    HideTree(tree.height, tree.spawnLeftTrunk, tree.spawnRightTrunk, tree.trunkPosition);
+                    tree.isActive = false;
+                }
+            }
+            else if (!tree.isActive)
+            {
+                //Display tree it is in view
+                DisplayTree(tree.height, tree.spawnLeftTrunk, tree.spawnRightTrunk, tree.trunkPosition);
+                tree.isActive = true;
+            }
+        }
+    }
+
+    void InitializeWorld()
+    {
+        Vector3 loadRange = new Vector2(viewDistance.x + (excessChunksToLoad * chunkSize), viewDistance.y + (excessChunksToLoad * chunkSize));
+        Vector3 topRightLoadPosition = mainCamera.transform.position + loadRange;
+        Vector3 bottomLeftLoadPosition = mainCamera.transform.position - loadRange;
+
+        var topRightChunkLoadCoordinate = WorldCoordinatesToNearestChunkCoordinate(topRightLoadPosition);
+        var bottomLeftChunkLoadCoordinate = WorldCoordinatesToNearestChunkCoordinate(bottomLeftLoadPosition);
+
+        for (int x = bottomLeftChunkLoadCoordinate.x; x <= topRightChunkLoadCoordinate.x; x++)
+        {
+            for (int y = bottomLeftChunkLoadCoordinate.y; y <= topRightChunkLoadCoordinate.y; y++)
+            {
+                Chunk chunk = chunks[new Vector2Int(x, y)];
+
+                blockTilemap.SetTiles(chunk.positions, chunk.tiles);
+
+                chunk.loaded = true;
+            }
+        }
+    }
+
+    List<Vector2Int> chunksToUnload;
+    bool unloading;
+
+    IEnumerator UnloadChunks()
+    {
+        unloading = true;
+
+        while (chunksToUnload.Count > 0)
+        {
+            Chunk chunk = chunks[chunksToUnload[0]];
+
+            if (!chunk.inUnloadQueue)
+            {
+                chunksToUnload.RemoveAt(0);
+                continue;
+            }
+
+            if (chunk.loaded)
+            {
+                blockTilemap.SetTiles(chunk.positions, chunk.nullTiles);
+            }
+
+            chunk.loaded = false;
+            chunk.inUnloadQueue = false;
+
+            chunksToUnload.RemoveAt(0);
+
+            //if (chunksToUnload.Count > 75)
+            //{
+            //    if (chunksToUnload.Count % 2 == 0)
+            //    {
+            //        yield return new WaitForEndOfFrame();
+            //    }
+            //}
+            //else
+            {
+                yield return new WaitForEndOfFrame();
+            }
+        }
+
+        unloading = false;
+    }
 
     void LoadChunks()
     {
@@ -535,88 +650,179 @@ public class WorldGenerator : MonoBehaviour
             var topRightChunkLoadCoordinate = WorldCoordinatesToNearestChunkCoordinate(topRightLoadPosition);
             var bottomLeftChunkLoadCoordinate = WorldCoordinatesToNearestChunkCoordinate(bottomLeftLoadPosition);
 
-            List<Vector2Int> chunkCoordinatesToLoad = new List<Vector2Int>();
-
-            for (int x = bottomLeftChunkLoadCoordinate.x; x <= topRightChunkLoadCoordinate.x; x++)
+            if (loadDirection.x == -1)
             {
+                if (topRightChunkLoadCoordinate.x + 1 < chunksOnX)
+                {
+                    for (int y = bottomLeftChunkLoadCoordinate.y; y <= topRightChunkLoadCoordinate.y; y++)
+                    {
+                        //test if i need this heere
+                        if (y < 0 || y >= chunksOnY) { continue; }
+
+                        var key = new Vector2Int(topRightChunkLoadCoordinate.x + 1, y);
+
+                        Chunk chunk = chunks[key];
+
+                        if (!chunk.inUnloadQueue && chunk.loaded)
+                        {
+                            chunksToUnload.Add(key);
+                            chunk.inUnloadQueue = true;
+                        }
+                    }
+                }
+
+                if (bottomLeftChunkLoadCoordinate.x < 0) { print("End of world not gonna generate (left)"); return; }
+
                 for (int y = bottomLeftChunkLoadCoordinate.y; y <= topRightChunkLoadCoordinate.y; y++)
                 {
-                    if (x < 0 || y < 0 || x >= worldWidth / chunkSize || y >= worldHeight / chunkSize) { continue; }
-                    chunkCoordinatesToLoad.Add(new Vector2Int(x, y));
-                    //Note: Maybe do not store all of these in a list and go ahead and do the work in this loop
+                    //test if i need this heere
+                    if (y < 0 || y >= chunksOnY) { continue; }
+
+                    Chunk chunk = chunks[new Vector2Int(bottomLeftChunkLoadCoordinate.x, y)];
+
+                    if (!chunk.loaded)
+                    {
+                        blockTilemap.SetTiles(chunk.positions, chunk.tiles);
+                    }
+                    else
+                    {
+                        //it must be in the queue
+                        chunk.inUnloadQueue = false;
+                    }
+
+                    chunk.loaded = true;
                 }
             }
-
-            for (int j = 0; j < chunkCoordinatesToLoad.Count; j++)
+            else
             {
-                Vector2Int chunkCoord = chunkCoordinatesToLoad[j];
-
-                if (previousIndicies.Contains(chunkCoord)) { previousIndicies.Remove(chunkCoord); continue; }
-
-                Chunk chunk = chunks[chunkCoord];
-
-                var bottomRightBlock = chunk.topLeftBlock + new Vector2Int(chunkSize, -chunkSize);
-
-                for (int x = chunk.topLeftBlock.x; x < chunk.topLeftBlock.x + (bottomRightBlock.x - chunk.topLeftBlock.x); x++)
+                if (bottomLeftChunkLoadCoordinate.x - 1 >= 0)
                 {
-                    for (int y = bottomRightBlock.y; y < bottomRightBlock.y + (chunk.topLeftBlock.y - bottomRightBlock.y); y++)
+                    for (int y = bottomLeftChunkLoadCoordinate.y; y <= topRightChunkLoadCoordinate.y; y++)
                     {
-                        if (x >= worldWidth)
+                        if (y < 0 || y >= chunksOnY) { continue; }
+
+                        var key = new Vector2Int(bottomLeftChunkLoadCoordinate.x - 1, y);
+
+                        Chunk chunk = chunks[key];
+
+                        if (!chunk.inUnloadQueue && chunk.loaded)
                         {
-                            //Note: May cause issues may need to be continue
-                            break;
+                            chunksToUnload.Add(key);
+                            chunk.inUnloadQueue = true;
                         }
-
-                        blockTilemap.SetTile(new Vector3Int(x, y, 0), TileFromBlockType(blockMap[x, y]));
                     }
+                }
+
+                if (topRightChunkLoadCoordinate.x >= chunksOnX) { print("End of world not gonna generate (right)"); return; }
+
+                for (int y = bottomLeftChunkLoadCoordinate.y; y <= topRightChunkLoadCoordinate.y; y++)
+                {
+                    if (y < 0 || y >= chunksOnY) { continue; }
+
+                    Chunk chunk = chunks[new Vector2Int(topRightChunkLoadCoordinate.x, y)];
+
+                    if (!chunk.loaded)
+                    {
+                        blockTilemap.SetTiles(chunk.positions, chunk.tiles);
+                    }
+                    else
+                    {
+                        //it must be in the queue
+                        chunk.inUnloadQueue = false;
+                    }
+
+                    chunk.loaded = true;
                 }
             }
 
-            //Load and Unload Trees
-            for (int k = 0; k < trees.Count; k++)
+            if (loadDirection.y == -1)
             {
-                TreeData tree = trees[k];
-
-                //Tree is active 
-                if ((tree.trunkPosition.x <= bottomLeftLoadPosition.x || tree.trunkPosition.x >= topRightLoadPosition.x))
+                if (topRightChunkLoadCoordinate.y + 1 < chunksOnY)
                 {
-                    if (tree.isActive)
+                    for (int x = bottomLeftChunkLoadCoordinate.x; x <= topRightChunkLoadCoordinate.x; x++)
                     {
-                        //Hide tree it is out of view
-                        HideTree(tree.height, tree.spawnLeftTrunk, tree.spawnRightTrunk, tree.trunkPosition);
-                        tree.isActive = false;
-                    }
-                }
-                else if (!tree.isActive)
-                {
-                    //Display tree it is in view
-                    DisplayTree(tree.height, tree.spawnLeftTrunk, tree.spawnRightTrunk, tree.trunkPosition);
-                    tree.isActive = true;
-                }
-            }
+                        if (x < 0 || x >= chunksOnX) { continue; }
 
-            //Unload remaining chunks that were not removed
-            for (int i = 0; i < previousIndicies.Count; i++)
-            {
-                Chunk unloadChunk = chunks[previousIndicies[i]];
+                        var key = new Vector2Int(x, topRightChunkLoadCoordinate.y + 1);
 
-                var bottomRightBlock = unloadChunk.topLeftBlock + new Vector2Int(chunkSize, -chunkSize);
+                        Chunk chunk = chunks[key];
 
-                for (int x = unloadChunk.topLeftBlock.x; x < unloadChunk.topLeftBlock.x + (bottomRightBlock.x - unloadChunk.topLeftBlock.x); x++)
-                {
-                    for (int y = bottomRightBlock.y; y < bottomRightBlock.y + (unloadChunk.topLeftBlock.y - bottomRightBlock.y); y++)
-                    {
-                        if (x >= worldWidth)
+                        if (!chunk.inUnloadQueue && chunk.loaded)
                         {
-                            break;
+                            chunksToUnload.Add(key);
+                            chunk.inUnloadQueue = true;
                         }
-
-                        blockTilemap.SetTile(new Vector3Int(x, y, 0), null);
                     }
+                }
+                
+                    Chunk dchunk = chunks[new Vector2Int(6, bottomLeftChunkLoadCoordinate.y)];
+                        blockTilemap.SetTiles(dchunk.positions, dchunk.nullTiles);
+                print(bottomLeftChunkLoadCoordinate);
+                if (bottomLeftChunkLoadCoordinate.y < 0) { print("End of world not gonna generate (bottom)"); return; }
+
+                for (int x = bottomLeftChunkLoadCoordinate.x; x <= topRightChunkLoadCoordinate.x; x++)
+                {
+                    //test with and without this check
+                    if (x < 0 || x >= chunksOnX) { continue; }
+
+                    Chunk chunk = chunks[new Vector2Int(x, bottomLeftChunkLoadCoordinate.y)];
+
+                    if (!chunk.loaded)
+                    {
+                        blockTilemap.SetTiles(chunk.positions, chunk.tiles);
+                    }
+                    else
+                    {
+                        chunk.inUnloadQueue = false;
+                    }
+
+                    chunk.loaded = true;
+                }
+                //print(bottomLeftChunkLoadCoordinate.y);
+                //if (bottomLeftChunkLoadCoordinate.y == 0) { Chunk chunk = chunks[new Vector2Int(7, bottomLeftChunkLoadCoordinate.y)]; blockTilemap.SetTiles(chunk.positions, chunk.nullTiles) ; }
+            }
+            else
+            {
+                if (bottomLeftChunkLoadCoordinate.y - 1 >= 0)
+                {
+                    for (int x = bottomLeftChunkLoadCoordinate.x; x <= topRightChunkLoadCoordinate.x; x++)
+                    {
+                        if (x < 0 || x >= chunksOnX) { continue; }
+
+                        var key = new Vector2Int(x, bottomLeftChunkLoadCoordinate.y - 1);
+
+                        Chunk chunk = chunks[key];
+
+                        if (!chunk.inUnloadQueue && chunk.loaded)
+                        {
+                            chunksToUnload.Add(key);
+                            chunk.inUnloadQueue = true;
+                        }
+                    }
+                }
+
+                if (topRightChunkLoadCoordinate.y >= chunksOnY) { print("End of world not gonna generate (top)"); return; }
+
+                for (int x = bottomLeftChunkLoadCoordinate.x; x <= topRightChunkLoadCoordinate.x; x++)
+                {
+                    //test with and without this check
+                    if (x < 0 || x >= chunksOnX) { continue; }
+
+                    Chunk chunk = chunks[new Vector2Int(x, topRightChunkLoadCoordinate.y)];
+                    if (!chunk.loaded)
+                    {
+                        blockTilemap.SetTiles(chunk.positions, chunk.tiles);
+                    }
+                    else
+                    {
+                        chunk.inUnloadQueue = false;
+                    }
+
+                    chunk.loaded = true;
                 }
             }
 
-            previousIndicies = chunkCoordinatesToLoad;
+            LoadTrees(bottomLeftLoadPosition, topRightLoadPosition);
         }
         //Show entire world for debugging
         else
@@ -635,6 +841,52 @@ public class WorldGenerator : MonoBehaviour
             }
         }
 
+    }
+
+
+    Vector3 lastCameraPositionUpdate;
+    Vector2Int loadDirection;
+    Rigidbody2D playerRb;
+
+    void Update()
+    {
+        if (Vector3.Distance(mainCamera.transform.position, lastCameraPositionUpdate) >= chunkSize / 3f)
+        {
+            if (playerRb.velocity.x < 0)
+            {
+                if (playerRb.velocity.y < 0)
+                {
+                    loadDirection = new Vector2Int(-1, -1);
+                }
+                else if (playerRb.velocity.y > 0)
+                {
+                    loadDirection = new Vector2Int(-1, 1);
+                }
+            }
+            else
+            {
+                if (playerRb.velocity.y < 0)
+                {
+                    loadDirection = new Vector2Int(1, -1);
+                }
+                else if (playerRb.velocity.y > 0)
+                {
+                    loadDirection = new Vector2Int(1, 1);
+                }
+            }
+
+            LoadChunks();
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            SceneManager.LoadScene(0);
+        }
+
+        if (chunksToUnload.Count > 0 && !unloading)
+        {
+            StartCoroutine(UnloadChunks());
+        }
     }
 
     RuleTile TileFromBlockType(byte blockType)
@@ -661,18 +913,5 @@ public class WorldGenerator : MonoBehaviour
         }
 
         return null;
-    }
-
-    void Update()
-    {
-        if (Vector3.Distance(mainCamera.transform.position, lastCameraPositionUpdate) >= chunkSize)
-        {
-            LoadChunks();
-        }
-
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            SceneManager.LoadScene(0);
-        }
     }
 }

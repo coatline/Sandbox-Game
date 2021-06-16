@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 3024590363601915483}
   - component: {fileID: -5950935772551705473}
-  - component: {fileID: 3024590363601915476}
   - component: {fileID: 3024590363601915480}
   - component: {fileID: 3024590363601915477}
   - component: {fileID: 6019829296876984046}
+  - component: {fileID: -5140171676514247021}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -48,39 +48,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03a21c1723a34134e9cff7b07bd60f86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 10.7
-  jumpForce: 8.7
-  jumpTime: 0.44
+  movementSpeed: 50
+  jumpForce: 10.9
+  jumpTime: 0.4
   fallingSpeedCap: 29.8
   feetPosition: {fileID: 8005720686574745082}
   terrainLayer:
     serializedVersion: 2
     m_Bits: 8
   reach: 112.29
-  backgroundTilemap: {fileID: 0}
-  blockTilemap: {fileID: 0}
---- !u!114 &3024590363601915476
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3024590363601915481}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 08d6542697564b04abe3814055406dd6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  movementSpeed: 20
-  jumpForce: 15.6
-  jumpTime: 0.35
-  fallingSpeedCap: 22.9
-  feetPosition: {fileID: 8005720686574745082}
-  terrainLayer:
-    serializedVersion: 2
-    m_Bits: 8
-  reach: 172.61
-  color: {r: 1, g: 0.8035239, b: 0.6556604, a: 0}
   backgroundTilemap: {fileID: 0}
   blockTilemap: {fileID: 0}
 --- !u!212 &3024590363601915480
@@ -171,6 +147,25 @@ CapsuleCollider2D:
   m_Offset: {x: -0.0047900677, y: -0.0479002}
   m_Size: {x: 0.86633897, y: 2.6541996}
   m_Direction: 0
+--- !u!95 &-5140171676514247021
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3024590363601915481}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 71670fff39fdb98479ef2b496e89f18a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &4486241809603478556
 GameObject:
   m_ObjectHideFlags: 0

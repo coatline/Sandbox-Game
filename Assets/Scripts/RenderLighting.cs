@@ -20,7 +20,7 @@ public class RenderLighting : MonoBehaviour
     [Range(.6f, .9f)]
     [SerializeField] float blockDropoff;
     [SerializeField] float lowestLightLevel;
-
+    [SerializeField] bool drawLighting;
     CalculateColorLighting ccl;
     SpriteRenderer sr;
     Camera cam;
@@ -71,6 +71,7 @@ public class RenderLighting : MonoBehaviour
 
     void UpdateTexture(Color[] pixels)
     {
+        if (!drawLighting) { return; }
         texture.SetPixels(pixels);
         texture.filterMode = filterMode;
         texture.Apply();
@@ -105,7 +106,7 @@ public class RenderLighting : MonoBehaviour
     void Update()
     {
         theoreticalPosition = new Vector2Int((int)cam.transform.position.x - size.x / 2, (int)cam.transform.position.y - size.y / 2);
-
+        //theoreticalPosition = new Vector2Int((int)transform.position.x,(int)transform.position.y);
         if (ccl.drawTiles)
         {
             //print(sw.ElapsedMilliseconds);
