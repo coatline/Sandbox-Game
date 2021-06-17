@@ -66,6 +66,7 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField] ExtendedRuleTile grassTile;
     [SerializeField] ExtendedRuleTile dirtTile;
     [SerializeField] ExtendedRuleTile stoneTile;
+    [SerializeField] ExtendedRuleTile torch;
     [SerializeField] ExtendedRuleTile blueTorch;
     [SerializeField] ExtendedRuleTile redTorch;
     [SerializeField] ExtendedRuleTile greenTorch;
@@ -101,7 +102,7 @@ public class WorldGenerator : MonoBehaviour
         terrainStartingHeight = worldHeight / 2;
 
         mainCamera = Camera.main;
-         
+
         viewDistance = new Vector3((mainCamera.orthographicSize * mainCamera.aspect), mainCamera.orthographicSize, 0);
         blockMap = new byte[worldWidth, worldHeight];
 
@@ -517,7 +518,7 @@ public class WorldGenerator : MonoBehaviour
 
                 for (int wx = topLeftBlock.x; wx < topLeftBlock.x + chunkSize; wx++)
                 {
-                    for (int wy = topLeftBlock.y; wy < topLeftBlock.y + chunkSize; wy++)
+                    for (int wy = topLeftBlock.y - chunkSize; wy < topLeftBlock.y; wy++)
                     {
                         if (!WithinWorldBounds(wx, wy)) { continue; }
 
@@ -535,7 +536,7 @@ public class WorldGenerator : MonoBehaviour
 
     Vector2Int WorldCoordinatesToNearestChunkCoordinate(Vector2 input)
     {
-        Vector2Int chunkCoords = new Vector2Int(Mathf.FloorToInt(input.x / chunkSize), Mathf.FloorToInt((int)input.y / chunkSize));
+        Vector2Int chunkCoords = new Vector2Int((int)(input.x / chunkSize), (int)((int)input.y / chunkSize));
         return chunkCoords;
     }
 
@@ -584,6 +585,7 @@ public class WorldGenerator : MonoBehaviour
         {
             for (int y = bottomLeftChunkLoadCoordinate.y; y <= topRightChunkLoadCoordinate.y; y++)
             {
+                if (!WithinWorldBounds(x * chunkSize, y * chunkSize)) { continue; }
                 Chunk chunk = chunks[new Vector2Int(x, y)];
 
                 blockTilemap.SetTiles(chunk.positions, chunk.tiles);
@@ -599,9 +601,12 @@ public class WorldGenerator : MonoBehaviour
     IEnumerator UnloadChunks()
     {
         unloading = true;
+        yield return new WaitForEndOfFrame();
 
         while (chunksToUnload.Count > 0)
         {
+            if (loadingNewChunks) { yield return new WaitForEndOfFrame(); }
+
             Chunk chunk = chunks[chunksToUnload[0]];
 
             if (!chunk.inUnloadQueue)
@@ -620,21 +625,60 @@ public class WorldGenerator : MonoBehaviour
 
             chunksToUnload.RemoveAt(0);
 
-            //if (chunksToUnload.Count > 75)
-            //{
-            //    if (chunksToUnload.Count % 2 == 0)
-            //    {
-            //        yield return new WaitForEndOfFrame();
-            //    }
-            //}
-            //else
+            if (chunksToUnload.Count % 3 == 0)
             {
                 yield return new WaitForEndOfFrame();
             }
+            //else
+            //{
+            //    yield return new WaitForEndOfFrame();
+            //}
         }
 
         unloading = false;
     }
+
+    //List<Vector2Int> chunksToLoad;
+    //bool loading;
+
+    //IEnumerator LoadInChunks()
+    //{
+    //    loading = true;
+
+    //    while (chunksToUnload.Count > 0)
+    //    {
+    //        if (loadingNewChunks) { yield return new WaitForEndOfFrame(); }
+
+    //        Chunk chunk = chunks[chunksToUnload[0]];
+
+    //        if (!chunk.inUnloadQueue)
+    //        {
+    //            chunksToUnload.RemoveAt(0);
+    //            continue;
+    //        }
+
+    //        if (chunk.loaded)
+    //        {
+    //            blockTilemap.SetTiles(chunk.positions, chunk.nullTiles);
+    //        }
+
+    //        chunk.loaded = false;
+    //        chunk.inUnloadQueue = false;
+
+    //        chunksToUnload.RemoveAt(0);
+
+    //        //if (chunksToUnload.Count % 2 == 0)
+    //        {
+    //            yield return new WaitForEndOfFrame();
+    //        }
+    //        //else
+    //        //{
+    //        //    yield return new WaitForEndOfFrame();
+    //        //}
+    //    }
+
+    //    unloading = false;
+    //}
 
     void LoadChunks()
     {
@@ -650,7 +694,7 @@ public class WorldGenerator : MonoBehaviour
             var topRightChunkLoadCoordinate = WorldCoordinatesToNearestChunkCoordinate(topRightLoadPosition);
             var bottomLeftChunkLoadCoordinate = WorldCoordinatesToNearestChunkCoordinate(bottomLeftLoadPosition);
 
-            if (loadDirection.x == -1)
+            //if (loadDirection.x == -1)
             {
                 if (topRightChunkLoadCoordinate.x + 1 < chunksOnX)
                 {
@@ -683,17 +727,16 @@ public class WorldGenerator : MonoBehaviour
                     if (!chunk.loaded)
                     {
                         blockTilemap.SetTiles(chunk.positions, chunk.tiles);
+                        chunk.loaded = true;
                     }
                     else
                     {
                         //it must be in the queue
                         chunk.inUnloadQueue = false;
                     }
-
-                    chunk.loaded = true;
                 }
             }
-            else
+            //else
             {
                 if (bottomLeftChunkLoadCoordinate.x - 1 >= 0)
                 {
@@ -724,18 +767,17 @@ public class WorldGenerator : MonoBehaviour
                     if (!chunk.loaded)
                     {
                         blockTilemap.SetTiles(chunk.positions, chunk.tiles);
+                        chunk.loaded = true;
                     }
                     else
                     {
                         //it must be in the queue
                         chunk.inUnloadQueue = false;
                     }
-
-                    chunk.loaded = true;
                 }
             }
 
-            if (loadDirection.y == -1)
+            //if (loadDirection.y == -1)
             {
                 if (topRightChunkLoadCoordinate.y + 1 < chunksOnY)
                 {
@@ -754,10 +796,7 @@ public class WorldGenerator : MonoBehaviour
                         }
                     }
                 }
-                
-                    Chunk dchunk = chunks[new Vector2Int(6, bottomLeftChunkLoadCoordinate.y)];
-                        blockTilemap.SetTiles(dchunk.positions, dchunk.nullTiles);
-                print(bottomLeftChunkLoadCoordinate);
+
                 if (bottomLeftChunkLoadCoordinate.y < 0) { print("End of world not gonna generate (bottom)"); return; }
 
                 for (int x = bottomLeftChunkLoadCoordinate.x; x <= topRightChunkLoadCoordinate.x; x++)
@@ -778,10 +817,8 @@ public class WorldGenerator : MonoBehaviour
 
                     chunk.loaded = true;
                 }
-                //print(bottomLeftChunkLoadCoordinate.y);
-                //if (bottomLeftChunkLoadCoordinate.y == 0) { Chunk chunk = chunks[new Vector2Int(7, bottomLeftChunkLoadCoordinate.y)]; blockTilemap.SetTiles(chunk.positions, chunk.nullTiles) ; }
             }
-            else
+            //else
             {
                 if (bottomLeftChunkLoadCoordinate.y - 1 >= 0)
                 {
@@ -847,34 +884,40 @@ public class WorldGenerator : MonoBehaviour
     Vector3 lastCameraPositionUpdate;
     Vector2Int loadDirection;
     Rigidbody2D playerRb;
+    bool loadingNewChunks;
 
     void Update()
     {
-        if (Vector3.Distance(mainCamera.transform.position, lastCameraPositionUpdate) >= chunkSize / 3f)
-        {
-            if (playerRb.velocity.x < 0)
-            {
-                if (playerRb.velocity.y < 0)
-                {
-                    loadDirection = new Vector2Int(-1, -1);
-                }
-                else if (playerRb.velocity.y > 0)
-                {
-                    loadDirection = new Vector2Int(-1, 1);
-                }
-            }
-            else
-            {
-                if (playerRb.velocity.y < 0)
-                {
-                    loadDirection = new Vector2Int(1, -1);
-                }
-                else if (playerRb.velocity.y > 0)
-                {
-                    loadDirection = new Vector2Int(1, 1);
-                }
-            }
+        loadingNewChunks = false;
 
+        if (Vector3.Distance(mainCamera.transform.position, lastCameraPositionUpdate) >= chunkSize / 2f)
+        {
+            //var pos = mainCamera.transform.position;
+            //loadDirection = Vector2Int.zero;
+            //if (lastCameraPositionUpdate.x > pos.x)
+            //{
+            //    if (lastCameraPositionUpdate.y < pos.y)
+            //    {
+            //        loadDirection = new Vector2Int(-1, 1);
+            //    }
+            //    else if (lastCameraPositionUpdate.y > pos.y)
+            //    {
+            //        loadDirection = new Vector2Int(-1, -1);
+            //    }
+            //}
+            //else if (lastCameraPositionUpdate.x < pos.x)
+            //{
+            //    if (lastCameraPositionUpdate.y > pos.y)
+            //    {
+            //        loadDirection = new Vector2Int(1, 1);
+            //    }
+            //    else if (lastCameraPositionUpdate.y > pos.y)
+            //    {
+            //        loadDirection = new Vector2Int(1, -1);
+            //    }
+            //}
+
+            loadingNewChunks = true;
             LoadChunks();
         }
 
@@ -909,7 +952,7 @@ public class WorldGenerator : MonoBehaviour
             //bluetorch
             case 8: return blueTorch;
             //normal torch
-            case 9: return greenTorch;
+            case 9: return torch;
         }
 
         return null;

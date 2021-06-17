@@ -28,7 +28,7 @@ TextureImporter:
     second: PlayerWalk4
   - first:
       213: -2445883823613288998
-    second: Dirt_Tile_9
+    second: Torch
   - first:
       213: 6373870660395215810
     second: Dirt_Tile_10
@@ -722,6 +722,27 @@ TextureImporter:
       bones: []
       spriteID: 780f3260b6696bb50800000000000000
       internalID: 6608634889621467271
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Torch
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 624
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: addd7ab0f997e0ed0800000000000000
+      internalID: -2445883823613288998
       vertices: []
       indices: 
       edges: []

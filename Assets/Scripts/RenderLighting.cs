@@ -17,7 +17,7 @@ public class RenderLighting : MonoBehaviour
     [Header("Light Settings")]
     [Range(.6f, .99f)]
     [SerializeField] float airDropoff;
-    [Range(.6f, .9f)]
+    [Range(.3f, .9f)]
     [SerializeField] float blockDropoff;
     [SerializeField] float lowestLightLevel;
     [SerializeField] bool drawLighting;

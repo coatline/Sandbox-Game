@@ -42,6 +42,11 @@ public class Player : MonoBehaviour
     {
         moveInputs = Input.GetAxis("Horizontal");
         rb.velocity = new Vector2(moveInputs * movementSpeed, rb.velocity.y);
+
+        if (rb.velocity.y < -fallingSpeedCap)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, -fallingSpeedCap);
+        }
     }
 
     byte currentblocktype=6;
@@ -56,11 +61,6 @@ public class Player : MonoBehaviour
         else if (moveInputs < 0)
         {
             transform.eulerAngles = new Vector3(0, 180, 0);
-        }
-
-        if (rb.velocity.y < -fallingSpeedCap)
-        {
-            rb.velocity = new Vector2(rb.velocity.x, -fallingSpeedCap);
         }
 
         if (Input.GetKeyDown(KeyCode.E))

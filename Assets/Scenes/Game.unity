@@ -679,7 +679,7 @@ TilemapCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_MaximumTileChangeCount: 250
+  m_MaximumTileChangeCount: 1000
   m_ExtrusionFactor: 0.00001
 --- !u!1 &439862292
 GameObject:
@@ -1038,7 +1038,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 20
+  orthographic size: 18
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -1110,7 +1110,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 20
+  orthographic size: 18
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -1485,8 +1485,8 @@ MonoBehaviour:
   treeStumpM: {fileID: 11400000, guid: 7cfdd985970046f48b201f84e8ed0c2c, type: 2}
   treeTrunk: {fileID: 11400000, guid: 11d019861782c374a8d65a00a82aa4e3, type: 2}
   treeLeaves: {fileID: 11400000, guid: e0b1e2bb460b30e408dda981838fd6ca, type: 2}
-  worldWidth: 91
-  worldHeight: 100
+  worldWidth: 635
+  worldHeight: 339
   chunkSize: 3
   stoneStartOffset: 22
   sprinkleStoneStartOffset: 6
@@ -1498,7 +1498,7 @@ MonoBehaviour:
   terrainScale: 0.28
   flowerScale: 11.51
   maxTerrainHeight: 0
-  displayChunks: 1
+  displayChunks: 0
   fillInWorld: 0
   blockTilemap: {fileID: 377442536}
   midgroundTilemap: {fileID: 439862296}
@@ -1506,6 +1506,7 @@ MonoBehaviour:
   grassTile: {fileID: 11400000, guid: f03d12f5953c8b546ad5345d300b3417, type: 2}
   dirtTile: {fileID: 11400000, guid: 115deafa0355eaa46bf3534e919c8da6, type: 2}
   stoneTile: {fileID: 11400000, guid: ef106a8a704b97945b869e875e254e56, type: 2}
+  torch: {fileID: 11400000, guid: 27b5d93433100b84987c98a2de5d235b, type: 2}
   blueTorch: {fileID: 11400000, guid: 166cacecc9f64d04489adcef5b925074, type: 2}
   redTorch: {fileID: 11400000, guid: d5b5906956ca7fb43aa3e5ef68451fe1, type: 2}
   greenTorch: {fileID: 11400000, guid: c033984d78d97984e97e20cf504ccc96, type: 2}
@@ -1571,7 +1572,7 @@ SpriteRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1473898464}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_DynamicOccludee: 1
@@ -1655,16 +1656,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21c961202eb7f2c42b5ee9a5ac464a71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  filterMode: 2
+  filterMode: 1
   lr: {fileID: 1473898469}
   overlap: {x: 10, y: 10}
   wg: {fileID: 1338082158}
-  ambientColor: {r: 1, g: 1, b: 1, a: 0}
+  ambientColor: {r: 1, g: 1, b: 1, a: 1}
   lightRadius: -1119
   fps: 0
   airDropoff: 0.9
-  blockDropoff: 0.6
-  lowestLightLevel: 0.04
+  blockDropoff: 0.5
+  lowestLightLevel: 0.035
   drawLighting: 1
 --- !u!1 &1578126800
 GameObject:
