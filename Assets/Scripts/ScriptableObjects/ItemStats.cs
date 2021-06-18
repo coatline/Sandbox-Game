@@ -14,13 +14,28 @@ public enum DamageType
     Melee,
     Ranged,
     Magic,
+    Potion,
     Pet
 }
 
-public enum Action
+public enum PlayerAction
 {
     none,
-    swing
+    swing,
+    shoot,
+    spear,
+    drink
+}
+
+public enum Buff
+{
+    movementSpeed,
+    defense,
+    criticalStrikeChance,
+    regeneration,
+    maxHealth,
+    attackSpeed,
+    strength
 }
 
 [CreateAssetMenu(fileName = "New Item", menuName = "Item")]
@@ -28,20 +43,19 @@ public class ItemStats : ScriptableObject
 {
     public ItemStats[] itemsToCraft;
     public EffectData givenEffect;
-    public DamageType damageType;
-    public Action actionOnUse;
+    public WeaponData weaponData;
+    public PlayerAction actionOnUse;
 
     public int amountPerCraft;
 
     public string _name;
     public string description;
-    public float speed;
+    public float useSpeed;
 
     public bool consumable;
 
     public int healthOnUse;
     public int itemType;
-    public int damageVal;
     public bool placeable;
     public int maxStack;
     public int value;

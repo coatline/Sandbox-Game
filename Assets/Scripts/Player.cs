@@ -6,6 +6,7 @@ using UnityEngine.Tilemaps;
 
 public class Player : MonoBehaviour
 {
+    [Header("Movement")]
     [Range(5, 50)]
     [SerializeField] float movementSpeed;
     [Range(1, 20)]
@@ -15,9 +16,8 @@ public class Player : MonoBehaviour
     [Range(10, 50f)]
     [SerializeField] float fallingSpeedCap;
     [SerializeField] Transform feetPosition;
-    [SerializeField] LayerMask terrainLayer;
+    [SerializeField] LayerMask groundLayer;
     [SerializeField] float reach;
-    CalculateColorLighting ccl;
     WorldGenerator wg;
     Rigidbody2D rb;
     Camera cam;
@@ -33,7 +33,6 @@ public class Player : MonoBehaviour
         cam = Camera.main;
         rb = GetComponent<Rigidbody2D>();
         wg = FindObjectOfType<WorldGenerator>();
-        ccl = FindObjectOfType<CalculateColorLighting>();
     }
 
     float moveInputs;
@@ -155,7 +154,7 @@ public class Player : MonoBehaviour
 
     void DoJump()
     {
-        isGrounded = Physics2D.OverlapBox(feetPosition.position, new Vector2(.55f, .25f), 0, terrainLayer);
+        isGrounded = Physics2D.OverlapBox(feetPosition.position, new Vector2(.55f, .25f), 0, groundLayer);
 
         if (isGrounded && Input.GetKeyDown(KeyCode.Space))
         {

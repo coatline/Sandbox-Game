@@ -178,6 +178,8 @@ public class WorldGenerator : MonoBehaviour
         }
     }
 
+    public bool blockModified;
+
     public void ModifyBlock(int x, int y, byte blockType)
     {
         if (x >= worldWidth || x < 0 || y < 0 || y >= worldHeight) { return; }
@@ -192,6 +194,8 @@ public class WorldGenerator : MonoBehaviour
 
         blockTilemap.SetTile(new Vector3Int(x, y, 0), TileFromBlockType(blockType));
         blockMap[x, y] = blockType;
+        blockModified = true;
+        //chunks[WorldCoordinatesToNearestChunkCoordinate(new Vector2(x, y))].tiles[;
     }
 
     void GenerateTrees()
