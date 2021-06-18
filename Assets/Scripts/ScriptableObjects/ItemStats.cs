@@ -45,6 +45,7 @@ public class ItemStats : ScriptableObject
     public EffectData givenEffect;
     public WeaponData weaponData;
     public PlayerAction actionOnUse;
+    public int tilemapLayer;
 
     public int amountPerCraft;
 

@@ -23,6 +23,7 @@ public class RenderLighting : MonoBehaviour
     [SerializeField] bool drawLighting;
     CalculateColorLighting ccl;
     SpriteRenderer sr;
+    Rigidbody2D playerRB;
     Camera cam;
     int lightValuesPropertyID;
 
@@ -33,9 +34,10 @@ public class RenderLighting : MonoBehaviour
     {
         lightValuesPropertyID = Shader.PropertyToID("_LightValues");
         cam = Camera.main;
+        playerRB = FindObjectOfType<Player>().GetComponent<Rigidbody2D>();
 
         SetMinLightRadius();
-        overlap =new Vector2Int((lightRadius-4)*2,(lightRadius-4) * 2);
+        overlap = new Vector2Int((lightRadius - 4) * 2, (lightRadius - 4) * 2);
 
         Vector3 viewDistance = cam.GetComponent<CameraFollowWithBarriers>().cameraSizeInUnits;
         size = new Vector2Int((int)viewDistance.x * 2, (int)viewDistance.y * 2) + overlap;
@@ -49,7 +51,8 @@ public class RenderLighting : MonoBehaviour
 
         ccl = GetComponent<CalculateColorLighting>();
         ccl.lightingPosition = new Vector2Int((int)transform.position.x, (int)transform.position.y);
-        ccl.blockMap = wg.blockMap;
+        ccl.fgblockMap = wg.fgblockMap;
+        ccl.mgblockMap = wg.mgblockMap;
         ccl.StartLighting(frameSize, wg, ambientColor, lightRadius, airDropoff, blockDropoff, lowestLightLevel);
     }
 
@@ -105,24 +108,30 @@ public class RenderLighting : MonoBehaviour
 
     void Update()
     {
-        theoreticalPosition = new Vector2Int((int)cam.transform.position.x - size.x / 2, (int)cam.transform.position.y - size.y / 2);
         //theoreticalPosition = new Vector2Int((int)transform.position.x,(int)transform.position.y);
         if (ccl.drawTiles)
         {
             //print(sw.ElapsedMilliseconds);
             sw.Reset();
 
-            if (transform.position != new Vector3(theoreticalPosition.x, theoreticalPosition.y) && ccl.lightingPosition == theoreticalPosition)
-            {
-                transform.position = new Vector3(theoreticalPosition.x, theoreticalPosition.y);
-            }
 
             if (ccl.lightingPosition == theoreticalPosition)
             {
                 UpdateTexture(ccl.pixels);
             }
+
+            if (transform.position != new Vector3(theoreticalPosition.x, theoreticalPosition.y) && ccl.lightingPosition == theoreticalPosition)
+            {
+                transform.position = new Vector3(theoreticalPosition.x, theoreticalPosition.y);
+            }
+
+            theoreticalPosition = new Vector2Int((int)cam.transform.position.x - size.x / 2, (int)cam.transform.position.y - size.y / 2);
+            //var fps = (Time.frameCount / Time.time);
+            //theoreticalPosition = new Vector2Int((int)(transform.position.x + (playerRB.velocity.x / fps)), (int)(transform.position.y + (playerRB.velocity.y / fps)));
+            //print(theoreticalPosition);
             ccl.lightingPosition = theoreticalPosition;
-            ccl.blockMap = wg.blockMap;
+            ccl.fgblockMap = wg.fgblockMap;
+            ccl.mgblockMap = wg.mgblockMap;
             ccl.drawTiles = false;
             sw.Start();
         }

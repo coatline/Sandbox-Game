@@ -48,7 +48,8 @@ public class CalculateColorLighting : MonoBehaviour
     //TODO: maybe use alpha of this array to depict whether or not it will emit light for a nice memory saving
     Color[,] lightValues;
     byte[,] toEmit;
-    public byte[,] blockMap;
+    public byte[,] fgblockMap;
+    public byte[,] mgblockMap;
 
     public Vector2Int lightingPosition;
     Thread lightingThread;
@@ -103,33 +104,33 @@ public class CalculateColorLighting : MonoBehaviour
                 lightValues[x, y] = Color.black;
                 toEmit[x, y] = 0;
 
-                byte tile = blockMap[worldX, worldY];
+                byte fgtile = fgblockMap[worldX, worldY];
+                byte mgtile = mgblockMap[worldX, worldY];
 
-                switch (tile)
+                if (fgtile == 0 && worldY > wg.highestTiles[worldX] - wg.caveStartingOffset)
                 {
-                    case 0:
-                        if (worldY > wg.highestTiles[worldX] - wg.caveStartingOffset)
-                        {
-                            lightValues[x, y] = ambientColor;
-                            toEmit[x, y] = 2;
-                        }
-                        break;
-                    case 6:
-                        lightValues[x, y] = Color.red;
-                        toEmit[x, y] = 1;
-                        break;
-                    case 7:
-                        lightValues[x, y] = Color.green;
-                        toEmit[x, y] = 1;
-                        break;
-                    case 8:
-                        lightValues[x, y] = Color.blue;
-                        toEmit[x, y] = 1;
-                        break;
-                    case 9:
-                        lightValues[x, y] = new Color(1f, .8f, .4f);
-                        toEmit[x, y] = 1;
-                        break;
+                    lightValues[x, y] = ambientColor;
+                    toEmit[x, y] = 2;
+                }
+                else if (mgtile == 1)
+                {
+                    lightValues[x, y] = Color.red;
+                    toEmit[x, y] = 1;
+                }
+                else if (mgtile == 2)
+                {
+                    lightValues[x, y] = Color.green;
+                    toEmit[x, y] = 1;
+                }
+                else if (mgtile == 3)
+                {
+                    lightValues[x, y] = Color.blue;
+                    toEmit[x, y] = 1;
+                }
+                else if (mgtile == 4)
+                {
+                    lightValues[x, y] = Color.white;
+                    toEmit[x, y] = 1;
                 }
             }
         }
@@ -146,26 +147,6 @@ public class CalculateColorLighting : MonoBehaviour
         }
     }
 
-    //Temporary
-    Color ColorFromBlockType(byte blocktype)
-    {
-        switch (blocktype)
-        {
-            case 0:
-                return ambientColor;
-            case 6:
-                return Color.blue;
-            case 7:
-                return Color.red;
-            case 8:
-                return Color.green;
-            case 9:
-                return new Color(1, .9f, .9f);
-        }
-
-        return Color.black;
-    }
-
     Color[,] singleLightEmission;
     List<int[]> lightFillQueue = new List<int[]>();
 
@@ -173,7 +154,7 @@ public class CalculateColorLighting : MonoBehaviour
     {
         if (toEmit[rootX, rootY] == 2)
         {
-            int skys=0;
+            int skys = 0;
 
             for (int nx = rootX - 1; nx <= rootX + 1; nx++)
             {
@@ -189,7 +170,7 @@ public class CalculateColorLighting : MonoBehaviour
             }
 
             //9 because it counts itself
-            if(skys >= 9)
+            if (skys >= 9)
             {
                 return;
             }
@@ -248,7 +229,7 @@ public class CalculateColorLighting : MonoBehaviour
                     {
                         float dropOff = 0;
 
-                        if (blockMap[worldPosX, worldPosY] == 0)
+                        if (fgblockMap[worldPosX, worldPosY] == 0)
                         {
                             dropOff = (nx != x && ny != y) ? airDiagonalDropOff : airDropoff;
                         }

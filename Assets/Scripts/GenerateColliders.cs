@@ -5,6 +5,7 @@ using UnityEngine.Tilemaps;
 
 public class GenerateColliders : MonoBehaviour
 {
+    [SerializeField] int tilemapLayer;
     [SerializeField] WorldGenerator wg;
     [SerializeField] int checkWidth;
     [SerializeField] int checkHeight;
@@ -19,6 +20,7 @@ public class GenerateColliders : MonoBehaviour
         var g = new GameObject($"{gameObject.name} Surrounding Collision");
         var masterGob = GameObject.Find("Tilemap Collision").transform;
         g.transform.SetParent(masterGob);
+        g.layer = tilemapLayer;
 
         for (int x = 0; x < checkWidth; x++)
         {
@@ -30,12 +32,6 @@ public class GenerateColliders : MonoBehaviour
             }
         }
     }
-    // 0 1 2 3
-
-    // o o o o   3
-    // o o o o   2
-    // o o o o   1
-    // o o o o   0
 
     Vector3 previousPosition;
 
@@ -52,7 +48,7 @@ public class GenerateColliders : MonoBehaviour
             {
                 if (checkPosX + x >= wg.worldWidth || checkPosY + y >= wg.worldHeight || checkPosX < 0 || checkPosY < 0) { continue; }
 
-                if (wg.blockMap[checkPosX + x, checkPosY + y] != 0)
+                if (wg.fgblockMap[checkPosX + x, checkPosY + y] != 0)
                 {
                     colliders[x, y].offset = new Vector2(checkPosX + x + .5f, checkPosY + y + .5f);
                     colliders[x, y].enabled = true;

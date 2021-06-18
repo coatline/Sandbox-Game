@@ -293,7 +293,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: -1
+  m_SortingOrder: -2
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -359,27 +359,27 @@ Tilemap:
   m_TileMatrixArray:
   - m_RefCount: 0
     m_Data:
-      e00: 2.5244127e-29
-      e01: 1.3738671e+38
-      e02: 1.3737779e+38
-      e03: 1.3737779e+38
-      e10: 4.39e-43
-      e11: 7.7e-44
-      e12: 7.7e-44
-      e13: 7.7e-44
-      e20: -0.000000007731288
-      e21: 3.7664026e+19
-      e22: -0.0000000020216735
-      e23: 3.7664026e+19
-      e30: 4.5905e-41
-      e31: 4.4e-43
-      e32: 4.37e-43
-      e33: 4.4e-43
+      e00: 4.6567195e-10
+      e01: -1.2892563e+22
+      e02: -1.2891572e+22
+      e03: -1.2891572e+22
+      e10: 7.6e-43
+      e11: 1.47e-43
+      e12: 1.47e-43
+      e13: 1.47e-43
+      e20: -1.0305682e-27
+      e21: 1.6786267e+29
+      e22: -4.57671e+10
+      e23: 1.6786267e+29
+      e30: 4.5904e-41
+      e31: 7.61e-43
+      e32: 7.58e-43
+      e33: 7.61e-43
   m_TileColorArray:
   - m_RefCount: 0
     m_Data: {r: 3.7662478e+19, g: 3.7662478e+19, b: 3.7662478e+19, a: 3.7662478e+19}
   - m_RefCount: 0
-    m_Data: {r: 3.7662478e+19, g: 3.7662478e+19, b: 3.7662478e+19, a: 3.7662478e+19}
+    m_Data: {r: 1.6784877e+29, g: 1.6784877e+29, b: 1.6784877e+29, a: 1.6784877e+29}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -463,7 +463,7 @@ GameObject:
   - component: {fileID: 377442535}
   - component: {fileID: 377442537}
   m_Layer: 3
-  m_Name: BlockTilemap
+  m_Name: Foreground Tilemap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1157,7 +1157,7 @@ MonoBehaviour:
   topRightBarrier: {fileID: 0}
   followObject: {fileID: 0}
   cameraSizeInUnits: {x: 0, y: 0}
-  speed: 1
+  speed: 0.35
 --- !u!114 &677809622
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1483,18 +1483,18 @@ MonoBehaviour:
   treeStumpBL: {fileID: 11400000, guid: 4b570429091c27c4aacde16b4b20333b, type: 2}
   treeStumpBR: {fileID: 11400000, guid: 0eb357a0f2cbdb54bad33c6208009ce7, type: 2}
   treeStumpM: {fileID: 11400000, guid: 7cfdd985970046f48b201f84e8ed0c2c, type: 2}
-  treeTrunk: {fileID: 11400000, guid: 11d019861782c374a8d65a00a82aa4e3, type: 2}
-  treeLeaves: {fileID: 11400000, guid: e0b1e2bb460b30e408dda981838fd6ca, type: 2}
-  worldWidth: 635
-  worldHeight: 339
+  treeTrunk: {fileID: 11400000, guid: 2b35b1cbecd69894ab3fb6bf17343a1a, type: 2}
+  treeLeaves: {fileID: 11400000, guid: 3be0def2792228e46a95448c7646e16a, type: 2}
+  worldWidth: 147
+  worldHeight: 419
   chunkSize: 3
   stoneStartOffset: 22
   sprinkleStoneStartOffset: 6
   usePerlinCaves: 0
   caveStartingOffset: 14
-  smoothIterations: 2
-  caveSize: 0.293
-  perlinCaveScale: 1.16
+  smoothIterations: 3
+  caveSize: 0.46
+  perlinCaveScale: 0.67
   terrainScale: 0.28
   flowerScale: 11.51
   maxTerrainHeight: 0
@@ -1510,8 +1510,9 @@ MonoBehaviour:
   blueTorch: {fileID: 11400000, guid: 166cacecc9f64d04489adcef5b925074, type: 2}
   redTorch: {fileID: 11400000, guid: d5b5906956ca7fb43aa3e5ef68451fe1, type: 2}
   greenTorch: {fileID: 11400000, guid: c033984d78d97984e97e20cf504ccc96, type: 2}
-  redFlowerTile: {fileID: 11400000, guid: 5383eb6c45c3f4b4cb89e63af399792b, type: 2}
-  yellowFlowerTile: {fileID: 11400000, guid: ae8fa73801d6e854f9cc382a01b587e1, type: 2}
+  dirtWall: {fileID: 11400000, guid: 2726a597905a11a4d9833a1fb68a1040, type: 2}
+  redFlowerTile: {fileID: 0}
+  yellowFlowerTile: {fileID: 0}
   playerPrefab: {fileID: -5950935772551705473, guid: 67cd9c87b486eab43993994b379cee81, type: 3}
   excessChunksToLoad: 1
   chanceForTreeToSpawn: 35.6
@@ -1842,7 +1843,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1882188972}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Tilemap Collision
   m_TagString: Untagged
   m_Icon: {fileID: 0}

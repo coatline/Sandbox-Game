@@ -35,7 +35,7 @@ SpriteAtlas:
       m_ForceMaximumCompressionQuality_BC6H_BC7: 0
     packingSettings:
       serializedVersion: 2
-      padding: 8
+      padding: 2
       blockOffset: 1
       allowAlphaSplitting: 0
       enableRotation: 1
@@ -46,7 +46,8 @@ SpriteAtlas:
     - {fileID: 2800000, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
     - {fileID: 2800000, guid: 190c018e56eca1a4e9b7dd8bf7a3e1d7, type: 3}
     - {fileID: 2800000, guid: 751a1cf3d62041e40ba2b96144981d8e, type: 3}
-    totalSpriteSurfaceArea: 34780
+    - {fileID: 2800000, guid: 485f797898a5f124496213bf29f036e2, type: 3}
+    totalSpriteSurfaceArea: 38900
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -123,6 +124,15 @@ SpriteAtlas:
   - {fileID: -3848607359157971786, guid: 751a1cf3d62041e40ba2b96144981d8e, type: 3}
   - {fileID: -7732646127817180950, guid: 751a1cf3d62041e40ba2b96144981d8e, type: 3}
   - {fileID: -4361036692186904357, guid: 751a1cf3d62041e40ba2b96144981d8e, type: 3}
+  - {fileID: -1989014740681875431, guid: 485f797898a5f124496213bf29f036e2, type: 3}
+  - {fileID: 5893691185103039832, guid: 485f797898a5f124496213bf29f036e2, type: 3}
+  - {fileID: 5483107121102818559, guid: 485f797898a5f124496213bf29f036e2, type: 3}
+  - {fileID: -7113129698204456251, guid: 485f797898a5f124496213bf29f036e2, type: 3}
+  - {fileID: -8774106452710243035, guid: 485f797898a5f124496213bf29f036e2, type: 3}
+  - {fileID: -6081920858734340774, guid: 485f797898a5f124496213bf29f036e2, type: 3}
+  - {fileID: -6388813999908634964, guid: 485f797898a5f124496213bf29f036e2, type: 3}
+  - {fileID: 541202014767282554, guid: 485f797898a5f124496213bf29f036e2, type: 3}
+  - {fileID: -3253162148095063232, guid: 485f797898a5f124496213bf29f036e2, type: 3}
   - {fileID: -868545436960593577, guid: 190c018e56eca1a4e9b7dd8bf7a3e1d7, type: 3}
   - {fileID: -1221980198292938105, guid: 190c018e56eca1a4e9b7dd8bf7a3e1d7, type: 3}
   - {fileID: 262377995717193040, guid: 190c018e56eca1a4e9b7dd8bf7a3e1d7, type: 3}
@@ -242,6 +252,15 @@ SpriteAtlas:
   - StoneBlocks_31
   - StoneBlocks_38
   - StoneBlocks_39
+  - DirtBackground_1
+  - DirtBackground_0
+  - DirtBackground_3
+  - DirtBackground_2
+  - DirtBackground_5
+  - DirtBackground_4
+  - DirtBackground_7
+  - DirtBackground_6
+  - DirtBackground_8
   - DirtBlocks_38
   - DirtBlocks_39
   - DirtBlocks_30

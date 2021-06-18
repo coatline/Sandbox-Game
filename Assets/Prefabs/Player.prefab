@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 3024590363601915477}
   - component: {fileID: 6019829296876984046}
   - component: {fileID: -5140171676514247021}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -49,14 +49,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03a21c1723a34134e9cff7b07bd60f86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 28.8
+  movementSpeed: 50
   jumpForce: 10.9
   jumpTime: 0.4
   fallingSpeedCap: 29.8
   feetPosition: {fileID: 8005720686574745082}
-  defaultLayer:
+  groundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   reach: 112.29
   backgroundTilemap: {fileID: 0}
   blockTilemap: {fileID: 0}
@@ -72,6 +72,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 145a39c03fa550f4ca1ed39f0785ead8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tilemapLayer: 3
   wg: {fileID: 0}
   checkWidth: 5
   checkHeight: 5
@@ -191,7 +192,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8005720686574745082}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: FeetPosition
   m_TagString: Untagged
   m_Icon: {fileID: 0}

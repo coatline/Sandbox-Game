@@ -48,7 +48,7 @@ public class Player : MonoBehaviour
         }
     }
 
-    byte currentblocktype=6;
+    byte currentblocktype = 1;
     bool placingTorch = false;
 
     void Update()
@@ -69,19 +69,19 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            currentblocktype = 6;
+            currentblocktype = 1;
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            currentblocktype = 7;
+            currentblocktype = 2;
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            currentblocktype = 8;
+            currentblocktype = 3;
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            currentblocktype = 9;
+            currentblocktype = 4;
         }
 
         if (Input.GetMouseButton(0))
@@ -93,9 +93,16 @@ public class Player : MonoBehaviour
                 Vector2Int blockPosition = new Vector2Int((int)mousePosition.x, (int)mousePosition.y);
 
                 //why do i do this check?
-                if (blockTilemap.GetTile(new Vector3Int(blockPosition.x, blockPosition.y, 0)) != null)
+                //if (blockTilemap.GetTile(new Vector3Int(blockPosition.x, blockPosition.y, 0)) != null)
                 {
-                    wg.ModifyBlock(blockPosition.x, blockPosition.y, 0);
+                    if (wg.fgblockMap[blockPosition.x, blockPosition.y] == 0)
+                    {
+                        wg.ModifyBlockmg(blockPosition.x, blockPosition.y, 0);
+                    }
+                    else
+                    {
+                        wg.ModifyBlockfg(blockPosition.x, blockPosition.y, 0);
+                    }
                 }
             }
         }
@@ -109,13 +116,13 @@ public class Player : MonoBehaviour
 
                 if (placingTorch)
                 {
-                    wg.ModifyBlock(blockPosition.x, blockPosition.y, currentblocktype);
+                    wg.ModifyBlockmg(blockPosition.x, blockPosition.y, currentblocktype);
                 }
                 else
                 {
                     //if (Vector2.Distance(blockPosition, transform.position) > .8f && CanPlace(0, new Vector3Int(blockPosition.x, blockPosition.y, 0)))
                     {
-                        wg.ModifyBlock(blockPosition.x, blockPosition.y,2);
+                        wg.ModifyBlockfg(blockPosition.x, blockPosition.y, 2);
                     }
                 }
             }
@@ -127,23 +134,23 @@ public class Player : MonoBehaviour
     //0-1-2
     bool CanPlace(int depth, Vector3Int pos)
     {
-        var air =0;
+        var air = 0;
 
-        if (depth == 0 && wg.blockMap[pos.x, pos.y] == air)
+        if (depth == 0 && wg.fgblockMap[pos.x, pos.y] == air)
         {
-            if (wg.blockMap[pos.x + 1, pos.y] != air)
+            if (wg.fgblockMap[pos.x + 1, pos.y] != air)
             {
                 return true;
             }
-            else if (wg.blockMap[pos.x - 1, pos.y] != air)
+            else if (wg.fgblockMap[pos.x - 1, pos.y] != air)
             {
                 return true;
             }
-            else if (wg.blockMap[pos.x, pos.y - 1] != air)
+            else if (wg.fgblockMap[pos.x, pos.y - 1] != air)
             {
                 return true;
             }
-            else if (wg.blockMap[pos.x, pos.y + 1] != air)
+            else if (wg.fgblockMap[pos.x, pos.y + 1] != air)
             {
                 return true;
             }
