@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-[CreateAssetMenu(fileName = "New Armor", menuName = "Armor")]
-
-public class ArmorData : ScriptableObject
+[System.Serializable]
+public class ArmorData
 {
     public int defenseValue;
     public Buff fullSetBonus;

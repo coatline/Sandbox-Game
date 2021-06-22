@@ -5,7 +5,7 @@ using UnityEngine.Tilemaps;
 
 public class Chunk
 {
-    public Vector2Int topLeftBlock;
+    public Vector2Int bottomLeftBlock;
     public Vector3Int[] positions;
     public TileBase[] nullTiles;
     public TileBase[] fgtiles;
@@ -16,7 +16,7 @@ public class Chunk
 
     public Chunk(Vector2Int topLeftBlock, Vector3Int[] positions, TileBase[] fgtiles, TileBase[] mgtiles, TileBase[] bgtiles, TileBase[] nullTiles)
     {
-        this.topLeftBlock = topLeftBlock;
+        this.bottomLeftBlock = topLeftBlock;
         this.positions = positions;
         this.nullTiles = nullTiles;
         this.fgtiles = fgtiles;

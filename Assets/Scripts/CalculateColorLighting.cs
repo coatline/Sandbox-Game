@@ -48,15 +48,18 @@ public class CalculateColorLighting : MonoBehaviour
     //TODO: maybe use alpha of this array to depict whether or not it will emit light for a nice memory saving
     Color[,] lightValues;
     byte[,] toEmit;
-    public byte[,] fgblockMap;
-    public byte[,] mgblockMap;
+    //public byte[,] fgblockMap;
+    //public byte[,] mgblockMap;
 
     public Vector2Int lightingPosition;
     Thread lightingThread;
 
     private void OnApplicationQuit()
     {
-        lightingThread.Abort();
+        if (lightingThread != null && lightingThread.IsAlive)
+        {
+            lightingThread.Abort();
+        }
     }
 
     public void Run()
@@ -104,8 +107,8 @@ public class CalculateColorLighting : MonoBehaviour
                 lightValues[x, y] = Color.black;
                 toEmit[x, y] = 0;
 
-                byte fgtile = fgblockMap[worldX, worldY];
-                byte mgtile = mgblockMap[worldX, worldY];
+                short fgtile = wg.fgblockMap[worldX, worldY];
+                short mgtile = wg.mgblockMap[worldX, worldY];
 
                 if (fgtile == 0 && worldY > wg.highestTiles[worldX] - wg.caveStartingOffset)
                 {
@@ -229,7 +232,7 @@ public class CalculateColorLighting : MonoBehaviour
                     {
                         float dropOff = 0;
 
-                        if (fgblockMap[worldPosX, worldPosY] == 0)
+                        if (wg.fgblockMap[worldPosX, worldPosY] == 0)
                         {
                             dropOff = (nx != x && ny != y) ? airDiagonalDropOff : airDropoff;
                         }

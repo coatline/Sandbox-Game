@@ -149,8 +149,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 45929522}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 133.9, y: -22.9, z: 0}
-  m_LocalScale: {x: 1.75, y: 2.64, z: 1}
+  m_LocalPosition: {x: 133.9, y: -18.5, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 532838313}
   m_RootOrder: 0
@@ -200,7 +200,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
-  m_Size: {x: 84.548386, y: 4.22}
+  m_Size: {x: 150, y: 8.3}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -218,8 +218,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6b43f81bd168774a99e0b4a5777f7b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parallaxEffectMultiplier: {x: 0.1, y: 0.1}
-  infiniteHorizontal: 0
+  parallaxEffectMultiplier: {x: 0.75, y: 0.3}
+  infiniteHorizontal: 1
   infiniteVertical: 0
   wg: {fileID: 1338082158}
 --- !u!1 &132104296
@@ -769,7 +769,57 @@ Tilemap:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 439862292}
   m_Enabled: 1
-  m_Tiles: {}
+  m_Tiles:
+  - first: {x: 471, y: 23, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 7
+      m_TileSpriteIndex: 9
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 1
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741826
+  - first: {x: 472, y: 23, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 9
+      m_TileSpriteIndex: 7
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741827
+  - first: {x: 473, y: 23, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 8
+      m_TileSpriteIndex: 10
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 1
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741826
+  - first: {x: 474, y: 23, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 9
+      m_TileSpriteIndex: 7
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741827
+  - first: {x: 472, y: 24, z: 0}
+    second:
+      serializedVersion: 2
+      m_TileIndex: 9
+      m_TileSpriteIndex: 7
+      m_TileMatrixIndex: 0
+      m_TileColorIndex: 0
+      m_TileObjectToInstantiateIndex: 65535
+      dummyAlignment: 0
+      m_AllTileFlags: 1073741827
   m_AnimatedTiles: {}
   m_TileAssetArray:
   - m_RefCount: 0
@@ -786,12 +836,12 @@ Tilemap:
     m_Data: {fileID: 0}
   - m_RefCount: 0
     m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
+  - m_RefCount: 1
+    m_Data: {fileID: 11400000, guid: 7c987820706287c44b1605d8d4264252, type: 2}
+  - m_RefCount: 1
+    m_Data: {fileID: 11400000, guid: 0eb357a0f2cbdb54bad33c6208009ce7, type: 2}
+  - m_RefCount: 3
+    m_Data: {fileID: 1437676432}
   m_TileSpriteArray:
   - m_RefCount: 0
     m_Data: {fileID: 0}
@@ -807,38 +857,38 @@ Tilemap:
     m_Data: {fileID: 0}
   - m_RefCount: 0
     m_Data: {fileID: 0}
+  - m_RefCount: 3
+    m_Data: {fileID: 865567405}
   - m_RefCount: 0
     m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
-  - m_RefCount: 0
-    m_Data: {fileID: 0}
+  - m_RefCount: 1
+    m_Data: {fileID: 848483762394598852, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
+  - m_RefCount: 1
+    m_Data: {fileID: 1775686116614827342, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
   m_TileMatrixArray:
-  - m_RefCount: 0
+  - m_RefCount: 5
     m_Data:
-      e00: 2.5244127e-29
-      e01: 1.3738671e+38
-      e02: 1.3737779e+38
-      e03: 1.3737779e+38
-      e10: 4.39e-43
-      e11: 7.7e-44
-      e12: 7.7e-44
-      e13: 7.7e-44
-      e20: -0.000000007731288
-      e21: 3.7664026e+19
-      e22: -0.0000000020216735
-      e23: 3.7664026e+19
-      e30: 4.5905e-41
-      e31: 4.4e-43
-      e32: 4.37e-43
-      e33: 4.4e-43
+      e00: 1
+      e01: 0
+      e02: 0
+      e03: 0
+      e10: 0
+      e11: 1
+      e12: 0
+      e13: 0
+      e20: 0
+      e21: 0
+      e22: 1
+      e23: 0
+      e30: 0
+      e31: 0
+      e32: 0
+      e33: 1
   m_TileColorArray:
-  - m_RefCount: 0
-    m_Data: {r: 3.7662478e+19, g: 3.7662478e+19, b: 3.7662478e+19, a: 3.7662478e+19}
-  - m_RefCount: 0
-    m_Data: {r: 3.7662478e+19, g: 3.7662478e+19, b: 3.7662478e+19, a: 3.7662478e+19}
+  - m_RefCount: 3
+    m_Data: {r: 0.80231625, g: 0.340032, b: 0.3806609, a: 1}
+  - m_RefCount: 2
+    m_Data: {r: 1, g: 1, b: 1, a: 1}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -898,7 +948,7 @@ MonoBehaviour:
   GraphScale: 9
   ShowGcCollectedAmount: 1
   DisableVsync: 1
-  ActivatedOnF2: 1
+  ActivatedOnF2: 0
   ChooseTargetFrameRate: 1
 --- !u!4 &501986359
 Transform:
@@ -929,7 +979,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &532838313
 Transform:
   m_ObjectHideFlags: 0
@@ -1157,6 +1207,7 @@ MonoBehaviour:
   topRightBarrier: {fileID: 0}
   followObject: {fileID: 0}
   cameraSizeInUnits: {x: 0, y: 0}
+  movement: {x: 0, y: 0, z: 0}
   speed: 0.35
 --- !u!114 &677809622
 MonoBehaviour:
@@ -1203,6 +1254,216 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shaderMaterial: {fileID: 2100000, guid: d32201e35a5593d4c95d63b7b1f5a255, type: 2}
+--- !u!213 &865567405
+Sprite:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  m_Rect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 4
+    height: 4
+  m_Offset: {x: 0, y: 0}
+  m_Border: {x: 0, y: 0, z: 0, w: 0}
+  m_PixelsToUnits: 4
+  m_Pivot: {x: 0.5, y: 0.5}
+  m_Extrude: 0
+  m_IsPolygon: 0
+  m_AtlasName: 
+  m_PackingTag: 
+  m_RenderDataKey:
+    00000000000000000000000000000000: 0
+  m_AtlasTags: []
+  m_SpriteAtlas: {fileID: 0}
+  m_RD:
+    serializedVersion: 3
+    texture: {fileID: 0}
+    alphaTexture: {fileID: 0}
+    secondaryTextures: []
+    m_SubMeshes:
+    - serializedVersion: 2
+      firstByte: 0
+      indexCount: 6
+      topology: 0
+      baseVertex: 0
+      firstVertex: 0
+      vertexCount: 4
+      localAABB:
+        m_Center: {x: 0, y: 0, z: 0}
+        m_Extent: {x: 0, y: 0, z: 0}
+    m_IndexBuffer: 000001000200020001000300
+    m_VertexData:
+      serializedVersion: 3
+      m_VertexCount: 4
+      m_Channels:
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 3
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 1
+        offset: 0
+        format: 0
+        dimension: 2
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      m_DataSize: 80
+      _typelessdata: 000000bf0000003f000000000000003f0000003f00000000000000bf000000bf000000000000003f000000bf00000000000000000000803f0000803f0000803f00000000000000000000803f00000000
+    m_Bindpose: []
+    textureRect:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 4
+      height: 4
+    textureRectOffset: {x: 0, y: 0}
+    atlasRectOffset: {x: -1, y: -1}
+    settingsRaw: 64
+    uvTransform: {x: 4, y: 2, z: 4, w: 2}
+    downscaleMultiplier: 1
+  m_AtlasRD:
+    serializedVersion: 3
+    texture: {fileID: 0}
+    alphaTexture: {fileID: 0}
+    secondaryTextures: []
+    m_SubMeshes:
+    - serializedVersion: 2
+      firstByte: 0
+      indexCount: 6
+      topology: 0
+      baseVertex: 0
+      firstVertex: 0
+      vertexCount: 4
+      localAABB:
+        m_Center: {x: 0, y: 0, z: 0}
+        m_Extent: {x: 0, y: 0, z: 0}
+    m_IndexBuffer: 000001000200020001000300
+    m_VertexData:
+      serializedVersion: 3
+      m_VertexCount: 4
+      m_Channels:
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 3
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 1
+        offset: 0
+        format: 0
+        dimension: 2
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      - stream: 0
+        offset: 0
+        format: 0
+        dimension: 0
+      m_DataSize: 80
+      _typelessdata: 000000bf0000003f000000000000003f0000003f00000000000000bf000000bf000000000000003f000000bf00000000000000000000803f0000803f0000803f00000000000000000000803f00000000
+    m_Bindpose: []
+    textureRect:
+      serializedVersion: 2
+      x: 0
+      y: 0
+      width: 4
+      height: 4
+    textureRectOffset: {x: 0, y: 0}
+    atlasRectOffset: {x: -1, y: -1}
+    settingsRaw: 64
+    uvTransform: {x: 4, y: 2, z: 4, w: 2}
+    downscaleMultiplier: 1
+  m_PhysicsShape: []
+  m_Bones: []
+  m_SpriteID: 
 --- !u!1 &973740080
 GameObject:
   m_ObjectHideFlags: 0
@@ -1460,6 +1721,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1338082159}
+  - component: {fileID: 1338082160}
   - component: {fileID: 1338082158}
   m_Layer: 0
   m_Name: WorldGenerator
@@ -1480,13 +1742,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6c9201951fd7c74f9556c982fac3112, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  treeStumpBL: {fileID: 11400000, guid: 4b570429091c27c4aacde16b4b20333b, type: 2}
-  treeStumpBR: {fileID: 11400000, guid: 0eb357a0f2cbdb54bad33c6208009ce7, type: 2}
-  treeStumpM: {fileID: 11400000, guid: 7cfdd985970046f48b201f84e8ed0c2c, type: 2}
-  treeTrunk: {fileID: 11400000, guid: 2b35b1cbecd69894ab3fb6bf17343a1a, type: 2}
-  treeLeaves: {fileID: 11400000, guid: 3be0def2792228e46a95448c7646e16a, type: 2}
-  worldWidth: 147
-  worldHeight: 419
+  worldWidth: 200
+  worldHeight: 100
   chunkSize: 3
   stoneStartOffset: 22
   sprinkleStoneStartOffset: 6
@@ -1498,22 +1755,17 @@ MonoBehaviour:
   terrainScale: 0.28
   flowerScale: 11.51
   maxTerrainHeight: 0
-  displayChunks: 0
+  displayChunks: 1
   fillInWorld: 0
-  blockTilemap: {fileID: 377442536}
+  foregroundTilemap: {fileID: 377442536}
   midgroundTilemap: {fileID: 439862296}
   backgroundTilemap: {fileID: 132104300}
-  grassTile: {fileID: 11400000, guid: f03d12f5953c8b546ad5345d300b3417, type: 2}
-  dirtTile: {fileID: 11400000, guid: 115deafa0355eaa46bf3534e919c8da6, type: 2}
-  stoneTile: {fileID: 11400000, guid: ef106a8a704b97945b869e875e254e56, type: 2}
-  torch: {fileID: 11400000, guid: 27b5d93433100b84987c98a2de5d235b, type: 2}
-  blueTorch: {fileID: 11400000, guid: 166cacecc9f64d04489adcef5b925074, type: 2}
-  redTorch: {fileID: 11400000, guid: d5b5906956ca7fb43aa3e5ef68451fe1, type: 2}
-  greenTorch: {fileID: 11400000, guid: c033984d78d97984e97e20cf504ccc96, type: 2}
-  dirtWall: {fileID: 11400000, guid: 2726a597905a11a4d9833a1fb68a1040, type: 2}
-  redFlowerTile: {fileID: 0}
-  yellowFlowerTile: {fileID: 0}
   playerPrefab: {fileID: -5950935772551705473, guid: 67cd9c87b486eab43993994b379cee81, type: 3}
+  itemData:
+  - {fileID: 11400000, guid: 09d7db0c7ee9c094caa07c4599cf04bd, type: 2}
+  - {fileID: 11400000, guid: 65a52429fc4ed7c4cb8c92774a532458, type: 2}
+  - {fileID: 11400000, guid: c7decb64c4d48f04b912d806d3c2e203, type: 2}
+  - {fileID: 11400000, guid: eba0309c6449f014e8a5973336c6d40a, type: 2}
   excessChunksToLoad: 1
   chanceForTreeToSpawn: 35.6
   maxTreeHeight: 20
@@ -1533,6 +1785,54 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1338082160
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1338082157}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1d0e69c022aaaa478de0a76fe10cd98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  offset: {x: 0, y: 0}
+  mapSize: {x: 0, y: 0}
+--- !u!114 &1437676432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Sprite: {fileID: 865567405}
+  m_Color: {r: 0.80231625, g: 0.340032, b: 0.3806609, a: 1}
+  m_Transform:
+    e00: 1
+    e01: 0
+    e02: 0
+    e03: 0
+    e10: 0
+    e11: 1
+    e12: 0
+    e13: 0
+    e20: 0
+    e21: 0
+    e22: 1
+    e23: 0
+    e30: 0
+    e31: 0
+    e32: 0
+    e33: 1
+  m_InstancedGameObject: {fileID: 0}
+  m_Flags: 3
+  m_ColliderType: 1
 --- !u!1 &1473898464
 GameObject:
   m_ObjectHideFlags: 0
@@ -1658,7 +1958,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21c961202eb7f2c42b5ee9a5ac464a71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  filterMode: 1
+  filterMode: 2
   lr: {fileID: 1473898469}
   overlap: {x: 10, y: 10}
   wg: {fileID: 1338082158}
@@ -1696,7 +1996,7 @@ Transform:
   m_GameObject: {fileID: 1578126800}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 146.9292, y: -3.800003, z: 0}
-  m_LocalScale: {x: 2.8, y: 5.04, z: 1}
+  m_LocalScale: {x: 1, y: 4, z: 1}
   m_Children: []
   m_Father: {fileID: 532838313}
   m_RootOrder: 2
@@ -1746,7 +2046,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
-  m_Size: {x: 74.52617, y: 10.8}
+  m_Size: {x: 150, y: 21.45}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -1764,7 +2064,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6b43f81bd168774a99e0b4a5777f7b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parallaxEffectMultiplier: {x: 0.05, y: 0.01}
+  parallaxEffectMultiplier: {x: 0.95, y: 0.8}
   infiniteHorizontal: 0
   infiniteVertical: 1
   wg: {fileID: 1338082158}
@@ -1890,8 +2190,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2051402017}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 160.9, y: -18.3, z: 0}
-  m_LocalScale: {x: 1.75, y: 2.64, z: 1}
+  m_LocalPosition: {x: 145.8, y: -13.3, z: 0}
+  m_LocalScale: {x: 1, y: 1.25, z: 1}
   m_Children: []
   m_Father: {fileID: 532838313}
   m_RootOrder: 1
@@ -1941,7 +2241,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
-  m_Size: {x: 66.70558, y: 5.71}
+  m_Size: {x: 250, y: 11.3}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -1959,7 +2259,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6b43f81bd168774a99e0b4a5777f7b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parallaxEffectMultiplier: {x: 0.03, y: 0.1}
-  infiniteHorizontal: 0
+  parallaxEffectMultiplier: {x: 0.85, y: 0.3}
+  infiniteHorizontal: 1
   infiniteVertical: 0
   wg: {fileID: 1338082158}

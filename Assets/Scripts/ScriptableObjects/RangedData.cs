@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-[CreateAssetMenu(fileName = "New RangedWeapon", menuName = "RangedWeapon")]
-
-public class RangedData : ScriptableObject
+[System.Serializable]
+public class RangedData
 {
     public int enemiesPassThroughCount;
     //public ;

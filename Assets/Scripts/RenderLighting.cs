@@ -51,8 +51,8 @@ public class RenderLighting : MonoBehaviour
 
         ccl = GetComponent<CalculateColorLighting>();
         ccl.lightingPosition = new Vector2Int((int)transform.position.x, (int)transform.position.y);
-        ccl.fgblockMap = wg.fgblockMap;
-        ccl.mgblockMap = wg.mgblockMap;
+        //ccl.fgblockMap = wg.fgblockMap;
+        //ccl.mgblockMap = wg.mgblockMap;
         ccl.StartLighting(frameSize, wg, ambientColor, lightRadius, airDropoff, blockDropoff, lowestLightLevel);
     }
 
@@ -126,12 +126,7 @@ public class RenderLighting : MonoBehaviour
             }
 
             theoreticalPosition = new Vector2Int((int)cam.transform.position.x - size.x / 2, (int)cam.transform.position.y - size.y / 2);
-            //var fps = (Time.frameCount / Time.time);
-            //theoreticalPosition = new Vector2Int((int)(transform.position.x + (playerRB.velocity.x / fps)), (int)(transform.position.y + (playerRB.velocity.y / fps)));
-            //print(theoreticalPosition);
             ccl.lightingPosition = theoreticalPosition;
-            ccl.fgblockMap = wg.fgblockMap;
-            ccl.mgblockMap = wg.mgblockMap;
             ccl.drawTiles = false;
             sw.Start();
         }

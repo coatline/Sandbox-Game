@@ -4,28 +4,8 @@ using UnityEngine.Tilemaps;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-//public enum BlockType
-//{
-//    air,
-//    grass,
-//    dirt,
-//    stone,
-//    wood,
-//    iron,
-//    redtorch,
-//    greentorch,
-//    bluetorch,
-//    torch
-//}
-
 public class WorldGenerator : MonoBehaviour
 {
-    [Header("Tree Tile References")]
-    [SerializeField] RuleTile treeStumpBL;
-    [SerializeField] RuleTile treeStumpBR;
-    [SerializeField] RuleTile treeStumpM;
-    [SerializeField] RuleTile treeTrunk;
-    [SerializeField] RuleTile treeLeaves;
     Camera mainCamera;
     Player player;
 
@@ -59,20 +39,11 @@ public class WorldGenerator : MonoBehaviour
     int terrainStartingHeight;
 
     [Header("References")]
-    [SerializeField] Tilemap blockTilemap;
+    [SerializeField] Tilemap foregroundTilemap;
     [SerializeField] Tilemap midgroundTilemap;
     [SerializeField] Tilemap backgroundTilemap;
-    [SerializeField] RuleTile grassTile;
-    [SerializeField] RuleTile dirtTile;
-    [SerializeField] RuleTile stoneTile;
-    [SerializeField] RuleTile torch;
-    [SerializeField] RuleTile blueTorch;
-    [SerializeField] RuleTile redTorch;
-    [SerializeField] RuleTile greenTorch;
-    [SerializeField] RuleTile dirtWall;
-    [SerializeField] RuleTile redFlowerTile;
-    [SerializeField] RuleTile yellowFlowerTile;
     [SerializeField] Player playerPrefab;
+    [SerializeField] List<ItemDataContainer> itemData;
 
     [Header("Settings")]
     [SerializeField] int excessChunksToLoad;
@@ -80,16 +51,20 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField] float chanceForTreeToSpawn;
     [Range(6, 20f)]
     [SerializeField] int maxTreeHeight;
-    int chunksOnX;
-    int chunksOnY;
 
     Vector3 viewDistance;
     Dictionary<Vector2Int, Chunk> chunks;
+    Dictionary<string, short> itemIDfromName;
+    [HideInInspector]
     public List<int> highestTiles;
-    //0air1grass2dirt3stone4wood5iron6redtorch7greentorch8bluetorch9torch
-    public byte[,] fgblockMap;
-    public byte[,] mgblockMap;
-    public byte[,] bgblockMap;
+    [HideInInspector]
+    public short[,] fgblockMap;
+    [HideInInspector]
+    public short[,] mgblockMap;
+    [HideInInspector]
+    public short[,] bgblockMap;
+    int chunksOnX;
+    int chunksOnY;
 
     void Awake()
     {
@@ -104,17 +79,22 @@ public class WorldGenerator : MonoBehaviour
         mainCamera = Camera.main;
 
         viewDistance = new Vector3((mainCamera.orthographicSize * mainCamera.aspect), mainCamera.orthographicSize, 0);
-        fgblockMap = new byte[worldWidth, worldHeight];
-        mgblockMap = new byte[worldWidth, worldHeight];
-        bgblockMap = new byte[worldWidth, worldHeight];
+        fgblockMap = new short[worldWidth, worldHeight];
+        mgblockMap = new short[worldWidth, worldHeight];
+        bgblockMap = new short[worldWidth, worldHeight];
 
         chunks = new Dictionary<Vector2Int, Chunk>();
         chunksToUnload = new List<Vector2Int>();
         highestTiles = new List<int>();
+        var cb = GetComponent<CreateBarrier>();
+        cb.offset = new Vector2(worldWidth / 2, worldHeight / 2);
+        cb.mapSize = new Vector2(worldWidth / 2, worldHeight / 2);
+
+        SetItemIDs();
 
         GenerateInitalTerrain();
 
-        GenerateTrees();
+        //GenerateTrees();
 
         //GenerateFlowers();
 
@@ -129,6 +109,17 @@ public class WorldGenerator : MonoBehaviour
         SpawnPlayer();
 
         InitializeWorld();
+    }
+
+    void SetItemIDs()
+    {
+        itemIDfromName = new Dictionary<string, short>();
+
+        for (short i = 0; i < itemData.Count; i++)
+        {
+            itemData[i].id = i;
+            itemIDfromName.Add(itemData[i]._name, i);
+        }
     }
 
     //Generate height map for terrain
@@ -155,25 +146,23 @@ public class WorldGenerator : MonoBehaviour
 
                 if (usePerlinCaves && (surfaceTerrainHeight + terrainStartingHeight) - y >= stoneStartOffset)
                 {
-                    fgblockMap[x, y] = 3;
+                    fgblockMap[x, y] = itemIDfromName["Stone"];
                 }
                 else
                 {
                     if ((surfaceTerrainHeight + terrainStartingHeight) - y > sprinkleStoneStartOffset && Random.Range(0, 3) == 0)
                     {
-                        fgblockMap[x, y] = 3;
+                        fgblockMap[x, y] = itemIDfromName["Stone"];
                     }
                     else
                     {
-                        //index out of array error
-
                         if (y == surfaceTerrainHeight + terrainStartingHeight)
                         {
-                            fgblockMap[x, y] = 1;
+                            fgblockMap[x, y] = itemIDfromName["Grass"];
                         }
                         else
                         {
-                            fgblockMap[x, y] = 2;
+                            fgblockMap[x, y] = itemIDfromName["Dirt"];
                         }
                     }
                 }
@@ -183,38 +172,32 @@ public class WorldGenerator : MonoBehaviour
 
     public bool blockModified;
 
-    public void ModifyBlockbg(int x, int y, byte blockType)
+    public void ModifyBlock(int x, int y, ItemDataContainer tileData)
     {
-        if (x >= worldWidth || x < 0 || y < 0 || y >= worldHeight) { return; }
-
-        //backgroundTilemap.SetTile(new Vector3Int(x, y, 0), bgTileFromBlockType(blockType));
-        bgblockMap[x, y] = blockType;
-        //chunks[WorldCoordinatesToNearestChunkCoordinate(new Vector2(x,y))].bgtiles[]
-    }
-
-    public void ModifyBlockmg(int x, int y, byte blockType)
-    {
-        if (x >= worldWidth || x < 0 || y < 0 || y >= worldHeight) { return; }
-
-        midgroundTilemap.SetTile(new Vector3Int(x, y, 0), mgTileFromBlockType(blockType));
-        mgblockMap[x, y] = blockType;
-    }
-
-    public void ModifyBlockfg(int x, int y, byte blockType)
-    {
-        if (x >= worldWidth || x < 0 || y < 0 || y >= worldHeight) { return; }
-
-        var belowBlock = new Vector3Int(x, y - 1, 0);
-
-        if (blockTilemap.GetTile(belowBlock) == grassTile)
-        {
-            blockTilemap.SetTile(belowBlock, dirtTile);
-            fgblockMap[belowBlock.x, belowBlock.y] = 2;
-        }
-
-        blockTilemap.SetTile(new Vector3Int(x, y, 0), fgTileFromBlockType(blockType));
-        fgblockMap[x, y] = blockType;
         blockModified = true;
+
+        switch (tileData.tileData.layer)
+        {
+            case WorldLayer.background:
+                bgblockMap[x, y] = tileData.id;
+                backgroundTilemap.SetTile(new Vector3Int(x, y, 0), tileData.tileData.tile);
+                chunks[WorldCoordinatesToNearestChunkCoordinates(new Vector2(x, y))].bgtiles[x + (y * chunkSize)] = tileData.tileData.tile;
+                break;
+            case WorldLayer.midground:
+                mgblockMap[x, y] = tileData.id;
+                midgroundTilemap.SetTile(new Vector3Int(x, y, 0), tileData.tileData.tile);
+                chunks[WorldCoordinatesToNearestChunkCoordinates(new Vector2(x, y))].mgtiles[x + (y * chunkSize)] = tileData.tileData.tile;
+                break;
+            case WorldLayer.foreground:
+                fgblockMap[x, y] = tileData.id;
+                foregroundTilemap.SetTile(new Vector3Int(x, y, 0), tileData.tileData.tile);
+                var chunkCoordinates = WorldCoordinatesToNearestChunkCoordinates(new Vector2(x, y));
+                var chunkWorldCoordinates = chunkCoordinates * new Vector2Int(chunkSize, chunkSize);
+                print(chunkWorldCoordinates);
+                print($"{x},{y}");
+                chunks[chunkCoordinates].fgtiles[(x - chunkWorldCoordinates.x) + ((y - chunkWorldCoordinates.y) * chunkSize)] = tileData.tileData.tile;
+                break;
+        }
     }
 
     void GenerateTrees()
@@ -229,7 +212,7 @@ public class WorldGenerator : MonoBehaviour
 
             if (Random.Range(0f, 100f) <= chanceForTreeToSpawn)
             {
-                int treeHeight = Random.Range(5, maxTreeHeight + 1);
+                int treeHeight = Random.Range(3, maxTreeHeight + 1);
                 bool spawnLeftStump = true;
                 bool spawnRightStump = true;
 
@@ -262,30 +245,31 @@ public class WorldGenerator : MonoBehaviour
         {
             if (i == 0)
             {
-                //treestumpM
-                mgblockMap[startingPosition.x, startingPosition.y] = 5;
+                if (!spawnLeftStump && !spawnRightStump)
+                {
+                    mgblockMap[startingPosition.x, startingPosition.y] = itemIDfromName["TreeTrunk"];
+                    continue;
+                }
+
+                mgblockMap[startingPosition.x, startingPosition.y] = itemIDfromName["TreeStump"];
 
                 if (spawnLeftStump)
                 {
-                    //treestumpBL
-                    mgblockMap[startingPosition.x - 1, startingPosition.y] = 6;
+                    mgblockMap[startingPosition.x - 1, startingPosition.y] = itemIDfromName["TreeStumpSide"];
                 }
 
                 if (spawnRightStump)
                 {
-                    //treestumpBR
-                    mgblockMap[startingPosition.x + 1, startingPosition.y] = 7;
+                    mgblockMap[startingPosition.x + 1, startingPosition.y] = itemIDfromName["TreeStumpSide"];
                 }
             }
             else if (treeHeight - i > 1)
             {
-                //treeTRUCNK
-                mgblockMap[startingPosition.x, startingPosition.y + i] = 8;
+                mgblockMap[startingPosition.x, startingPosition.y + i] = itemIDfromName["TreeTrunk"];
             }
             else
             {
-                //treeleaves
-                mgblockMap[startingPosition.x, startingPosition.y + i] = 9;
+                mgblockMap[startingPosition.x, startingPosition.y + i] = itemIDfromName["TreeTop"];
             }
 
         }
@@ -297,7 +281,7 @@ public class WorldGenerator : MonoBehaviour
 
         for (int x = 0; x < worldWidth; x++)
         {
-            if (blockTilemap.GetTile(new Vector3Int(x + 1, highestTiles[x], 0)) == null || blockTilemap.GetTile(new Vector3Int(x - 1, highestTiles[x], 0)) == null)
+            if (foregroundTilemap.GetTile(new Vector3Int(x + 1, highestTiles[x], 0)) == null || foregroundTilemap.GetTile(new Vector3Int(x - 1, highestTiles[x], 0)) == null)
             {
                 continue;
             }
@@ -307,15 +291,15 @@ public class WorldGenerator : MonoBehaviour
 
             if (Random.Range(0f, normalnoise) <= .02f)
             {
-                if (Random.Range(0, 2) == 0)
-                {
+                //if (Random.Range(0, 2) == 0)
+                //{
 
-                    midgroundTilemap.SetTile(new Vector3Int(x, highestTiles[x] + 1, 0), redFlowerTile);
-                }
-                else
-                {
-                    midgroundTilemap.SetTile(new Vector3Int(x, highestTiles[x] + 1, 0), yellowFlowerTile);
-                }
+                //    midgroundTilemap.SetTile(new Vector3Int(x, highestTiles[x] + 1, 0), redFlowerTile);
+                //}
+                //else
+                //{
+                //    midgroundTilemap.SetTile(new Vector3Int(x, highestTiles[x] + 1, 0), yellowFlowerTile);
+                //}
             }
         }
     }
@@ -333,10 +317,10 @@ public class WorldGenerator : MonoBehaviour
         topright.transform.SetParent(camerabarriers.transform);
         bottomleft.transform.SetParent(camerabarriers.transform);
 
-        player = Instantiate(playerPrefab, new Vector3(worldWidth / 2, highestTiles[worldWidth / 2] + 3, 0), Quaternion.identity);
+        player = Instantiate(playerPrefab, new Vector3(worldWidth / 2, highestTiles[worldWidth / 2] + 2, 0), Quaternion.identity);
         playerRb = player.GetComponent<Rigidbody2D>();
 
-        player.blockTilemap = blockTilemap;
+        player.blockTilemap = foregroundTilemap;
         player.backgroundTilemap = midgroundTilemap;
 
         var script = mainCamera.GetComponent<CameraFollowWithBarriers>();
@@ -364,13 +348,13 @@ public class WorldGenerator : MonoBehaviour
 
                 Vector2Int chunkPos = new Vector2Int(x, y);
                 if (!chunks.TryGetValue(chunkPos, out Chunk chunk)) { return; }
-                Vector3Int bottomRightBlock = new Vector3Int(chunks[chunkPos].topLeftBlock.x + chunkSize, chunks[chunkPos].topLeftBlock.y - chunkSize, 0);
-                Vector3Int topLeftBlock = new Vector3Int(chunks[chunkPos].topLeftBlock.x, chunks[chunkPos].topLeftBlock.y, 0);
-
-                Debug.DrawLine(bottomRightBlock, bottomRightBlock + new Vector3Int(0, chunkSize, 0), color, Mathf.Infinity);
-                Debug.DrawLine(bottomRightBlock, bottomRightBlock - new Vector3Int(chunkSize, 0, 0), color, Mathf.Infinity);
-                Debug.DrawLine(topLeftBlock, topLeftBlock - new Vector3Int(0, chunkSize, 0), color, Mathf.Infinity);
-                Debug.DrawLine(topLeftBlock, topLeftBlock + new Vector3Int(chunkSize, 0, 0), color, Mathf.Infinity);
+                Vector3Int topRightBlock = new Vector3Int(chunks[chunkPos].bottomLeftBlock.x + chunkSize, chunks[chunkPos].bottomLeftBlock.y + chunkSize, 0);
+                Vector3Int bottomLeftBlock = new Vector3Int(chunks[chunkPos].bottomLeftBlock.x, chunks[chunkPos].bottomLeftBlock.y, 0);
+                //Gizmos.DrawWireCube()
+                Debug.DrawLine(bottomLeftBlock, topRightBlock - new Vector3Int(0, chunkSize, 0), color, Mathf.Infinity);
+                Debug.DrawLine(bottomLeftBlock, topRightBlock - new Vector3Int(chunkSize, 0, 0), color, Mathf.Infinity);
+                Debug.DrawLine(topRightBlock, bottomLeftBlock + new Vector3Int(0, chunkSize, 0), color, Mathf.Infinity);
+                Debug.DrawLine(topRightBlock, bottomLeftBlock + new Vector3Int(chunkSize, 0, 0), color, Mathf.Infinity);
 
             }
         }
@@ -522,7 +506,7 @@ public class WorldGenerator : MonoBehaviour
         for (int x = 0; x < chunksOnX; x++)
             for (int y = 0; y < chunksOnY; y++)
             {
-                var topLeftBlock = new Vector2Int((x * chunkSize), (y * chunkSize) + chunkSize);
+                var bottomLeftBlock = new Vector2Int((x * chunkSize), (y * chunkSize));
 
                 Vector3Int[] positions = new Vector3Int[chunkSize * chunkSize];
                 TileBase[] nullTiles = new TileBase[chunkSize * chunkSize];
@@ -531,27 +515,26 @@ public class WorldGenerator : MonoBehaviour
                 TileBase[] bgtiles = new TileBase[chunkSize * chunkSize];
                 int iterations = 0;
 
-                for (int wx = topLeftBlock.x; wx < topLeftBlock.x + chunkSize; wx++)
-                {
-                    for (int wy = topLeftBlock.y - chunkSize; wy < topLeftBlock.y; wy++)
+                for (int wy = bottomLeftBlock.y; wy < bottomLeftBlock.y + chunkSize; wy++)
+                    for (int wx = bottomLeftBlock.x; wx < bottomLeftBlock.x + chunkSize; wx++)
                     {
-                        if (!WithinWorldBounds(wx, wy)) { continue; }
+                        {
+                            if (!WithinWorldBounds(wx, wy)) { continue; }
 
-                        positions[iterations] = new Vector3Int(wx, wy, 0);
-                        fgtiles[iterations] = fgTileFromBlockType(fgblockMap[wx, wy]);
-                        mgtiles[iterations] = mgTileFromBlockType(mgblockMap[wx, wy]);
-                        bgtiles[iterations] = bgTileFromBlockType(bgblockMap[wx, wy]);
-                        //nullTiles[iterations] = null;
-                        iterations++;
+                            positions[iterations] = new Vector3Int(wx, wy, 0);
+                            fgtiles[iterations] = itemData[(fgblockMap[wx, wy])].tileData.tile;
+                            mgtiles[iterations] = itemData[(mgblockMap[wx, wy])].tileData.tile;
+                            bgtiles[iterations] = itemData[(bgblockMap[wx, wy])].tileData.tile;
+                            iterations++;
+                        }
                     }
-                }
 
-                Chunk chunk = new Chunk(topLeftBlock, positions, fgtiles, mgtiles, bgtiles, nullTiles);
+                Chunk chunk = new Chunk(bottomLeftBlock, positions, fgtiles, mgtiles, bgtiles, nullTiles);
                 chunks.Add(new Vector2Int(x, y), chunk);
             }
     }
 
-    Vector2Int WorldCoordinatesToNearestChunkCoordinate(Vector2 input)
+    Vector2Int WorldCoordinatesToNearestChunkCoordinates(Vector2 input)
     {
         Vector2Int chunkCoords = new Vector2Int((int)(input.x / chunkSize), (int)((int)input.y / chunkSize));
         return chunkCoords;
@@ -568,8 +551,8 @@ public class WorldGenerator : MonoBehaviour
         Vector3 topRightLoadPosition = mainCamera.transform.position + loadRange;
         Vector3 bottomLeftLoadPosition = mainCamera.transform.position - loadRange;
 
-        var topRightChunkLoadCoordinate = WorldCoordinatesToNearestChunkCoordinate(topRightLoadPosition);
-        var bottomLeftChunkLoadCoordinate = WorldCoordinatesToNearestChunkCoordinate(bottomLeftLoadPosition);
+        var topRightChunkLoadCoordinate = WorldCoordinatesToNearestChunkCoordinates(topRightLoadPosition);
+        var bottomLeftChunkLoadCoordinate = WorldCoordinatesToNearestChunkCoordinates(bottomLeftLoadPosition);
 
         for (int x = bottomLeftChunkLoadCoordinate.x; x <= topRightChunkLoadCoordinate.x; x++)
         {
@@ -578,7 +561,7 @@ public class WorldGenerator : MonoBehaviour
                 if (!WithinWorldBounds(x * chunkSize, y * chunkSize)) { continue; }
                 Chunk chunk = chunks[new Vector2Int(x, y)];
 
-                blockTilemap.SetTiles(chunk.positions, chunk.fgtiles);
+                foregroundTilemap.SetTiles(chunk.positions, chunk.fgtiles);
                 midgroundTilemap.SetTiles(chunk.positions, chunk.mgtiles);
                 backgroundTilemap.SetTiles(chunk.positions, chunk.bgtiles);
 
@@ -609,7 +592,7 @@ public class WorldGenerator : MonoBehaviour
 
             if (chunk.loaded)
             {
-                blockTilemap.SetTiles(chunk.positions, chunk.nullTiles);
+                foregroundTilemap.SetTiles(chunk.positions, chunk.nullTiles);
                 midgroundTilemap.SetTiles(chunk.positions, chunk.nullTiles);
                 backgroundTilemap.SetTiles(chunk.positions, chunk.nullTiles);
             }
@@ -619,7 +602,7 @@ public class WorldGenerator : MonoBehaviour
 
             chunksToUnload.RemoveAt(0);
 
-            if (chunksToUnload.Count % 2 == 0)
+            //if (chunksToUnload.Count %1 == 0)
             {
                 yield return new WaitForEndOfFrame();
             }
@@ -639,8 +622,8 @@ public class WorldGenerator : MonoBehaviour
             Vector3 topRightLoadPosition = mainCamera.transform.position + loadRange;
             Vector3 bottomLeftLoadPosition = mainCamera.transform.position - loadRange;
 
-            var topRightChunkLoadCoordinate = WorldCoordinatesToNearestChunkCoordinate(topRightLoadPosition);
-            var bottomLeftChunkLoadCoordinate = WorldCoordinatesToNearestChunkCoordinate(bottomLeftLoadPosition);
+            var topRightChunkLoadCoordinate = WorldCoordinatesToNearestChunkCoordinates(topRightLoadPosition);
+            var bottomLeftChunkLoadCoordinate = WorldCoordinatesToNearestChunkCoordinates(bottomLeftLoadPosition);
 
             //if (loadDirection.x == -1)
             {
@@ -674,9 +657,7 @@ public class WorldGenerator : MonoBehaviour
 
                     if (!chunk.loaded)
                     {
-                        blockTilemap.SetTiles(chunk.positions, chunk.fgtiles);
-                        midgroundTilemap.SetTiles(chunk.positions, chunk.mgtiles);
-                        backgroundTilemap.SetTiles(chunk.positions, chunk.bgtiles);
+                        LoadChunk(chunk);
                     }
                     else
                     {
@@ -717,9 +698,7 @@ public class WorldGenerator : MonoBehaviour
 
                     if (!chunk.loaded)
                     {
-                        blockTilemap.SetTiles(chunk.positions, chunk.fgtiles);
-                        midgroundTilemap.SetTiles(chunk.positions, chunk.mgtiles);
-                        backgroundTilemap.SetTiles(chunk.positions, chunk.bgtiles);
+                        LoadChunk(chunk);
                     }
                     else
                     {
@@ -762,9 +741,7 @@ public class WorldGenerator : MonoBehaviour
 
                     if (!chunk.loaded)
                     {
-                        blockTilemap.SetTiles(chunk.positions, chunk.fgtiles);
-                        midgroundTilemap.SetTiles(chunk.positions, chunk.mgtiles);
-                        backgroundTilemap.SetTiles(chunk.positions, chunk.bgtiles);
+                        LoadChunk(chunk);
                     }
                     else
                     {
@@ -802,11 +779,10 @@ public class WorldGenerator : MonoBehaviour
                     if (x < 0 || x >= chunksOnX) { continue; }
 
                     Chunk chunk = chunks[new Vector2Int(x, topRightChunkLoadCoordinate.y)];
+
                     if (!chunk.loaded)
                     {
-                        blockTilemap.SetTiles(chunk.positions, chunk.fgtiles);
-                        midgroundTilemap.SetTiles(chunk.positions, chunk.mgtiles);
-                        backgroundTilemap.SetTiles(chunk.positions, chunk.bgtiles);
+                        LoadChunk(chunk);
                     }
                     else
                     {
@@ -831,11 +807,18 @@ public class WorldGenerator : MonoBehaviour
                         break;
                     }
 
-                    blockTilemap.SetTile(new Vector3Int(x, y, 0), fgTileFromBlockType(fgblockMap[x, y]));
+                    foregroundTilemap.SetTile(new Vector3Int(x, y, 0), itemData[(fgblockMap[x, y])].tileData.tile);
                 }
             }
         }
 
+    }
+
+    void LoadChunk(Chunk chunk)
+    {
+        foregroundTilemap.SetTiles(chunk.positions, chunk.fgtiles);
+        midgroundTilemap.SetTiles(chunk.positions, chunk.mgtiles);
+        backgroundTilemap.SetTiles(chunk.positions, chunk.bgtiles);
     }
 
     Vector3 lastCameraPositionUpdate;
@@ -887,64 +870,5 @@ public class WorldGenerator : MonoBehaviour
         {
             StartCoroutine(UnloadChunks());
         }
-    }
-
-    RuleTile bgTileFromBlockType(byte blockType)
-    {
-        switch (blockType)
-        {
-            //air
-            case 0: return null;
-            //dirt wall
-            case 1: return dirtWall;
-        }
-
-        return null;
-    }
-
-    RuleTile mgTileFromBlockType(byte blockType)
-    {
-        switch (blockType)
-        {
-            //air
-            case 0: return null;
-            //redtorch
-            case 1: return redTorch;
-            //greentorch
-            case 2: return greenTorch;
-            //bluetorch
-            case 3: return blueTorch;
-            //normal torch
-            case 4: return torch;
-            //treestumpMiddle
-            case 5: return treeStumpM;
-            //treesstumpLeft
-            case 6: return treeStumpBL;
-            //treesstumpRight
-            case 7: return treeStumpBR;
-            //treeTrunk
-            case 8: return treeTrunk;
-            //Tree leavess
-            case 9: return treeLeaves;
-        }
-
-        return null;
-    }
-
-    RuleTile fgTileFromBlockType(byte blockType)
-    {
-        switch (blockType)
-        {
-            //air
-            case 0: return null;
-            //grass
-            case 1: return grassTile;
-            //dirt
-            case 2: return dirtTile;
-            //stone
-            case 3: return stoneTile;
-                //4wood5iron
-        }
-        return null;
     }
 }

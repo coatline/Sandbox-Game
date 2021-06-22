@@ -1,0 +1,18 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public enum WorldLayer
+{
+    foreground,
+    midground,
+    background
+}
+
+[System.Serializable]
+
+public class TileData
+{
+    public WorldLayer layer;
+    public RuleTile tile;
+}

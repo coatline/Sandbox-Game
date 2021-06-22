@@ -38,27 +38,32 @@ public enum Buff
     strength
 }
 
-[CreateAssetMenu(fileName = "New Item", menuName = "Item")]
-public class ItemStats : ScriptableObject
+public enum ItemType
 {
-    public ItemStats[] itemsToCraft;
-    public EffectData givenEffect;
+    rangedWeapon,
+    projectile,
+    tool,
+    consumable,
+    armor,
+    block,
+}
+
+[CreateAssetMenu(fileName = "New Item", menuName = "Item")]
+
+public class ItemDataContainer : ScriptableObject
+{
+    public ItemType itemType;
+    public TileData tileData;
     public WeaponData weaponData;
     public PlayerAction actionOnUse;
-    public int tilemapLayer;
-
-    public int amountPerCraft;
 
     public string _name;
     public string description;
+    public string rarity;
+
     public float useSpeed;
 
-    public bool consumable;
-
-    public int healthOnUse;
-    public int itemType;
-    public bool placeable;
-    public int maxStack;
-    public int value;
-    //public ItemStats tilesNearbyToBeCraftable;
+    public short maxStack;
+    public short value;
+    public short id;
 }

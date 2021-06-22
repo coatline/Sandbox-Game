@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-[CreateAssetMenu(fileName = "New Accessory", menuName = "Accessory")]
-
-public class AccessoryData : ScriptableObject
+[System.Serializable]
+public class AccessoryData
 {
 }

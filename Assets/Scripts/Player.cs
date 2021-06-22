@@ -7,7 +7,7 @@ using UnityEngine.Tilemaps;
 public class Player : MonoBehaviour
 {
     [Header("Movement")]
-    [Range(5, 50)]
+    [Range(5, 100)]
     [SerializeField] float movementSpeed;
     [Range(1, 20)]
     [SerializeField] float jumpForce;
@@ -18,6 +18,7 @@ public class Player : MonoBehaviour
     [SerializeField] Transform feetPosition;
     [SerializeField] LayerMask groundLayer;
     [SerializeField] float reach;
+    [SerializeField] ItemDataContainer dirt;
     WorldGenerator wg;
     Rigidbody2D rb;
     Camera cam;
@@ -97,11 +98,9 @@ public class Player : MonoBehaviour
                 {
                     if (wg.fgblockMap[blockPosition.x, blockPosition.y] == 0)
                     {
-                        wg.ModifyBlockmg(blockPosition.x, blockPosition.y, 0);
                     }
                     else
                     {
-                        wg.ModifyBlockfg(blockPosition.x, blockPosition.y, 0);
                     }
                 }
             }
@@ -116,13 +115,12 @@ public class Player : MonoBehaviour
 
                 if (placingTorch)
                 {
-                    wg.ModifyBlockmg(blockPosition.x, blockPosition.y, currentblocktype);
                 }
                 else
                 {
                     //if (Vector2.Distance(blockPosition, transform.position) > .8f && CanPlace(0, new Vector3Int(blockPosition.x, blockPosition.y, 0)))
                     {
-                        wg.ModifyBlockfg(blockPosition.x, blockPosition.y, 2);
+                        wg.ModifyBlock(blockPosition.x, blockPosition.y, dirt);
                     }
                 }
             }

@@ -13,12 +13,14 @@ public class ParallaxEffect : MonoBehaviour
     Vector3 lastCameraPosition;
     float textureUnitSizeX;
     float textureUnitSizeY;
+    SpriteRenderer sr;
 
     private void Start()
     {
         cameraTransform = Camera.main.transform;
         lastCameraPosition = cameraTransform.position;
-        Sprite sprite = GetComponent<SpriteRenderer>().sprite;
+        sr = GetComponent<SpriteRenderer>();
+        Sprite sprite = sr.sprite;
         Texture2D texture = sprite.texture;
         transform.position = new Vector3(cameraTransform.position.x, (wg.worldHeight / 2f) + textureUnitSizeY / 2);
         textureUnitSizeX = texture.width / sprite.pixelsPerUnit;

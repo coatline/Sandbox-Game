@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CreateBarrier : MonoBehaviour
 {
-    [SerializeField] Vector2 offset;
+    public Vector2 offset;
     public Vector2 mapSize;
 
     void Start()

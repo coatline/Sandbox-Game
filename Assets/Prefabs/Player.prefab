@@ -58,6 +58,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   reach: 112.29
+  dirt: {fileID: 11400000, guid: c7decb64c4d48f04b912d806d3c2e203, type: 2}
   backgroundTilemap: {fileID: 0}
   blockTilemap: {fileID: 0}
 --- !u!114 &8161488080005865931
@@ -74,8 +75,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tilemapLayer: 3
   wg: {fileID: 0}
-  checkWidth: 5
+  checkWidth: 3
   checkHeight: 5
+  entityWidth: 0
+  entityHeight: 0
 --- !u!212 &3024590363601915480
 SpriteRenderer:
   m_ObjectHideFlags: 0
