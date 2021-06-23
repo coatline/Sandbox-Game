@@ -32,9 +32,10 @@ public class CalculateColorLighting : MonoBehaviour
         if (running) return;
         running = true;
 
-        blockDiagonalDropOff = Mathf.Pow(blockDropoff, Mathf.Sqrt(2));
-        airDiagonalDropOff = Mathf.Pow(airDropoff, Mathf.Sqrt(2));
-
+        blockDiagonalDropOff = Mathf.Pow(blockDropoff, Mathf.Sqrt(1.5f));
+        airDiagonalDropOff = Mathf.Pow(airDropoff, Mathf.Sqrt(1.5f));
+        //blockDiagonalDropOff = blockDropoff;
+        //airDiagonalDropOff = airDropoff;
         singleLightEmission = new Color[lightRadius * 2 + 1, lightRadius * 2 + 1];
         lightValues = new Color[frameSize.x, frameSize.y];
         toEmit = new byte[frameSize.x, frameSize.y];
@@ -108,29 +109,14 @@ public class CalculateColorLighting : MonoBehaviour
                 toEmit[x, y] = 0;
 
                 short fgtile = wg.fgblockMap[worldX, worldY];
-                short mgtile = wg.mgblockMap[worldX, worldY];
+                ItemDataContainer mgtile = wg.itemData[wg.mgblockMap[worldX, worldY]];
 
                 if (fgtile == 0 && worldY > wg.highestTiles[worldX] - wg.caveStartingOffset)
                 {
                     lightValues[x, y] = ambientColor;
                     toEmit[x, y] = 2;
                 }
-                else if (mgtile == 1)
-                {
-                    lightValues[x, y] = Color.red;
-                    toEmit[x, y] = 1;
-                }
-                else if (mgtile == 2)
-                {
-                    lightValues[x, y] = Color.green;
-                    toEmit[x, y] = 1;
-                }
-                else if (mgtile == 3)
-                {
-                    lightValues[x, y] = Color.blue;
-                    toEmit[x, y] = 1;
-                }
-                else if (mgtile == 4)
+                else if (mgtile.emitsLight)
                 {
                     lightValues[x, y] = Color.white;
                     toEmit[x, y] = 1;

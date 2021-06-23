@@ -10,6 +10,6 @@ public class Structure : ScriptableObject
     public string _name;
     public byte width;
     public byte height;
-    public List<RuleTile> tiles;
-    public int[] structure;
+    public List<ItemDataContainer> tiles;
+    public int[] structureData;
 }

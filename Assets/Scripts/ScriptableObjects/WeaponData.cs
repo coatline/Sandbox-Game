@@ -7,7 +7,8 @@ public class WeaponData
 {
     public DamageType damageType;
     public RangedData rangedData;
-    
+    public ToolData toolData;
+
     public int criticalStrikeChance;
     public int damageVal;
 }

@@ -56,6 +56,7 @@ public class ItemDataContainer : ScriptableObject
     public TileData tileData;
     public WeaponData weaponData;
     public PlayerAction actionOnUse;
+    public bool emitsLight;
 
     public string _name;
     public string description;

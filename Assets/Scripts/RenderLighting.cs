@@ -112,7 +112,7 @@ public class RenderLighting : MonoBehaviour
         if (ccl.drawTiles)
         {
             //print(sw.ElapsedMilliseconds);
-            sw.Reset();
+            //sw.Reset();
 
 
             if (ccl.lightingPosition == theoreticalPosition)
@@ -128,7 +128,7 @@ public class RenderLighting : MonoBehaviour
             theoreticalPosition = new Vector2Int((int)cam.transform.position.x - size.x / 2, (int)cam.transform.position.y - size.y / 2);
             ccl.lightingPosition = theoreticalPosition;
             ccl.drawTiles = false;
-            sw.Start();
+            //sw.Start();
         }
 
         if (Input.GetKey(KeyCode.P))

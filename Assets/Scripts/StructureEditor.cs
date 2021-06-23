@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -14,15 +16,17 @@ public class StructureEditor : MonoBehaviour
     [SerializeField] bool LoadCurrentData;
     [InspectorButton("ClearMap", ButtonWidth = 150)]
     [SerializeField] bool ClearTilemap;
-    List<RuleTile> tiles;
-    Camera cam;
-
+    [InspectorButton("ClearItemData", ButtonWidth = 150)]
+    [SerializeField] bool ClearItemDataList;
+    [SerializeField] List<ItemDataContainer> itemData;
+    List<ItemDataContainer> tiles;
+    
     void LoadStructureData()
     {
         for (int x = 0; x < structureToEdit.width; x++)
             for (int y = 0; y < structureToEdit.height; y++)
             {
-                tilemap.SetTile(new Vector3Int(x, y, 0), structureToEdit.tiles[structureToEdit.structure[x + (y * structureToEdit.width)]]);
+                tilemap.SetTile(new Vector3Int(x, y, 0), structureToEdit.tiles[structureToEdit.structureData[x + (y * structureToEdit.width)]].tileData.tile);
             }
     }
 
@@ -31,15 +35,17 @@ public class StructureEditor : MonoBehaviour
         tilemap.ClearAllTiles();
     }
 
-    void Start()
+    void ClearItemData()
     {
-        cam = Camera.main;
+        itemData.Clear();
     }
 
     void SaveStructureData()
     {
-        structureToEdit.structure = new int[structureToEdit.width * structureToEdit.height];
-        tiles = new List<RuleTile>();
+        Debug.ClearDeveloperConsole();
+
+        structureToEdit.structureData = new int[structureToEdit.width * structureToEdit.height];
+        tiles = new List<ItemDataContainer>();
         structureToEdit.tiles.Clear();
 
         for (int x = 0; x < structureToEdit.width; x++)
@@ -47,16 +53,19 @@ public class StructureEditor : MonoBehaviour
             {
                 var tile = (RuleTile)tilemap.GetTile(new Vector3Int(x, y, 0));
 
-                if (!tiles.Contains(tile))
+                for (int i = 0; i < itemData.Count; i++)
                 {
-                    tiles.Add(tile);
+                    if (itemData[i].tileData.tile == tile && !tiles.Contains(itemData[i]))
+                    {
+                        tiles.Add(itemData[i]);
+                    }
                 }
             }
 
         for (int x = 0; x < structureToEdit.width; x++)
             for (int y = 0; y < structureToEdit.height; y++)
             {
-                structureToEdit.structure[x + (y * structureToEdit.width)] = TilesIndex((RuleTile)tilemap.GetTile(new Vector3Int(x, y, 0)));
+                structureToEdit.structureData[x + (y * structureToEdit.width)] = TilesIndex((RuleTile)tilemap.GetTile(new Vector3Int(x, y, 0)));
             }
 
         structureToEdit.tiles = this.tiles;
@@ -66,7 +75,7 @@ public class StructureEditor : MonoBehaviour
     {
         for (int i = 0; i < tiles.Count; i++)
         {
-            if (tile == tiles[i])
+            if (tile == tiles[i].tileData.tile)
             {
                 return i;
             }

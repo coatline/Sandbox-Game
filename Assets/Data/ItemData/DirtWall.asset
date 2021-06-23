@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa09bd11f12393d44bcf30c9b64de8af, type: 3}
+  m_Name: DirtWall
+  m_EditorClassIdentifier: 
+  itemType: 5
+  tileData:
+    layer: 2
+    tile: {fileID: 11400000, guid: 2726a597905a11a4d9833a1fb68a1040, type: 2}
+    multiBlockItem: {fileID: 0}
+  weaponData:
+    damageType: 0
+    rangedData:
+      enemiesPassThroughCount: 0
+    toolData:
+      worldLayer: 0
+      strength: 0
+    criticalStrikeChance: 0
+    damageVal: 0
+  actionOnUse: 1
+  _name: DirtWall
+  description: 
+  rarity: Common
+  useSpeed: 1
+  maxStack: 999
+  value: 0
+  id: 0

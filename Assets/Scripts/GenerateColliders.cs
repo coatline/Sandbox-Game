@@ -69,7 +69,7 @@ public class GenerateColliders : MonoBehaviour
             int x = colliderPositions[i].x;
             int y = colliderPositions[i].y;
 
-            if (checkPosX + x >= wg.worldWidth || checkPosY + y >= wg.worldHeight || checkPosX < 0 || checkPosY < 0) { continue; }
+            if (checkPosX + x >= wg.worldWidth || checkPosY + y >= wg.worldHeight || checkPosX + x < 0 || checkPosY + y < 0) { continue; }
 
             BoxCollider2D bc;
 

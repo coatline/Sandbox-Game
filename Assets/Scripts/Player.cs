@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
     [SerializeField] LayerMask groundLayer;
     [SerializeField] float reach;
     [SerializeField] ItemDataContainer dirt;
+    [SerializeField] ItemDataContainer torch;
     WorldGenerator wg;
     Rigidbody2D rb;
     Camera cam;
@@ -49,8 +50,8 @@ public class Player : MonoBehaviour
         }
     }
 
-    byte currentblocktype = 1;
     bool placingTorch = false;
+    Vector3Int previousPosAndIndex;
 
     void Update()
     {
@@ -66,23 +67,20 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             placingTorch = !placingTorch;
+
+            if(!placingTorch)
+            {
+                wg.mgblockMap[previousPosAndIndex.x, previousPosAndIndex.y] = (short)previousPosAndIndex.z;
+            }
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (placingTorch)
         {
-            currentblocktype = 1;
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            currentblocktype = 2;
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            currentblocktype = 3;
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            currentblocktype = 4;
+            //just have player light item so you can change the color and stuff
+            wg.mgblockMap[previousPosAndIndex.x, previousPosAndIndex.y] = (short)previousPosAndIndex.z;
+            Vector2Int blockPosition = new Vector2Int((int)transform.position.x, (int)transform.position.y);
+            previousPosAndIndex = new Vector3Int(blockPosition.x, blockPosition.y, wg.mgblockMap[blockPosition.x, blockPosition.y]);
+            wg.mgblockMap[blockPosition.x, blockPosition.y] = torch.id;
         }
 
         if (Input.GetMouseButton(0))
@@ -93,14 +91,14 @@ public class Player : MonoBehaviour
             {
                 Vector2Int blockPosition = new Vector2Int((int)mousePosition.x, (int)mousePosition.y);
 
-                //why do i do this check?
-                //if (blockTilemap.GetTile(new Vector3Int(blockPosition.x, blockPosition.y, 0)) != null)
                 {
                     if (wg.fgblockMap[blockPosition.x, blockPosition.y] == 0)
                     {
+                        wg.BreakBlock(blockPosition.x, blockPosition.y, WorldLayer.midground);
                     }
                     else
                     {
+                        wg.BreakBlock(blockPosition.x, blockPosition.y, WorldLayer.foreground);
                     }
                 }
             }
@@ -115,12 +113,13 @@ public class Player : MonoBehaviour
 
                 if (placingTorch)
                 {
+                    wg.PlaceBlock(blockPosition.x, blockPosition.y, torch);
                 }
                 else
                 {
                     //if (Vector2.Distance(blockPosition, transform.position) > .8f && CanPlace(0, new Vector3Int(blockPosition.x, blockPosition.y, 0)))
                     {
-                        wg.ModifyBlock(blockPosition.x, blockPosition.y, dirt);
+                        wg.PlaceBlock(blockPosition.x, blockPosition.y, dirt);
                     }
                 }
             }

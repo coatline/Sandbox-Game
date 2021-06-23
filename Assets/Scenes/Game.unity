@@ -1742,30 +1742,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6c9201951fd7c74f9556c982fac3112, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldWidth: 200
-  worldHeight: 100
+  worldWidth: 400
+  worldHeight: 200
   chunkSize: 3
   stoneStartOffset: 22
   sprinkleStoneStartOffset: 6
-  usePerlinCaves: 0
+  usePerlinCaves: 1
   caveStartingOffset: 14
   smoothIterations: 3
-  caveSize: 0.46
-  perlinCaveScale: 0.67
-  terrainScale: 0.28
+  caveSize: 0.396
+  perlinCaveScale: 0.69
+  terrainScale: 2.33
   flowerScale: 11.51
-  maxTerrainHeight: 0
-  displayChunks: 1
+  maxTerrainHeight: 10.68
+  displayChunks: 0
   fillInWorld: 0
   foregroundTilemap: {fileID: 377442536}
   midgroundTilemap: {fileID: 439862296}
   backgroundTilemap: {fileID: 132104300}
   playerPrefab: {fileID: -5950935772551705473, guid: 67cd9c87b486eab43993994b379cee81, type: 3}
+  structures:
+  - {fileID: 11400000, guid: 6cc338f2fd9a5ed4bbdd19dfe6cd30c5, type: 2}
   itemData:
   - {fileID: 11400000, guid: 09d7db0c7ee9c094caa07c4599cf04bd, type: 2}
   - {fileID: 11400000, guid: 65a52429fc4ed7c4cb8c92774a532458, type: 2}
   - {fileID: 11400000, guid: c7decb64c4d48f04b912d806d3c2e203, type: 2}
   - {fileID: 11400000, guid: eba0309c6449f014e8a5973336c6d40a, type: 2}
+  - {fileID: 11400000, guid: 43531e03d2311124bb5b1e00be71d1f4, type: 2}
+  - {fileID: 11400000, guid: 46afb2af641133b448c7c7fc69038da5, type: 2}
   excessChunksToLoad: 1
   chanceForTreeToSpawn: 35.6
   maxTreeHeight: 20
@@ -1792,11 +1796,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1338082157}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b1d0e69c022aaaa478de0a76fe10cd98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  overlap: {x: 5, y: 5}
+  layer: Blocks
   offset: {x: 0, y: 0}
   mapSize: {x: 0, y: 0}
 --- !u!114 &1437676432
@@ -1965,9 +1971,9 @@ MonoBehaviour:
   ambientColor: {r: 1, g: 1, b: 1, a: 1}
   lightRadius: -1119
   fps: 0
-  airDropoff: 0.9
-  blockDropoff: 0.5
-  lowestLightLevel: 0.035
+  airDropoff: 0.875
+  blockDropoff: 0.646
+  lowestLightLevel: 0.03
   drawLighting: 1
 --- !u!1 &1578126800
 GameObject:

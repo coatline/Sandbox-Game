@@ -15,4 +15,6 @@ public class TileData
 {
     public WorldLayer layer;
     public RuleTile tile;
+    public Structure multiBlockItem;
+    //public Sound breakSound;
 }

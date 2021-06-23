@@ -59,6 +59,7 @@ MonoBehaviour:
     m_Bits: 8
   reach: 112.29
   dirt: {fileID: 11400000, guid: c7decb64c4d48f04b912d806d3c2e203, type: 2}
+  torch: {fileID: 11400000, guid: 46afb2af641133b448c7c7fc69038da5, type: 2}
   backgroundTilemap: {fileID: 0}
   blockTilemap: {fileID: 0}
 --- !u!114 &8161488080005865931
