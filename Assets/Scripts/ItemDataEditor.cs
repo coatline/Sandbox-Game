@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class ItemDataEditor : MonoBehaviour
@@ -32,12 +33,14 @@ public class ItemDataEditor : MonoBehaviour
     {
         for (int i = 0; i < items.Count; i++)
         {
-            items[i]._name = items[i].name;
+            items[i].itemName = items[i].name;
+            EditorUtility.SetDirty(items[i]);
         }
 
         for (int i = 0; i < structures.Count; i++)
         {
             structures[i]._name = structures[i].name;
+            EditorUtility.SetDirty(structures[i]);
         }
     }
 
@@ -50,9 +53,11 @@ public class ItemDataEditor : MonoBehaviour
                 if (items[i].name == ruleTiles[j].name)
                 {
                     items[i].tileData.tile = ruleTiles[j];
+                    EditorUtility.SetDirty(items[i]);
                     break;
                 }
             }
         }
+
     }
 }

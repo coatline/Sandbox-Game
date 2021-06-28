@@ -20,7 +20,7 @@ public class StructureEditor : MonoBehaviour
     [SerializeField] bool ClearItemDataList;
     [SerializeField] List<ItemDataContainer> itemData;
     List<ItemDataContainer> tiles;
-    
+
     void LoadStructureData()
     {
         for (int x = 0; x < structureToEdit.width; x++)
@@ -69,6 +69,7 @@ public class StructureEditor : MonoBehaviour
             }
 
         structureToEdit.tiles = this.tiles;
+        EditorUtility.SetDirty(structureToEdit);
     }
 
     int TilesIndex(RuleTile tile)

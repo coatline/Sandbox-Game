@@ -16,17 +16,30 @@ MonoBehaviour:
   tileData:
     layer: 0
     tile: {fileID: 11400000, guid: ef106a8a704b97945b869e875e254e56, type: 2}
+    multiBlockItem: {fileID: 0}
+    dropOnBreak: {fileID: 11400000}
+    pimtid:
+      itemStructurePartOf: {fileID: 0}
+      relativePosition: {x: 0, y: 0}
+    amountDropped: 1
+    treeTile: 0
   weaponData:
     damageType: 0
     rangedData:
       enemiesPassThroughCount: 0
+    toolData:
+      worldLayer: 0
+      strength: 0
     criticalStrikeChance: 0
     damageVal: 0
   actionOnUse: 1
-  _name: 
+  itemSprite: {fileID: -3848607359157971786, guid: 751a1cf3d62041e40ba2b96144981d8e, type: 3}
+  emitsLight: 0
+  emitColor: {r: 0, g: 0, b: 0, a: 0}
+  itemName: Stone
   description: 
   rarity: Common
   useSpeed: 1
   maxStack: 999
   value: 0
-  id: 0
+  id: 3

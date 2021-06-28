@@ -17,6 +17,12 @@ MonoBehaviour:
     layer: 1
     tile: {fileID: 11400000, guid: 27b5d93433100b84987c98a2de5d235b, type: 2}
     multiBlockItem: {fileID: 0}
+    dropOnBreak: {fileID: 11400000}
+    pimtid:
+      itemStructurePartOf: {fileID: 0}
+      relativePosition: {x: 0, y: 0}
+    amountDropped: 1
+    treeTile: 0
   weaponData:
     damageType: 0
     rangedData:
@@ -27,8 +33,10 @@ MonoBehaviour:
     criticalStrikeChance: 0
     damageVal: 0
   actionOnUse: 1
+  itemSprite: {fileID: -2445883823613288998, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
   emitsLight: 1
-  _name: Torch
+  emitColor: {r: 1, g: 1, b: 1, a: 0}
+  itemName: Torch
   description: 
   rarity: Common
   useSpeed: 1

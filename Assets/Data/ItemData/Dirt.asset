@@ -16,17 +16,30 @@ MonoBehaviour:
   tileData:
     layer: 0
     tile: {fileID: 11400000, guid: 115deafa0355eaa46bf3534e919c8da6, type: 2}
+    multiBlockItem: {fileID: 0}
+    dropOnBreak: {fileID: 11400000}
+    pimtid:
+      itemStructurePartOf: {fileID: 0}
+      relativePosition: {x: 0, y: 0}
+    amountDropped: 1
+    treeTile: 0
   weaponData:
     damageType: 0
     rangedData:
       enemiesPassThroughCount: 0
+    toolData:
+      worldLayer: 0
+      strength: 0
     criticalStrikeChance: 0
     damageVal: 0
   actionOnUse: 1
-  _name: 
-  description: 
+  itemSprite: {fileID: 3069411614605551677, guid: 190c018e56eca1a4e9b7dd8bf7a3e1d7, type: 3}
+  emitsLight: 0
+  emitColor: {r: 0, g: 0, b: 0, a: 0}
+  itemName: Dirt
+  description: STUPID
   rarity: Common
   useSpeed: 1
   maxStack: 999
   value: 0
-  id: 0
+  id: 2

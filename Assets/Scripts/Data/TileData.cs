@@ -16,5 +16,8 @@ public class TileData
     public WorldLayer layer;
     public RuleTile tile;
     public Structure multiBlockItem;
-    //public Sound breakSound;
+    public ItemDataContainer dropOnBreak;
+    public PartInMutliTileItemData pimtid;
+    public int amountDropped;
+    public bool treeTile;
 }

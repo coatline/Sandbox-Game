@@ -44,6 +44,7 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField] Tilemap backgroundTilemap;
     [SerializeField] Player playerPrefab;
     [SerializeField] List<Structure> structures;
+    [SerializeField] Pickup pickupPrefab;
     public List<ItemDataContainer> itemData;
 
     [Header("Settings")]
@@ -55,6 +56,7 @@ public class WorldGenerator : MonoBehaviour
 
     Vector3 viewDistance;
     Dictionary<Vector2Int, Chunk> chunks;
+    Dictionary<Vector2Int, TreeData> trees;
     Dictionary<string, short> itemIDfromName;
     Dictionary<string, Structure> structureFromName;
     [HideInInspector]
@@ -85,9 +87,11 @@ public class WorldGenerator : MonoBehaviour
         mgblockMap = new short[worldWidth, worldHeight];
         bgblockMap = new short[worldWidth, worldHeight];
 
+        trees = new Dictionary<Vector2Int, TreeData>();
         chunks = new Dictionary<Vector2Int, Chunk>();
         chunksToUnload = new List<Vector2Int>();
         highestTiles = new List<int>();
+
         var cb = GetComponent<CreateBarrier>();
         cb.offset = new Vector2(worldWidth / 2, worldHeight / 2);
         cb.mapSize = new Vector2(worldWidth / 2, worldHeight / 2);
@@ -96,7 +100,7 @@ public class WorldGenerator : MonoBehaviour
 
         GenerateInitalTerrain();
 
-        //GenerateTrees();
+        GenerateTrees();
 
         //GenerateFlowers();
 
@@ -130,12 +134,12 @@ public class WorldGenerator : MonoBehaviour
         {
             itemData[i].id = i;
 
-            if (itemData[i]._name == "")
+            if (itemData[i].itemName == "")
             {
                 Debug.LogError($"item id of {itemData[i].id}'s name needs to be assigned!");
             }
 
-            itemIDfromName.Add(itemData[i]._name, i);
+            itemIDfromName.Add(itemData[i].itemName, i);
         }
 
         for (int j = 0; j < structures.Count; j++)
@@ -196,7 +200,7 @@ public class WorldGenerator : MonoBehaviour
         }
     }
 
-    public bool blockModified;
+    public Vector2Int blockModifiedAt = -Vector2Int.one;
 
     void GenerateStructure(string name, int x, int y)
     {
@@ -224,36 +228,123 @@ public class WorldGenerator : MonoBehaviour
             }
     }
 
-    public void BreakBlock(int x, int y, WorldLayer layer)
-    {
-        blockModified = true;
+    // Pretty much a Queue
+    List<Vector2Int> treeBlocksToChop = new List<Vector2Int>();
 
+    IEnumerator ChopTree()
+    {
+        while (treeBlocksToChop.Count > 0)
+        {
+            Vector2Int pos = treeBlocksToChop[0];
+            BreakBlock(pos.x, pos.y, WorldLayer.midground, true);
+            treeBlocksToChop.RemoveAt(0);
+            yield return new WaitForSeconds(.02f);
+        }
+    }
+
+    public void BreakBlock(int x, int y, WorldLayer layer, bool isTreeBroken = false)
+    {
         var chunkCoordinates = WorldCoordinatesToNearestChunkCoordinates(new Vector2(x, y));
         var chunkWorldCoordinates = chunkCoordinates * new Vector2Int(chunkSize, chunkSize);
+
+        ItemDataContainer itemBroken = null;
 
         switch (layer)
         {
             case WorldLayer.foreground:
+
+                if (fgblockMap[x, y] == 0)
+                {
+                    return;
+                }
+
+                blockModifiedAt = new Vector2Int(x, y);
+                itemBroken = itemData[fgblockMap[x, y]];
                 fgblockMap[x, y] = 0;
                 foregroundTilemap.SetTile(new Vector3Int(x, y, 0), null);
                 chunks[chunkCoordinates].fgtiles[(x - chunkWorldCoordinates.x) + ((y - chunkWorldCoordinates.y) * chunkSize)] = null;
+
                 break;
             case WorldLayer.midground:
+
+                if (mgblockMap[x, y] == 0)
+                {
+                    return;
+                }
+
+                itemBroken = itemData[mgblockMap[x, y]];
+
+                if (!isTreeBroken && itemBroken.tileData.treeTile)
+                {
+                    for (int ty = 0; ty < maxTreeHeight; ty++)
+                    {
+                        TreeData tree;
+
+                        int treeStumpWorldPositionY = y - ty;
+
+                        // ty moves down the tree to find the root
+                        // When it finds it it will start to break from the point it was broken
+                        if (trees.TryGetValue(new Vector2Int(x, treeStumpWorldPositionY), out tree))
+                        {
+                            for (int by = y; by < ((tree.height) + y); by++)
+                            {
+                                treeBlocksToChop.Add(new Vector2Int(x, by));
+                                //BreakBlock(x, by, WorldLayer.midground, true);
+                            }
+
+                            // If the stump was broken then break the side stumps too
+                            if (treeStumpWorldPositionY == y)
+                            {
+                                if (tree.leftStump)
+                                {
+                                    BreakBlock(x - 1, treeStumpWorldPositionY, WorldLayer.midground, true);
+                                }
+                                if (tree.rightStump)
+                                {
+                                    BreakBlock(x + 1, treeStumpWorldPositionY, WorldLayer.midground, true);
+                                }
+
+                                trees.Remove(new Vector2Int(x, treeStumpWorldPositionY));
+                            }
+
+                            StartCoroutine(ChopTree());
+
+                            break;
+                        }
+                    }
+                }
+                else if(isTreeBroken && !itemBroken.tileData.treeTile) { /* Just another Midground block that should not be broken */ return; }
+
                 mgblockMap[x, y] = 0;
                 midgroundTilemap.SetTile(new Vector3Int(x, y, 0), null);
                 chunks[chunkCoordinates].mgtiles[(x - chunkWorldCoordinates.x) + ((y - chunkWorldCoordinates.y) * chunkSize)] = null;
+
                 break;
             case WorldLayer.background:
+
+                if (bgblockMap[x, y] == 0)
+                {
+                    return;
+                }
+
+                itemBroken = itemData[bgblockMap[x, y]];
                 bgblockMap[x, y] = 0;
                 backgroundTilemap.SetTile(new Vector3Int(x, y, 0), null);
                 chunks[chunkCoordinates].bgtiles[(x - chunkWorldCoordinates.x) + ((y - chunkWorldCoordinates.y) * chunkSize)] = null;
+
                 break;
         }
+
+        var rotation = Quaternion.Euler(0, 0, Random.Range(0, 360));
+
+        var pickup = Instantiate(pickupPrefab, new Vector3(x + Random.Range(-.25f, .25f), y + Random.Range(-.25f, .25f), 0) + Vector3.one / 2, rotation);
+        //pickup.GetComponent<Pickup>()
+        pickup.SetItem(itemBroken.tileData.dropOnBreak, itemBroken.tileData.amountDropped);
     }
 
     public void PlaceBlock(int x, int y, ItemDataContainer tileData)
     {
-        blockModified = true;
+        blockModifiedAt = new Vector2Int(x, y);
 
         var chunkCoordinates = WorldCoordinatesToNearestChunkCoordinates(new Vector2(x, y));
         var chunkWorldCoordinates = chunkCoordinates * new Vector2Int(chunkSize, chunkSize);
@@ -268,8 +359,6 @@ public class WorldGenerator : MonoBehaviour
 
                 break;
             case WorldLayer.midground:
-
-                if (fgblockMap[x, y] != 0) { return; };
 
                 mgblockMap[x, y] = tileData.id;
                 midgroundTilemap.SetTile(new Vector3Int(x, y, 0), tileData.tileData.tile);
@@ -319,37 +408,38 @@ public class WorldGenerator : MonoBehaviour
                     case 2: spawnRightStump = false; spawnLeftStump = false; break;
                 }
 
-                Vector3Int startingPosition = new Vector3Int(x, highestTiles[x] + 1, 0);
+                Vector2Int startingPosition = new Vector2Int(x, highestTiles[x] + 1);
                 GenerateTree(treeHeight, spawnLeftStump, spawnRightStump, startingPosition);
             }
         }
     }
 
-    void GenerateTree(int treeHeight, bool spawnLeftStump, bool spawnRightStump, Vector3Int startingPosition)
+    void GenerateTree(int treeHeight, bool spawnLeftStump, bool spawnRightStump, Vector2Int startingPosition)
     {
+        TreeData newTree = new TreeData(startingPosition, spawnLeftStump, spawnRightStump, treeHeight);
+        trees.Add(startingPosition, newTree);
+
         for (int i = 0; i < treeHeight; i++)
         {
             if (i == 0)
             {
+                if (!spawnLeftStump && !spawnRightStump)
+                {
+                    mgblockMap[startingPosition.x, startingPosition.y] = itemIDfromName["TreeTrunk"];
+                    continue;
+                }
 
+                mgblockMap[startingPosition.x, startingPosition.y] = itemIDfromName["TreeStumpMiddle"];
 
-                //if (!spawnLeftStump && !spawnRightStump)
-                //{
-                //    mgblockMap[startingPosition.x, startingPosition.y] = itemIDfromName["TreeTrunk"];
-                //    continue;
-                //}
+                if (spawnLeftStump)
+                {
+                    mgblockMap[startingPosition.x - 1, startingPosition.y] = itemIDfromName["TreeStumpLeft"];
+                }
 
-                //mgblockMap[startingPosition.x, startingPosition.y] = itemIDfromName["TreeStump"];
-
-                //if (spawnLeftStump)
-                //{
-                //    mgblockMap[startingPosition.x - 1, startingPosition.y] = itemIDfromName["TreeStumpSide"];
-                //}
-
-                //if (spawnRightStump)
-                //{
-                //    mgblockMap[startingPosition.x + 1, startingPosition.y] = itemIDfromName["TreeStumpSide"];
-                //}
+                if (spawnRightStump)
+                {
+                    mgblockMap[startingPosition.x + 1, startingPosition.y] = itemIDfromName["TreeStumpRight"];
+                }
             }
             else if (treeHeight - i > 1)
             {
@@ -417,7 +507,6 @@ public class WorldGenerator : MonoBehaviour
         script.topRightBarrier = topright.transform;
         script.bottomLeftBarrier = bottomleft.transform;
         script.followObject = player.transform;
-
     }
 
     bool drawn = false;
@@ -752,27 +841,33 @@ public class WorldGenerator : MonoBehaviour
                     }
                 }
 
-                if (bottomLeftChunkLoadCoordinate.x < 0) { print("End of world not gonna generate (left)"); return; }
-
-                for (int y = bottomLeftChunkLoadCoordinate.y; y <= topRightChunkLoadCoordinate.y; y++)
+                if (bottomLeftChunkLoadCoordinate.x >= 0)
                 {
-                    //test if i need this heere
-                    if (y < 0 || y >= chunksOnY) { continue; }
-
-                    Chunk chunk = chunks[new Vector2Int(bottomLeftChunkLoadCoordinate.x, y)];
-
-                    if (!chunk.loaded)
+                    for (int y = bottomLeftChunkLoadCoordinate.y; y <= topRightChunkLoadCoordinate.y; y++)
                     {
-                        LoadChunk(chunk);
-                    }
-                    else
-                    {
-                        //it must be in the queue
-                        chunk.inUnloadQueue = false;
-                    }
+                        //test if i need this heere
+                        if (y < 0 || y >= chunksOnY) { continue; }
 
-                    chunk.loaded = true;
+                        Chunk chunk = chunks[new Vector2Int(bottomLeftChunkLoadCoordinate.x, y)];
+
+                        if (!chunk.loaded)
+                        {
+                            LoadChunk(chunk);
+                        }
+                        else
+                        {
+                            //it must be in the queue
+                            chunk.inUnloadQueue = false;
+                        }
+
+                        chunk.loaded = true;
+                    }
                 }
+                else
+                {
+                    //print("End of world not gonna generate (left)");
+                }
+
             }
             //else
             {
@@ -794,26 +889,32 @@ public class WorldGenerator : MonoBehaviour
                     }
                 }
 
-                if (topRightChunkLoadCoordinate.x >= chunksOnX) { print("End of world not gonna generate (right)"); return; }
-
-                for (int y = bottomLeftChunkLoadCoordinate.y; y <= topRightChunkLoadCoordinate.y; y++)
+                if (topRightChunkLoadCoordinate.x < chunksOnX)
                 {
-                    if (y < 0 || y >= chunksOnY) { continue; }
-
-                    Chunk chunk = chunks[new Vector2Int(topRightChunkLoadCoordinate.x, y)];
-
-                    if (!chunk.loaded)
+                    for (int y = bottomLeftChunkLoadCoordinate.y; y <= topRightChunkLoadCoordinate.y; y++)
                     {
-                        LoadChunk(chunk);
-                    }
-                    else
-                    {
-                        //it must be in the queue
-                        chunk.inUnloadQueue = false;
-                    }
+                        if (y < 0 || y >= chunksOnY) { continue; }
 
-                    chunk.loaded = true;
+                        Chunk chunk = chunks[new Vector2Int(topRightChunkLoadCoordinate.x, y)];
+
+                        if (!chunk.loaded)
+                        {
+                            LoadChunk(chunk);
+                        }
+                        else
+                        {
+                            //it must be in the queue
+                            chunk.inUnloadQueue = false;
+                        }
+
+                        chunk.loaded = true;
+                    }
                 }
+                else
+                {
+                    //print("End of world not gonna generate (right)");
+                }
+
             }
 
             //if (loadDirection.y == -1)
@@ -836,26 +937,32 @@ public class WorldGenerator : MonoBehaviour
                     }
                 }
 
-                if (bottomLeftChunkLoadCoordinate.y < 0) { print("End of world not gonna generate (bottom)"); return; }
-
-                for (int x = bottomLeftChunkLoadCoordinate.x; x <= topRightChunkLoadCoordinate.x; x++)
+                if (bottomLeftChunkLoadCoordinate.y >= 0)
                 {
-                    //test with and without this check
-                    if (x < 0 || x >= chunksOnX) { continue; }
-
-                    Chunk chunk = chunks[new Vector2Int(x, bottomLeftChunkLoadCoordinate.y)];
-
-                    if (!chunk.loaded)
+                    for (int x = bottomLeftChunkLoadCoordinate.x; x <= topRightChunkLoadCoordinate.x; x++)
                     {
-                        LoadChunk(chunk);
-                    }
-                    else
-                    {
-                        chunk.inUnloadQueue = false;
-                    }
+                        //test with and without this check
+                        if (x < 0 || x >= chunksOnX) { continue; }
 
-                    chunk.loaded = true;
+                        Chunk chunk = chunks[new Vector2Int(x, bottomLeftChunkLoadCoordinate.y)];
+
+                        if (!chunk.loaded)
+                        {
+                            LoadChunk(chunk);
+                        }
+                        else
+                        {
+                            chunk.inUnloadQueue = false;
+                        }
+
+                        chunk.loaded = true;
+                    }
                 }
+                else
+                {
+                    //print("End of world not gonna generate (bottom)");
+                }
+
             }
             //else
             {
@@ -877,29 +984,34 @@ public class WorldGenerator : MonoBehaviour
                     }
                 }
 
-                if (topRightChunkLoadCoordinate.y >= chunksOnY) { print("End of world not gonna generate (top)"); return; }
-
-                for (int x = bottomLeftChunkLoadCoordinate.x; x <= topRightChunkLoadCoordinate.x; x++)
+                if (topRightChunkLoadCoordinate.y < chunksOnY)
                 {
-                    //test with and without this check
-                    if (x < 0 || x >= chunksOnX) { continue; }
-
-                    Chunk chunk = chunks[new Vector2Int(x, topRightChunkLoadCoordinate.y)];
-
-                    if (!chunk.loaded)
+                    for (int x = bottomLeftChunkLoadCoordinate.x; x <= topRightChunkLoadCoordinate.x; x++)
                     {
-                        LoadChunk(chunk);
-                    }
-                    else
-                    {
-                        chunk.inUnloadQueue = false;
-                    }
+                        //test with and without this check
+                        if (x < 0 || x >= chunksOnX) { continue; }
 
-                    chunk.loaded = true;
+                        Chunk chunk = chunks[new Vector2Int(x, topRightChunkLoadCoordinate.y)];
+
+                        if (!chunk.loaded)
+                        {
+                            LoadChunk(chunk);
+                        }
+                        else
+                        {
+                            chunk.inUnloadQueue = false;
+                        }
+
+                        chunk.loaded = true;
+                    }
+                }
+                else
+                {
+                    //print("End of world not gonna generate (top)");
                 }
             }
 
-            //LoadTrees(bottomLeftLoadPosition, topRightLoadPosition);
+            //BoundsInt boundsInt = new BoundsInt();
         }
         //Show entire world for debugging
         else

@@ -15,18 +15,31 @@ MonoBehaviour:
   itemType: 5
   tileData:
     layer: 0
-    tile: {fileID: 11400000, guid: f03d12f5953c8b546ad5345d300b3417, type: 2}
+    tile: {fileID: 11400000, guid: bd1b5fbd493ee7644b24672cb834955e, type: 2}
+    multiBlockItem: {fileID: 0}
+    dropOnBreak: {fileID: 11400000, guid: c7decb64c4d48f04b912d806d3c2e203, type: 2}
+    pimtid:
+      itemStructurePartOf: {fileID: 0}
+      relativePosition: {x: 0, y: 0}
+    amountDropped: 1
+    treeTile: 0
   weaponData:
     damageType: 0
     rangedData:
       enemiesPassThroughCount: 0
+    toolData:
+      worldLayer: 0
+      strength: 0
     criticalStrikeChance: 0
     damageVal: 0
   actionOnUse: 1
-  _name: 
+  itemSprite: {fileID: -7981621989889312606, guid: 228f8f7a11ab1254f9ef291f1b74d92a, type: 3}
+  emitsLight: 0
+  emitColor: {r: 0, g: 0, b: 0, a: 0}
+  itemName: Grass
   description: 
   rarity: Common
   useSpeed: 1
   maxStack: 999
   value: 0
-  id: 0
+  id: 1

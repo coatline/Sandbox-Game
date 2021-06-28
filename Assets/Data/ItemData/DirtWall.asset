@@ -17,6 +17,12 @@ MonoBehaviour:
     layer: 2
     tile: {fileID: 11400000, guid: 2726a597905a11a4d9833a1fb68a1040, type: 2}
     multiBlockItem: {fileID: 0}
+    dropOnBreak: {fileID: 11400000}
+    pimtid:
+      itemStructurePartOf: {fileID: 0}
+      relativePosition: {x: 0, y: 0}
+    amountDropped: 1
+    treeTile: 0
   weaponData:
     damageType: 0
     rangedData:
@@ -27,10 +33,13 @@ MonoBehaviour:
     criticalStrikeChance: 0
     damageVal: 0
   actionOnUse: 1
-  _name: DirtWall
+  itemSprite: {fileID: -1398546867751651778, guid: 485f797898a5f124496213bf29f036e2, type: 3}
+  emitsLight: 0
+  emitColor: {r: 0, g: 0, b: 0, a: 0}
+  itemName: DirtWall
   description: 
   rarity: Common
   useSpeed: 1
   maxStack: 999
   value: 0
-  id: 0
+  id: 4

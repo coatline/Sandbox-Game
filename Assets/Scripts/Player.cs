@@ -20,6 +20,7 @@ public class Player : MonoBehaviour
     [SerializeField] float reach;
     [SerializeField] ItemDataContainer dirt;
     [SerializeField] ItemDataContainer torch;
+    InventoryManager inventoryManager;
     WorldGenerator wg;
     Rigidbody2D rb;
     Camera cam;
@@ -35,6 +36,7 @@ public class Player : MonoBehaviour
         cam = Camera.main;
         rb = GetComponent<Rigidbody2D>();
         wg = FindObjectOfType<WorldGenerator>();
+        inventoryManager = FindObjectOfType<InventoryManager>();
     }
 
     float moveInputs;
@@ -50,8 +52,9 @@ public class Player : MonoBehaviour
         }
     }
 
-    bool placingTorch = false;
     Vector3Int previousPosAndIndex;
+    bool lightin;
+    bool extinguished;
 
     void Update()
     {
@@ -64,24 +67,33 @@ public class Player : MonoBehaviour
             transform.eulerAngles = new Vector3(0, 180, 0);
         }
 
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            placingTorch = !placingTorch;
+        ItemDataContainer currentItem = inventoryManager.CurrentItem();
 
-            if(!placingTorch)
+        {
+            //wg.mgblockMap[previousPosAndIndex.x, previousPosAndIndex.y] = (short)previousPosAndIndex.z;
+        }
+
+        if (currentItem && currentItem.emitsLight)
+        {
+            if (lightin)
             {
                 wg.mgblockMap[previousPosAndIndex.x, previousPosAndIndex.y] = (short)previousPosAndIndex.z;
             }
-        }
 
-        if (placingTorch)
-        {
-            //just have player light item so you can change the color and stuff
-            wg.mgblockMap[previousPosAndIndex.x, previousPosAndIndex.y] = (short)previousPosAndIndex.z;
+            lightin = true;
             Vector2Int blockPosition = new Vector2Int((int)transform.position.x, (int)transform.position.y);
             previousPosAndIndex = new Vector3Int(blockPosition.x, blockPosition.y, wg.mgblockMap[blockPosition.x, blockPosition.y]);
             wg.mgblockMap[blockPosition.x, blockPosition.y] = torch.id;
+            extinguished = false;
         }
+        else if (!extinguished)
+        {
+            wg.mgblockMap[previousPosAndIndex.x, previousPosAndIndex.y] = (short)previousPosAndIndex.z;
+            extinguished = true;
+            lightin = false;
+        }
+
+        //just have player light item so you can change the color and stuff
 
         if (Input.GetMouseButton(0))
         {
@@ -111,15 +123,16 @@ public class Player : MonoBehaviour
             {
                 Vector2Int blockPosition = new Vector2Int((int)mousePosition.x, (int)mousePosition.y);
 
-                if (placingTorch)
+                if (blockPosition.x < 0 || blockPosition.x >= wg.worldWidth || blockPosition.y < 0 || blockPosition.y >= wg.worldHeight) { return; }
+
+
+                if (currentItem != null && Vector2.Distance(blockPosition, transform.position) > .8f && CanPlace(currentItem.tileData.layer, new Vector3Int(blockPosition.x, blockPosition.y, 0)))
                 {
-                    wg.PlaceBlock(blockPosition.x, blockPosition.y, torch);
-                }
-                else
-                {
-                    //if (Vector2.Distance(blockPosition, transform.position) > .8f && CanPlace(0, new Vector3Int(blockPosition.x, blockPosition.y, 0)))
+                    //probably do not need to do this
+                    if (inventoryManager.CurrentSlot().count > 0)
                     {
-                        wg.PlaceBlock(blockPosition.x, blockPosition.y, dirt);
+                        wg.PlaceBlock(blockPosition.x, blockPosition.y, currentItem);
+                        inventoryManager.CurrentSlot().RemoveItem(1);
                     }
                 }
             }
@@ -128,26 +141,43 @@ public class Player : MonoBehaviour
         DoJump();
     }
 
-    //0-1-2
-    bool CanPlace(int depth, Vector3Int pos)
+    bool CanPlace(WorldLayer layer, Vector3Int pos)
     {
         var air = 0;
 
-        if (depth == 0 && wg.fgblockMap[pos.x, pos.y] == air)
+        if (layer == WorldLayer.foreground)
         {
-            if (wg.fgblockMap[pos.x + 1, pos.y] != air)
+            if (wg.fgblockMap[pos.x, pos.y] == air)
             {
-                return true;
+                if (wg.bgblockMap[pos.x, pos.y] != air || wg.fgblockMap[pos.x + 1, pos.y] != air || wg.fgblockMap[pos.x - 1, pos.y] != air || wg.fgblockMap[pos.x, pos.y - 1] != air || wg.fgblockMap[pos.x, pos.y + 1] != air)
+                {
+                    return true;
+                }
             }
-            else if (wg.fgblockMap[pos.x - 1, pos.y] != air)
+            else
             {
-                return true;
+                return false;
             }
-            else if (wg.fgblockMap[pos.x, pos.y - 1] != air)
+        }
+
+        if (layer == WorldLayer.midground)
+        {
+            if (wg.mgblockMap[pos.x, pos.y] == air && wg.fgblockMap[pos.x,pos.y]==air)
             {
-                return true;
+                if (wg.bgblockMap[pos.x, pos.y] != air || wg.fgblockMap[pos.x + 1, pos.y] != air || wg.fgblockMap[pos.x - 1, pos.y] != air || wg.fgblockMap[pos.x, pos.y - 1] != air || wg.fgblockMap[pos.x, pos.y + 1] != air)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
-            else if (wg.fgblockMap[pos.x, pos.y + 1] != air)
+        }
+
+        if (wg.bgblockMap[pos.x, pos.y] == air)
+        {
+            if (wg.bgblockMap[pos.x + 1, pos.y] != air || wg.bgblockMap[pos.x - 1, pos.y] != air || wg.bgblockMap[pos.x, pos.y - 1] != air || wg.bgblockMap[pos.x, pos.y + 1] != air)
             {
                 return true;
             }
@@ -158,7 +188,7 @@ public class Player : MonoBehaviour
 
     void DoJump()
     {
-        isGrounded = Physics2D.OverlapBox(feetPosition.position, new Vector2(.55f, .25f), 0, groundLayer);
+        isGrounded = Physics2D.OverlapBox(feetPosition.position, new Vector2(.55f, .4f), 0, groundLayer);
 
         if (isGrounded && Input.GetKeyDown(KeyCode.Space))
         {
@@ -183,6 +213,18 @@ public class Player : MonoBehaviour
         else if (Input.GetKeyUp(KeyCode.Space))
         {
             jumping = false;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Pickup") && GetComponent<CapsuleCollider2D>().IsTouching(collision))
+        {
+            Pickup pickup = collision.gameObject.GetComponent<Pickup>();
+
+            //Send this to a pool instead
+            Destroy(collision.gameObject);
+            inventoryManager.AddItem(pickup.itemData, pickup.count);
         }
     }
 }

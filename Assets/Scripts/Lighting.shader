@@ -3,7 +3,6 @@ Shader "Custom/Lighting"
 	Properties
 	{
 		_MainTex("_MainTex", 2D) = "white" {}
-		_CameraTex("_CameraTex", 2D) = "white" {}
 		_LightValues("_LightValues", 2D) = "white" {}
 	}
 		SubShader
@@ -43,7 +42,6 @@ Shader "Custom/Lighting"
 
 				sampler2D _MainTex;
 				sampler2D _LightValues;
-				sampler2D _CameraTex;
 
 				fixed4 frag(v2f i) : SV_Target
 				{

@@ -21,6 +21,7 @@ public class RenderLighting : MonoBehaviour
     [SerializeField] float blockDropoff;
     [SerializeField] float lowestLightLevel;
     [SerializeField] bool drawLighting;
+
     CalculateColorLighting ccl;
     SpriteRenderer sr;
     Rigidbody2D playerRB;
@@ -44,7 +45,7 @@ public class RenderLighting : MonoBehaviour
         frameSize = size;
 
         transform.position = new Vector3Int((int)cam.transform.position.x - size.x / 2, (int)cam.transform.position.y - size.y / 2, 0);
-
+        
         InitializeSprite();
 
         texture = new Texture2D(frameSize.x, frameSize.y);
@@ -79,6 +80,7 @@ public class RenderLighting : MonoBehaviour
         texture.filterMode = filterMode;
         texture.Apply();
         lr.shaderMaterial.SetTexture(lightValuesPropertyID, texture);
+        //sr.sprite.texture
     }
 
     void InitializeSprite()
@@ -113,7 +115,6 @@ public class RenderLighting : MonoBehaviour
         {
             //print(sw.ElapsedMilliseconds);
             //sw.Reset();
-
 
             if (ccl.lightingPosition == theoreticalPosition)
             {

@@ -31,7 +31,7 @@ TextureImporter:
     second: Torch
   - first:
       213: 6373870660395215810
-    second: Dirt_Tile_10
+    second: ItemSlot
   - first:
       213: -7097341274207599037
     second: Dirt_Tile_11
@@ -735,7 +735,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []

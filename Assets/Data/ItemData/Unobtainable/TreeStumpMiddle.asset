@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa09bd11f12393d44bcf30c9b64de8af, type: 3}
+  m_Name: TreeStumpMiddle
+  m_EditorClassIdentifier: 
+  itemType: 5
+  tileData:
+    layer: 1
+    tile: {fileID: 11400000, guid: cdd8986d1a94c77408c054d5594e78f1, type: 2}
+    multiBlockItem: {fileID: 0}
+    dropOnBreak: {fileID: 11400000, guid: 6d89c77261d7c344d966341fa441f874, type: 2}
+    pimtid:
+      itemStructurePartOf: {fileID: 0}
+      relativePosition: {x: 0, y: 0}
+    amountDropped: 5
+    treeTile: 1
+  weaponData:
+    damageType: 0
+    rangedData:
+      enemiesPassThroughCount: 0
+    toolData:
+      worldLayer: 0
+      strength: 0
+    criticalStrikeChance: 0
+    damageVal: 0
+  actionOnUse: 1
+  itemSprite: {fileID: 0}
+  emitsLight: 0
+  emitColor: {r: 0, g: 0, b: 0, a: 0}
+  itemName: TreeStumpMiddle
+  description: 
+  rarity: Common
+  useSpeed: 1
+  maxStack: 999
+  value: 0
+  id: 6

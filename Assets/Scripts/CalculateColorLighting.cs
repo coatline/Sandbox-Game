@@ -6,6 +6,9 @@ using UnityEngine;
 [DefaultExecutionOrder(-100)]
 public class CalculateColorLighting : MonoBehaviour
 {
+    [HideInInspector()] public Color[] pixels;
+    [SerializeField] float airDiagonalDropOff;
+    [SerializeField] float blockDiagonalDropOff;
     WorldGenerator wg;
     Color ambientColor;
     int lightRadius;
@@ -13,9 +16,6 @@ public class CalculateColorLighting : MonoBehaviour
     float blockDropoff;
     float lowestLightLevel;
     public bool drawTiles;
-    public Color[] pixels;
-    float blockDiagonalDropOff;
-    float airDiagonalDropOff;
     Vector2Int frameSize;
     bool running;
 
@@ -32,15 +32,7 @@ public class CalculateColorLighting : MonoBehaviour
         if (running) return;
         running = true;
 
-        blockDiagonalDropOff = Mathf.Pow(blockDropoff, Mathf.Sqrt(1.5f));
-        airDiagonalDropOff = Mathf.Pow(airDropoff, Mathf.Sqrt(1.5f));
-        //blockDiagonalDropOff = blockDropoff;
-        //airDiagonalDropOff = airDropoff;
-        singleLightEmission = new Color[lightRadius * 2 + 1, lightRadius * 2 + 1];
-        lightValues = new Color[frameSize.x, frameSize.y];
-        toEmit = new byte[frameSize.x, frameSize.y];
-        pixels = new Color[frameSize.x * frameSize.y];
-        singleLightEmission = new Color[lightRadius * 2 + 1, lightRadius * 2 + 1];
+        Setup();
 
         lightingThread = new Thread(Run);
         lightingThread.Start();
@@ -54,6 +46,20 @@ public class CalculateColorLighting : MonoBehaviour
 
     public Vector2Int lightingPosition;
     Thread lightingThread;
+
+    private void Setup()
+    {
+        wg = FindObjectOfType<WorldGenerator>();
+
+        blockDiagonalDropOff = Mathf.Pow(blockDropoff, Mathf.Sqrt(1.5f));
+        airDiagonalDropOff = Mathf.Pow(airDropoff, Mathf.Sqrt(1.5f));
+
+        lightValues = new Color[frameSize.x, frameSize.y];
+        toEmit = new byte[frameSize.x, frameSize.y];
+        pixels = new Color[frameSize.x * frameSize.y];
+        singleLightEmission = new Color[lightRadius * 2 + 1, lightRadius * 2 + 1];
+        singleLightEmission = new Color[lightRadius * 2 + 1, lightRadius * 2 + 1];
+    }
 
     private void OnApplicationQuit()
     {
@@ -103,10 +109,10 @@ public class CalculateColorLighting : MonoBehaviour
                 int worldX = lightingPosition.x + x;
                 int worldY = lightingPosition.y + y;
 
-                if (!WithinWorldBounds(worldX, worldY)) { continue; }
 
                 lightValues[x, y] = Color.black;
                 toEmit[x, y] = 0;
+                if (!WithinWorldBounds(worldX, worldY)) { continue; }
 
                 short fgtile = wg.fgblockMap[worldX, worldY];
                 ItemDataContainer mgtile = wg.itemData[wg.mgblockMap[worldX, worldY]];

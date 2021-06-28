@@ -6,14 +6,12 @@ using UnityEngine.Tilemaps;
 public class GenerateColliders : MonoBehaviour
 {
     [SerializeField] int tilemapLayer;
-    [SerializeField] WorldGenerator wg;
     [SerializeField] int checkWidth;
     [SerializeField] int checkHeight;
-    [SerializeField] int entityWidth;
-    [SerializeField] int entityHeight;
-    //BoxCollider2D[,] colliders;
+    WorldGenerator wg;
     Dictionary<Vector2Int, BoxCollider2D> colliders;
     List<Vector2Int> colliderPositions;
+
     //DO NOT GENERATE COLLIDERS FOR THE MIDDLE OF THE ENTITY TO SAVE ABOUT 2-3 COLLIDER CHECKS
 
     void Start()
@@ -33,37 +31,24 @@ public class GenerateColliders : MonoBehaviour
         {
             for (int y = 0; y < checkHeight; y++)
             {
-                if((x==0&&y==0)|| (x == 0 && y == checkHeight - 1)|| (x == checkWidth - 1 && y == 0)|| (x == checkWidth - 1 && y == checkHeight - 1)) { continue; }
+                if ((x == 0 && y == 0) || (x == 0 && y == checkHeight - 1) || (x == checkWidth - 1 && y == 0) || (x == checkWidth - 1 && y == checkHeight - 1)) { continue; }
                 var bc = g.AddComponent<BoxCollider2D>();
                 bc.enabled = false;
                 colliders.Add(new Vector2Int(x, y), bc);
                 colliderPositions.Add(new Vector2Int(x, y));
-                //colliders[x, y] = bc;
             }
         }
-
-        //for (int x = 0; x < entityWidth; x++)
-        //{
-        //    for (int y = 0; y < entityHeight; y++)
-        //    {
-        //        transform.position/2
-        //    }
-        //}
     }
 
     Vector3 previousPosition;
 
     void FixedUpdate()
     {
-        if (transform.position == previousPosition && !wg.blockModified) { return; }
+        if (Vector2.Distance(transform.position, new Vector2Int((int)transform.position.x, (int)transform.position.y)) < .5f && wg.blockModifiedAt==-Vector2Int.one) { return; }
 
         int checkPosX = (int)transform.position.x - checkWidth / 2;
         int checkPosY = (int)transform.position.y - checkHeight / 2;
 
-        //for (int x = 0; x < checkWidth; x++)
-        //{
-        //    for (int y = 0; y < checkHeight; y++)
-        //    {
         for (int i = 0; i < colliderPositions.Count; i++)
         {
             int x = colliderPositions[i].x;
@@ -85,54 +70,12 @@ public class GenerateColliders : MonoBehaviour
                     bc.enabled = false;
                 }
             }
+            else
+            {
+                //print for a test
+            }
         }
-        //if (wg.fgblockMap[checkPosX + x, checkPosY + y] != 0)
-        //{
-        //    colliders[x, y].offset = new Vector2(checkPosX + x + .5f, checkPosY + y + .5f);
-        //    colliders[x, y].enabled = true;
-        //}
-        //else
-        //{
-        //    colliders[x, y].enabled = false;
-        //}
-        //    }
-        //}
 
         previousPosition = transform.position;
-        //if (wg.blockMap[posX, posY] != 0)
-        //{
-        //    colliders[2, 2].enabled = true;
-        //    colliders[2, 2].offset = new Vector2(posX, posY);
-        //}
-        //if (wg.blockMap[posX - 1, posY] != 0)
-        //{
-        //    colliders[1, 2].enabled = true;
-        //    colliders[1, 2].offset = new Vector2(posX, posY);
-        //}
-        //if (wg.blockMap[posX + 1, posY] != 0)
-        //{
-        //    colliders[2, 2].enabled = true;
-        //    colliders[3, 2].offset = new Vector2(posX, posY);
-        //}
-        //if (wg.blockMap[posX, posY + 1] != 0)
-        //{
-        //    colliders[2, 2].enabled = true;
-        //    colliders[2, 2].offset = new Vector2(posX, posY);
-        //}
-        //if (wg.blockMap[posX, posY - 1] != 0)
-        //{
-        //    colliders[2, 2].enabled = true;
-        //    colliders[2, 2].offset = new Vector2(posX, posY);
-        //}
-        //if (wg.blockMap[posX + 1, posY - 1] != 0)
-        //{
-        //    colliders[2, 2].enabled = true;
-        //    colliders[2, 2].offset = new Vector2(posX, posY);
-        //}
-        //if (wg.blockMap[posX - 1, posY - 1] != 0)
-        //{
-        //    colliders[2, 2].enabled = true;
-        //    colliders[2, 2].offset = new Vector2(posX, posY);
-        //}
     }
 }

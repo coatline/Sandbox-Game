@@ -16,14 +16,27 @@ MonoBehaviour:
   tileData:
     layer: 0
     tile: {fileID: 0}
+    multiBlockItem: {fileID: 0}
+    dropOnBreak: {fileID: 0}
+    pimtid:
+      itemStructurePartOf: {fileID: 0}
+      relativePosition: {x: 0, y: 0}
+    amountDropped: 0
+    treeTile: 0
   weaponData:
     damageType: 0
     rangedData:
       enemiesPassThroughCount: 0
+    toolData:
+      worldLayer: 0
+      strength: 0
     criticalStrikeChance: 0
     damageVal: 0
   actionOnUse: 0
-  _name: Null
+  itemSprite: {fileID: 0}
+  emitsLight: 0
+  emitColor: {r: 0, g: 0, b: 0, a: 0}
+  itemName: Nothing
   description: 
   rarity: Common
   useSpeed: 1
