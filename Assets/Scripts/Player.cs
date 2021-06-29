@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     [SerializeField] ItemDataContainer dirt;
     [SerializeField] ItemDataContainer torch;
     InventoryManager inventoryManager;
+    CursorBehavior cursor;
     WorldGenerator wg;
     Rigidbody2D rb;
     Camera cam;
@@ -36,6 +37,7 @@ public class Player : MonoBehaviour
         cam = Camera.main;
         rb = GetComponent<Rigidbody2D>();
         wg = FindObjectOfType<WorldGenerator>();
+        cursor = FindObjectOfType<CursorBehavior>();
         inventoryManager = FindObjectOfType<InventoryManager>();
     }
 
@@ -53,8 +55,8 @@ public class Player : MonoBehaviour
     }
 
     Vector3Int previousPosAndIndex;
-    bool lightin;
     bool extinguished;
+    bool lit;
 
     void Update()
     {
@@ -69,18 +71,19 @@ public class Player : MonoBehaviour
 
         ItemDataContainer currentItem = inventoryManager.CurrentItem();
 
+        if(cursor.currentItem)
         {
-            //wg.mgblockMap[previousPosAndIndex.x, previousPosAndIndex.y] = (short)previousPosAndIndex.z;
+            currentItem = cursor.currentItem;
         }
 
         if (currentItem && currentItem.emitsLight)
         {
-            if (lightin)
+            if (lit)
             {
                 wg.mgblockMap[previousPosAndIndex.x, previousPosAndIndex.y] = (short)previousPosAndIndex.z;
             }
 
-            lightin = true;
+            lit = true;
             Vector2Int blockPosition = new Vector2Int((int)transform.position.x, (int)transform.position.y);
             previousPosAndIndex = new Vector3Int(blockPosition.x, blockPosition.y, wg.mgblockMap[blockPosition.x, blockPosition.y]);
             wg.mgblockMap[blockPosition.x, blockPosition.y] = torch.id;
@@ -90,10 +93,10 @@ public class Player : MonoBehaviour
         {
             wg.mgblockMap[previousPosAndIndex.x, previousPosAndIndex.y] = (short)previousPosAndIndex.z;
             extinguished = true;
-            lightin = false;
+            lit = false;
         }
 
-        //just have player light item so you can change the color and stuff
+        //just have a list of objects that emit light and look at those
 
         if (Input.GetMouseButton(0))
         {
@@ -218,7 +221,7 @@ public class Player : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Pickup") && GetComponent<CapsuleCollider2D>().IsTouching(collision))
+        if (collision.gameObject.CompareTag("Pickup") && GetComponent<Collider2D>().IsTouching(collision))
         {
             Pickup pickup = collision.gameObject.GetComponent<Pickup>();
 

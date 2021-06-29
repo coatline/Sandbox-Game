@@ -9,8 +9,9 @@ public class CalculateColorLighting : MonoBehaviour
     [HideInInspector()] public Color[] pixels;
     [SerializeField] float airDiagonalDropOff;
     [SerializeField] float blockDiagonalDropOff;
+    [SerializeField] DayNightCycle dnc;
+    public Color ambientColor;
     WorldGenerator wg;
-    Color ambientColor;
     int lightRadius;
     float airDropoff;
     float blockDropoff;
@@ -19,12 +20,11 @@ public class CalculateColorLighting : MonoBehaviour
     Vector2Int frameSize;
     bool running;
 
-    public void StartLighting(Vector2Int frameSize, WorldGenerator wg, Color ambientColor, int lightRadius, float airDropoff, float blockDropoff, float lowestLightLevel)
+    public void StartLighting(Vector2Int frameSize, WorldGenerator wg, int lightRadius, float airDropoff, float blockDropoff, float lowestLightLevel)
     {
         this.frameSize = frameSize;
         this.lowestLightLevel = lowestLightLevel;
         this.blockDropoff = blockDropoff;
-        this.ambientColor = ambientColor;
         this.lightRadius = lightRadius;
         this.airDropoff = airDropoff;
         this.wg = wg;
@@ -117,10 +117,19 @@ public class CalculateColorLighting : MonoBehaviour
                 short fgtile = wg.fgblockMap[worldX, worldY];
                 ItemDataContainer mgtile = wg.itemData[wg.mgblockMap[worldX, worldY]];
 
-                if (fgtile == 0 && worldY > wg.highestTiles[worldX] - wg.caveStartingOffset)
+                if (worldY > wg.highestTiles[worldX] - wg.caveStartingOffset && fgtile == 0 && wg.bgblockMap[worldX, worldY] == 0)
                 {
                     lightValues[x, y] = ambientColor;
                     toEmit[x, y] = 2;
+
+                    if (dnc.timeOfDay == TimeOfDay.night)
+                    {
+                        if (mgtile.emitsLight)
+                        {
+                            lightValues[x, y] = Color.white;
+                            toEmit[x, y] = 1;
+                        }
+                    }
                 }
                 else if (mgtile.emitsLight)
                 {
@@ -222,7 +231,7 @@ public class CalculateColorLighting : MonoBehaviour
 
                     if (neighborLayer <= lightRadius && neighborLayer == currentLayer + 1)
                     {
-                        float dropOff = 0;
+                        float dropOff;
 
                         if (wg.fgblockMap[worldPosX, worldPosY] == 0)
                         {

@@ -35,7 +35,7 @@ MonoBehaviour:
   actionOnUse: 1
   itemSprite: {fileID: -2445883823613288998, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
   emitsLight: 1
-  emitColor: {r: 1, g: 1, b: 1, a: 0}
+  emitColor: {r: 1, g: 0.9607843, b: 0.88235295, a: 0}
   itemName: Torch
   description: 
   rarity: Common

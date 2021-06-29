@@ -17,14 +17,125 @@ public class InventorySlot : MonoBehaviour
     [SerializeField] Color selectedBackgroundColor;
     [SerializeField] Vector2 scaleOnSelect;
     public ItemDataContainer item;
+    CursorBehavior cursor;
+    InventoryManager im;
     public int count;
     bool selected;
 
     private void Start()
     {
+        im = FindObjectOfType<InventoryManager>();
+        cursor = FindObjectOfType<CursorBehavior>();
+
         if (!selected)
         {
             backgroundSr.color = normalBackgroundColor;
+        }
+    }
+
+    public void InteractWithCursor()
+    {
+        if (!im.canEditInventory) { return; }
+
+        if (cursor.currentItem)
+        {
+            if (item)
+            {
+                if (cursor.currentItem == item)
+                {
+                    // Combine items
+
+                    AddItem(cursor.currentItem, cursor.count);
+                    cursor.RemoveItem();
+                }
+                else
+                {
+                    // Swap items
+
+                    ItemDataContainer oldItem = item;
+                    int oldCount = count;
+
+                    ChangeItem(cursor.currentItem, cursor.count);
+
+                    cursor.RemoveItem();
+                    cursor.TakeItem(oldItem, oldCount);
+                }
+            }
+            else
+            {
+                // Take item
+
+                ChangeItem(cursor.currentItem, cursor.count);
+
+                cursor.RemoveItem();
+            }
+        }
+        else
+        {
+            if (item)
+            {
+                // Give item
+
+                cursor.TakeItem(item, count);
+                ClearItem();
+            }
+            else
+            {
+                // Do nothing
+            }
+        }
+    }
+
+    void ChangeItem(ItemDataContainer newItem, int count)
+    {
+        this.item = newItem;
+        this.count = count;
+
+        UpdateImage();
+    }
+
+    void UpdateImage()
+    {
+        if (item)
+        {
+            itemImageSr.sprite = item.itemSprite;
+            itemImageSr.enabled = true;
+
+            if (!selected)
+            {
+                backgroundSr.color = filledBackgroundColor;
+            }
+        }
+        else
+        {
+            itemImageSr.enabled = false;
+
+            if (!selected)
+            {
+                backgroundSr.color = normalBackgroundColor;
+            }
+        }
+
+        UpdateCountText();
+    }
+
+    void ClearItem()
+    {
+        item = null;
+        count = 0;
+
+        UpdateImage();
+    }
+
+    void UpdateCountText()
+    {
+        if (this.count > 1)
+        {
+            countText.text = this.count.ToString();
+        }
+        else
+        {
+            countText.text = "";
         }
     }
 
@@ -37,46 +148,23 @@ public class InventorySlot : MonoBehaviour
         }
 
         this.count += count;
-
-        if (this.count > 1)
-        {
-            countText.text = this.count.ToString();
-        }
-
         this.item = item;
-        itemImageSr.enabled = true;
-        itemImageSr.sprite = item.itemSprite;
 
-        if (!selected)
-        {
-            backgroundSr.color = filledBackgroundColor;
-        }
+        UpdateImage();
     }
 
     public void RemoveItem(int count)
     {
         this.count -= count;
 
-        if (this.count > 1)
+        if (this.count <= 0)
         {
-            countText.text = this.count.ToString();
+            ClearItem();
         }
-        else if (this.count == 1)
+        else
         {
-            countText.text = "";
+            UpdateImage();
         }
-        else if (this.count <= 0)
-        {
-            item = null;
-            itemImageSr.enabled = false;
-            backgroundSr.color = normalBackgroundColor;
-        }
-    }
-
-    public void TakeItem()
-    {
-        itemImageSr.enabled = false;
-        backgroundSr.color = normalBackgroundColor;
     }
 
     public void SelectSlot()

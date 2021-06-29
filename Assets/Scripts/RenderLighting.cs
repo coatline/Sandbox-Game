@@ -10,7 +10,6 @@ public class RenderLighting : MonoBehaviour
     [SerializeField] LightingRenderer lr;
     [SerializeField] Vector2Int overlap;
     [SerializeField] WorldGenerator wg;
-    [SerializeField] Color ambientColor;
     [SerializeField] int lightRadius;
     [SerializeField] int fps;
 
@@ -54,7 +53,7 @@ public class RenderLighting : MonoBehaviour
         ccl.lightingPosition = new Vector2Int((int)transform.position.x, (int)transform.position.y);
         //ccl.fgblockMap = wg.fgblockMap;
         //ccl.mgblockMap = wg.mgblockMap;
-        ccl.StartLighting(frameSize, wg, ambientColor, lightRadius, airDropoff, blockDropoff, lowestLightLevel);
+        ccl.StartLighting(frameSize, wg, lightRadius, airDropoff, blockDropoff, lowestLightLevel);
     }
 
     void SetMinLightRadius()

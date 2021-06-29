@@ -9,6 +9,7 @@ public class InventoryManager : MonoBehaviour
     [SerializeField] TMP_Text cursorText;
     [SerializeField] Vector2Int inventorySize;
     GameObject extendedInventoryHolder;
+    public bool canEditInventory;
     InventorySlot[,] slotMap;
     int selectedSlotIndex;
     bool started;
@@ -39,6 +40,7 @@ public class InventoryManager : MonoBehaviour
         extendedInventoryHolder.transform.SetParent(transform);
 
         ScrollSlot(0);
+        Invoke("ToggleExtendedInventory", .1f);
     }
 
     public void AddItem(ItemDataContainer item, int count)
@@ -79,6 +81,7 @@ public class InventoryManager : MonoBehaviour
     void ToggleExtendedInventory()
     {
         extendedInventoryHolder.SetActive(!extendedInventoryHolder.activeSelf);
+        canEditInventory = extendedInventoryHolder.activeSelf;
 
         if (extendedInventoryHolder.transform.childCount == 0)
         {

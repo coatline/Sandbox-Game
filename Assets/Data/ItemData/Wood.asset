@@ -33,7 +33,7 @@ MonoBehaviour:
     criticalStrikeChance: 0
     damageVal: 0
   actionOnUse: 1
-  itemSprite: {fileID: 9016455088205929372, guid: 2bdbff6f8b629934780447730c6f0f50, type: 3}
+  itemSprite: {fileID: 6373870660395215810, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
   emitsLight: 0
   emitColor: {r: 0, g: 0, b: 0, a: 0}
   itemName: Wood
@@ -42,4 +42,4 @@ MonoBehaviour:
   useSpeed: 1
   maxStack: 999
   value: 0
-  id: 2
+  id: 11

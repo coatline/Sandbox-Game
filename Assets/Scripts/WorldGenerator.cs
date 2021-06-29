@@ -100,6 +100,7 @@ public class WorldGenerator : MonoBehaviour
 
         GenerateInitalTerrain();
 
+        GenerateStructure("TestStructure", worldWidth / 2, highestTiles[worldWidth / 2]);
         GenerateTrees();
 
         //GenerateFlowers();
@@ -109,7 +110,6 @@ public class WorldGenerator : MonoBehaviour
         GenerateCaves();
 
         AddCaveDetail();
-        GenerateStructure("BrokenDownShelter", worldWidth / 2, highestTiles[worldWidth / 2]);
 
         AddChunks();
 

@@ -11,6 +11,7 @@ public class GenerateColliders : MonoBehaviour
     WorldGenerator wg;
     Dictionary<Vector2Int, BoxCollider2D> colliders;
     List<Vector2Int> colliderPositions;
+    GameObject colHolder;
 
     //DO NOT GENERATE COLLIDERS FOR THE MIDDLE OF THE ENTITY TO SAVE ABOUT 2-3 COLLIDER CHECKS
 
@@ -22,17 +23,17 @@ public class GenerateColliders : MonoBehaviour
         colliders = new Dictionary<Vector2Int, BoxCollider2D>();
         colliderPositions = new List<Vector2Int>();
 
-        var g = new GameObject($"{gameObject.name} Surrounding Collision");
+        colHolder = new GameObject($"{gameObject.name} Surrounding Collision");
         var masterGob = GameObject.Find("Tilemap Collision").transform;
-        g.transform.SetParent(masterGob);
-        g.layer = tilemapLayer;
+        colHolder.transform.SetParent(masterGob);
+        colHolder.layer = tilemapLayer;
 
         for (int x = 0; x < checkWidth; x++)
         {
             for (int y = 0; y < checkHeight; y++)
             {
                 if ((x == 0 && y == 0) || (x == 0 && y == checkHeight - 1) || (x == checkWidth - 1 && y == 0) || (x == checkWidth - 1 && y == checkHeight - 1)) { continue; }
-                var bc = g.AddComponent<BoxCollider2D>();
+                var bc = colHolder.AddComponent<BoxCollider2D>();
                 bc.enabled = false;
                 colliders.Add(new Vector2Int(x, y), bc);
                 colliderPositions.Add(new Vector2Int(x, y));
@@ -44,7 +45,7 @@ public class GenerateColliders : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (Vector2.Distance(transform.position, new Vector2Int((int)transform.position.x, (int)transform.position.y)) < .5f && wg.blockModifiedAt==-Vector2Int.one) { return; }
+        if (Vector2.Distance(transform.position, new Vector2Int((int)transform.position.x, (int)transform.position.y)) < .5f && wg.blockModifiedAt == -Vector2Int.one) { return; }
 
         int checkPosX = (int)transform.position.x - checkWidth / 2;
         int checkPosY = (int)transform.position.y - checkHeight / 2;
@@ -77,5 +78,10 @@ public class GenerateColliders : MonoBehaviour
         }
 
         previousPosition = transform.position;
+    }
+
+    private void OnDestroy()
+    {
+        Destroy(colHolder);
     }
 }
