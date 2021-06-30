@@ -16,10 +16,9 @@ public class InventorySlot : MonoBehaviour
     [SerializeField] Color filledBackgroundColor;
     [SerializeField] Color selectedBackgroundColor;
     [SerializeField] Vector2 scaleOnSelect;
-    public ItemDataContainer item;
+    public ItemPackage itemPackage;
     CursorBehavior cursor;
     InventoryManager im;
-    public int count;
     bool selected;
 
     private void Start()
@@ -37,46 +36,45 @@ public class InventorySlot : MonoBehaviour
     {
         if (!im.canEditInventory) { return; }
 
-        if (cursor.currentItem)
+        if (cursor.itemPackage.item)
         {
-            if (item)
+            if (itemPackage.item != null)
             {
-                if (cursor.currentItem == item)
+                if (cursor.itemPackage == itemPackage)
                 {
                     // Combine items
 
-                    AddItem(cursor.currentItem, cursor.count);
+                    AddItem(cursor.itemPackage.count);
                     cursor.RemoveItem();
                 }
                 else
                 {
                     // Swap items
 
-                    ItemDataContainer oldItem = item;
-                    int oldCount = count;
+                    ItemPackage oldItemPackage = itemPackage;
 
-                    ChangeItem(cursor.currentItem, cursor.count);
+                    ChangeItem(cursor.itemPackage);
 
                     cursor.RemoveItem();
-                    cursor.TakeItem(oldItem, oldCount);
+                    cursor.TakeItem(oldItemPackage);
                 }
             }
             else
             {
                 // Take item
 
-                ChangeItem(cursor.currentItem, cursor.count);
+                ChangeItem(cursor.itemPackage);
 
                 cursor.RemoveItem();
             }
         }
         else
         {
-            if (item)
+            if (itemPackage.item != null)
             {
                 // Give item
 
-                cursor.TakeItem(item, count);
+                cursor.TakeItem(itemPackage);
                 ClearItem();
             }
             else
@@ -86,19 +84,18 @@ public class InventorySlot : MonoBehaviour
         }
     }
 
-    void ChangeItem(ItemDataContainer newItem, int count)
+    void ChangeItem(ItemPackage itemPackage)
     {
-        this.item = newItem;
-        this.count = count;
+        this.itemPackage = itemPackage;
 
         UpdateImage();
     }
 
     void UpdateImage()
     {
-        if (item)
+        if (itemPackage.item != null)
         {
-            itemImageSr.sprite = item.itemSprite;
+            itemImageSr.sprite = itemPackage.item.itemSprite;
             itemImageSr.enabled = true;
 
             if (!selected)
@@ -121,17 +118,17 @@ public class InventorySlot : MonoBehaviour
 
     void ClearItem()
     {
-        item = null;
-        count = 0;
+        itemPackage.item = null;
+        itemPackage.count = 0;
 
         UpdateImage();
     }
 
     void UpdateCountText()
     {
-        if (this.count > 1)
+        if (this.itemPackage.count > 1)
         {
-            countText.text = this.count.ToString();
+            countText.text = this.itemPackage.count.ToString();
         }
         else
         {
@@ -139,25 +136,31 @@ public class InventorySlot : MonoBehaviour
         }
     }
 
-    public void AddItem(ItemDataContainer item, int count)
+    public void AddItem(int count, ItemDataContainer newItem = null)
     {
-        if (this.count + count > item.maxStack)
+        if (itemPackage.item == null)
         {
-            //drop the rest of it
-            this.count = item.maxStack;
+            itemPackage = new ItemPackage(newItem, count);
         }
+        else
+        {
+            this.itemPackage.count += count;
 
-        this.count += count;
-        this.item = item;
+            if (this.itemPackage.count + count > itemPackage.item.maxStack)
+            {
+                //drop the rest of it
+                this.itemPackage.count = itemPackage.item.maxStack;
+            }
+        }
 
         UpdateImage();
     }
 
     public void RemoveItem(int count)
     {
-        this.count -= count;
+        this.itemPackage.count -= count;
 
-        if (this.count <= 0)
+        if (this.itemPackage.count <= 0)
         {
             ClearItem();
         }
@@ -176,7 +179,7 @@ public class InventorySlot : MonoBehaviour
 
     public void DeSelectSlot()
     {
-        if (item != null)
+        if (itemPackage.item != null)
         {
             backgroundSr.color = filledBackgroundColor;
         }

@@ -9,8 +9,7 @@ public class CursorBehavior : MonoBehaviour
     Image image;
     TMP_Text countText;
 
-    public ItemDataContainer currentItem;
-    public int count;
+    public ItemPackage itemPackage;
 
     void Start()
     {
@@ -26,9 +25,9 @@ public class CursorBehavior : MonoBehaviour
 
     void UpdateText()
     {
-        if(count > 1)
+        if(itemPackage.count > 1)
         {
-            countText.text = count.ToString();
+            countText.text = itemPackage.count.ToString();
         }
         else
         {
@@ -36,24 +35,33 @@ public class CursorBehavior : MonoBehaviour
         }
     }
 
-    public void TakeItem(ItemDataContainer newItem, int count)
+    public void UseItem(int count)
     {
-        this.count = count;
+        this.itemPackage.count -= count;
+
+        if(this.itemPackage.count <= 0)
+        {
+            RemoveItem();
+            return;
+        }
+
+        UpdateText();
+    }
+
+    public void TakeItem(ItemPackage newItem)
+    {
+        this.itemPackage.count = newItem.count;
         image.enabled = true;
-        currentItem = newItem;
-        image.sprite = currentItem.itemSprite;
+        itemPackage.item = newItem.item;
+        image.sprite = itemPackage.item.itemSprite;
         UpdateText();
     }
 
     public void RemoveItem()
     {
-        currentItem = null;
         image.enabled = false;
-        count = 0;
+        itemPackage.count = 0;
+        itemPackage.item = null;
         UpdateText();
     }
-
-    //Class itempackage
-    //holds itemdata and count for that data
-    //
 }

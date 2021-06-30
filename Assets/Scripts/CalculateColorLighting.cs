@@ -7,9 +7,10 @@ using UnityEngine;
 public class CalculateColorLighting : MonoBehaviour
 {
     [HideInInspector()] public Color[] pixels;
-    [SerializeField] float airDiagonalDropOff;
-    [SerializeField] float blockDiagonalDropOff;
     [SerializeField] DayNightCycle dnc;
+    public List<Vector2Int> lightEmitters;
+    float airDiagonalDropOff;
+    float blockDiagonalDropOff;
     public Color ambientColor;
     WorldGenerator wg;
     int lightRadius;
@@ -109,9 +110,9 @@ public class CalculateColorLighting : MonoBehaviour
                 int worldX = lightingPosition.x + x;
                 int worldY = lightingPosition.y + y;
 
-
                 lightValues[x, y] = Color.black;
                 toEmit[x, y] = 0;
+
                 if (!WithinWorldBounds(worldX, worldY)) { continue; }
 
                 short fgtile = wg.fgblockMap[worldX, worldY];
@@ -138,6 +139,16 @@ public class CalculateColorLighting : MonoBehaviour
                 }
             }
         }
+
+        for (int i = 0; i < lightEmitters.Count; i++)
+        {
+            var x = lightEmitters[i].x - lightingPosition.x;
+            var y = lightEmitters[i].y - lightingPosition.y;
+
+            lightValues[x, y] = Color.white;
+            toEmit[x, y] = 1;
+        }
+
 
         for (int x = 0; x < frameSize.x; x++)
         {

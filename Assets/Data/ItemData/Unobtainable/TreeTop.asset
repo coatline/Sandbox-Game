@@ -14,14 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemType: 5
   tileData:
+    itemDroppedOnBreak:
+      item: {fileID: 11400000, guid: 6d89c77261d7c344d966341fa441f874, type: 2}
+      count: 3
     layer: 1
     tile: {fileID: 11400000, guid: 3be0def2792228e46a95448c7646e16a, type: 2}
-    multiBlockItem: {fileID: 0}
-    dropOnBreak: {fileID: 11400000, guid: 6d89c77261d7c344d966341fa441f874, type: 2}
-    pimtid:
+    hardness: 0
+    partOfMultiTileData:
       itemStructurePartOf: {fileID: 0}
       relativePosition: {x: 0, y: 0}
-    amountDropped: 5
+    multiBlockItem: {fileID: 0}
     treeTile: 1
   weaponData:
     damageType: 0

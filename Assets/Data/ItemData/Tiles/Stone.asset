@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa09bd11f12393d44bcf30c9b64de8af, type: 3}
+  m_Name: Stone
+  m_EditorClassIdentifier: 
+  itemType: 5
+  tileData:
+    itemDroppedOnBreak:
+      item: {fileID: 11400000}
+      count: 1
+    layer: 0
+    tile: {fileID: 11400000, guid: ef106a8a704b97945b869e875e254e56, type: 2}
+    hardness: 2
+    partOfMultiTileData:
+      itemStructurePartOf: {fileID: 0}
+      relativePosition: {x: 0, y: 0}
+    multiBlockItem: {fileID: 0}
+    treeTile: 0
+  weaponData:
+    damageType: 0
+    rangedData:
+      enemiesPassThroughCount: 0
+    toolData:
+      worldLayer: 0
+      strength: 0
+    criticalStrikeChance: 0
+    damageVal: 0
+  actionOnUse: 1
+  useTime: 0.25
+  maxStack: 999
+  value: 0
+  id: 3
+  emitsLight: 0
+  emitColor: {r: 0, g: 0, b: 0, a: 0}
+  itemSprite: {fileID: -3848607359157971786, guid: 751a1cf3d62041e40ba2b96144981d8e, type: 3}
+  selectedSprite: {fileID: 0}
+  showOnSelect: 0
+  hideOnUse: 0
+  itemName: Stone
+  description: 
+  rarity: Common

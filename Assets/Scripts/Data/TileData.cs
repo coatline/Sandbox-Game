@@ -13,11 +13,13 @@ public enum WorldLayer
 
 public class TileData
 {
+    public ItemPackage itemDroppedOnBreak;
     public WorldLayer layer;
     public RuleTile tile;
+    public int hardness;
+
+    public PartInMutliTileItemData partOfMultiTileData;
     public Structure multiBlockItem;
-    public ItemDataContainer dropOnBreak;
-    public PartInMutliTileItemData pimtid;
-    public int amountDropped;
+
     public bool treeTile;
 }

@@ -4,13 +4,11 @@ using UnityEngine;
 
 public class Pickup : MonoBehaviour
 {
-    public ItemDataContainer itemData;
-    public int count;
+    public ItemPackage itemPackage;
 
-    public void SetItem(ItemDataContainer item, int count)
+    public void SetItem(ItemPackage newItemPackage)
     {
-        GetComponent<SpriteRenderer>().sprite = item.itemSprite;
-        itemData = item;
-        this.count = count;
+        GetComponent<SpriteRenderer>().sprite = newItemPackage.item.itemSprite;
+        itemPackage = newItemPackage;
     }
 }

@@ -2,9 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InventoryManager : MonoBehaviour
 {
+    [SerializeField] List<ItemPackage> startingItems;
     [SerializeField] InventorySlot slotPrefab;
     [SerializeField] TMP_Text cursorText;
     [SerializeField] Vector2Int inventorySize;
@@ -19,9 +21,9 @@ public class InventoryManager : MonoBehaviour
         return slotMap[selectedSlotIndex, 0];
     }
 
-    public ItemDataContainer CurrentItem()
+    public ItemPackage CurrentItemPackage()
     {
-        return slotMap[selectedSlotIndex, 0].item;
+        return slotMap[selectedSlotIndex, 0].itemPackage;
     }
 
     void Awake()
@@ -33,6 +35,12 @@ public class InventoryManager : MonoBehaviour
             for (int x = 0; x < inventorySize.x; x++)
             {
                 slotMap[x, y] = Instantiate(slotPrefab, transform);
+                
+                if(startingItems.Count > 0)
+                {
+                    slotMap[x, y].AddItem(startingItems[0].count, startingItems[0].item);
+                    startingItems.RemoveAt(0);
+                }
             }
         }
 
@@ -40,10 +48,12 @@ public class InventoryManager : MonoBehaviour
         extendedInventoryHolder.transform.SetParent(transform);
 
         ScrollSlot(0);
-        Invoke("ToggleExtendedInventory", .1f);
+        //LayoutRebuilder.ForceRebuildLayoutImmediate(GetComponent<RectTransform>());
+        //ToggleExtendedInventory();
+        Invoke("ToggleExtendedInventory", .05f);
     }
 
-    public void AddItem(ItemDataContainer item, int count)
+    public void AddItem(ItemPackage newItemPackage)
     {
         bool seenEmpty = false;
         Vector2Int emptyIndex = Vector2Int.zero;
@@ -54,15 +64,16 @@ public class InventoryManager : MonoBehaviour
             {
                 InventorySlot slot = slotMap[x, y];
 
-                if (!seenEmpty && slot.item == null)
+                if (!seenEmpty && slot.itemPackage.item == null)
                 {
                     emptyIndex = new Vector2Int(x, y);
                     seenEmpty = true;
                 }
 
-                if (slot.item == item && slot.count < slot.item.maxStack/*+ count*/)
+                if (slot.itemPackage.item == newItemPackage.item && slot.itemPackage.count < slot.itemPackage.item.maxStack + newItemPackage.count)
                 {
-                    slot.AddItem(item, count);
+                    // Stack the items into one slot
+                    slot.AddItem(newItemPackage.count);
                     return;
                 }
             }
@@ -70,7 +81,7 @@ public class InventoryManager : MonoBehaviour
 
         if (seenEmpty)
         {
-            slotMap[emptyIndex.x, emptyIndex.y].AddItem(item, count);
+            slotMap[emptyIndex.x, emptyIndex.y].AddItem(newItemPackage.count, newItemPackage.item);
         }
         else
         {

@@ -16,15 +16,18 @@ public class Player : MonoBehaviour
     [Range(10, 50f)]
     [SerializeField] float fallingSpeedCap;
     [SerializeField] Transform feetPosition;
+    [SerializeField] SpriteRenderer itemHold;
     [SerializeField] LayerMask groundLayer;
     [SerializeField] float reach;
-    [SerializeField] ItemDataContainer dirt;
-    [SerializeField] ItemDataContainer torch;
+    [SerializeField] Animation swingAnimation;
     InventoryManager inventoryManager;
     CursorBehavior cursor;
+    RenderLighting rl;
     WorldGenerator wg;
     Rigidbody2D rb;
     Camera cam;
+    Animator a;
+    int swingAnimationHash = Animator.StringToHash("PlayerSwing");
 
     public Tilemap backgroundTilemap;
     public Tilemap blockTilemap;
@@ -35,7 +38,9 @@ public class Player : MonoBehaviour
     void Start()
     {
         cam = Camera.main;
+        a = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
+        rl = FindObjectOfType<RenderLighting>();
         wg = FindObjectOfType<WorldGenerator>();
         cursor = FindObjectOfType<CursorBehavior>();
         inventoryManager = FindObjectOfType<InventoryManager>();
@@ -54,71 +59,45 @@ public class Player : MonoBehaviour
         }
     }
 
-    Vector3Int previousPosAndIndex;
-    bool extinguished;
     bool lit;
 
     void Update()
     {
-        if (moveInputs > 0)
-        {
-            transform.eulerAngles = new Vector3(0, 0, 0);
-        }
-        else if (moveInputs < 0)
-        {
-            transform.eulerAngles = new Vector3(0, 180, 0);
-        }
+        FaceDirection();
 
-        ItemDataContainer currentItem = inventoryManager.CurrentItem();
+        HandleItems();
 
-        if(cursor.currentItem)
-        {
-            currentItem = cursor.currentItem;
-        }
+        DoJump();
+    }
 
-        if (currentItem && currentItem.emitsLight)
-        {
-            if (lit)
-            {
-                wg.mgblockMap[previousPosAndIndex.x, previousPosAndIndex.y] = (short)previousPosAndIndex.z;
-            }
+    void UseItem()
+    {
+        if (!currentItemPackage.item) { return; }
 
-            lit = true;
-            Vector2Int blockPosition = new Vector2Int((int)transform.position.x, (int)transform.position.y);
-            previousPosAndIndex = new Vector3Int(blockPosition.x, blockPosition.y, wg.mgblockMap[blockPosition.x, blockPosition.y]);
-            wg.mgblockMap[blockPosition.x, blockPosition.y] = torch.id;
-            extinguished = false;
-        }
-        else if (!extinguished)
-        {
-            wg.mgblockMap[previousPosAndIndex.x, previousPosAndIndex.y] = (short)previousPosAndIndex.z;
-            extinguished = true;
-            lit = false;
-        }
-
-        //just have a list of objects that emit light and look at those
-
-        if (Input.GetMouseButton(0))
+        if (currentItemPackage.item.itemType == ItemType.tool)
         {
             var mousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
 
-            if (Vector2.Distance(transform.position, mousePosition) < reach)
+            if (CanBreak(currentItemPackage.item.weaponData.toolData.worldLayer, new Vector2Int((int)mousePosition.x, (int)mousePosition.y)) && Vector2.Distance(transform.position, mousePosition) < reach)
             {
                 Vector2Int blockPosition = new Vector2Int((int)mousePosition.x, (int)mousePosition.y);
 
+                if (wg.fgblockMap[blockPosition.x, blockPosition.y] == 0)
                 {
-                    if (wg.fgblockMap[blockPosition.x, blockPosition.y] == 0)
-                    {
-                        wg.BreakBlock(blockPosition.x, blockPosition.y, WorldLayer.midground);
-                    }
-                    else
-                    {
-                        wg.BreakBlock(blockPosition.x, blockPosition.y, WorldLayer.foreground);
-                    }
+                    wg.BreakBlock(blockPosition.x, blockPosition.y, WorldLayer.midground);
+                }
+                else
+                {
+                    wg.BreakBlock(blockPosition.x, blockPosition.y, WorldLayer.foreground);
                 }
             }
+            else
+            {
+                canUse = true;
+                return;
+            }
         }
-        else if (Input.GetMouseButton(1))
+        else if (currentItemPackage.item.itemType == ItemType.block)
         {
             var mousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
 
@@ -128,31 +107,164 @@ public class Player : MonoBehaviour
 
                 if (blockPosition.x < 0 || blockPosition.x >= wg.worldWidth || blockPosition.y < 0 || blockPosition.y >= wg.worldHeight) { return; }
 
+                var distance = Vector2.Distance(blockPosition, transform.position);
 
-                if (currentItem != null && Vector2.Distance(blockPosition, transform.position) > .8f && CanPlace(currentItem.tileData.layer, new Vector3Int(blockPosition.x, blockPosition.y, 0)))
+                if (currentItemPackage != null && distance > .8f && distance < reach && CanPlace(currentItemPackage.item.tileData.layer, new Vector2Int(blockPosition.x, blockPosition.y)))
                 {
-                    //probably do not need to do this
-                    if (inventoryManager.CurrentSlot().count > 0)
+                    if (currentItemPackage.count > 0)
                     {
-                        wg.PlaceBlock(blockPosition.x, blockPosition.y, currentItem);
-                        inventoryManager.CurrentSlot().RemoveItem(1);
+
+                        if (cursorItem)
+                        {
+                            wg.PlaceBlock(blockPosition.x, blockPosition.y, currentItemPackage.item);
+                            cursor.UseItem(1);
+                        }
+                        else
+                        {
+                            wg.PlaceBlock(blockPosition.x, blockPosition.y, currentItemPackage.item);
+                            inventoryManager.CurrentSlot().RemoveItem(1);
+                        }
                     }
+                }
+                else
+                {
+                    canUse = true;
+                    return;
                 }
             }
         }
 
-        DoJump();
+        canUse = false;
+        StartCoroutine(UseTimer());
     }
 
-    bool CanPlace(WorldLayer layer, Vector3Int pos)
-    {
-        var air = 0;
+    GameObject dynamicLight;
+    ItemPackage currentItemPackage;
+    bool canUse = true;
+    bool cursorItem;
 
+    IEnumerator UseTimer()
+    {
+        yield return new WaitForSeconds(currentItemPackage.item.useTime);
+        canUse = true;
+    }
+
+    public bool swinging;
+    public bool idle;
+
+    void HandleItems()
+    {
+        if (cursor.itemPackage.item != null)
+        {
+            currentItemPackage = cursor.itemPackage;
+            cursorItem = true;
+        }
+        else
+        {
+            currentItemPackage = inventoryManager.CurrentItemPackage();
+        }
+
+        if (swinging && !itemHold.enabled)
+        {
+            itemHold.enabled = true;
+        }
+
+        if (currentItemPackage.item != null)
+        {
+            if (currentItemPackage.item.showOnSelect && idle)
+            {
+                if (!itemHold.enabled)
+                {
+                    itemHold.enabled = true;
+                }
+
+                itemHold.sprite = currentItemPackage.item.selectedSprite;
+            }
+            else if (!swinging && itemHold.enabled)
+            {
+                itemHold.enabled = false;
+            }
+
+
+            if (currentItemPackage.item.emitsLight)
+            {
+                if (!lit)
+                {
+                    dynamicLight = new GameObject("Light");
+                    dynamicLight.transform.SetParent(transform);
+                    dynamicLight.transform.position = itemHold.transform.position;
+                    rl.dynamicLightEmitters.Add(dynamicLight.transform);
+                    lit = true;
+                }
+            }
+            else if (lit)
+            {
+                Destroy(dynamicLight);
+                lit = false;
+            }
+
+            if (Input.GetMouseButton(0))
+            {
+                itemHold.sprite = currentItemPackage.item.itemSprite;
+                a.speed = 2 - (currentItemPackage.item.useTime);
+
+                if (!swinging)
+                {
+                    a.Play(swingAnimationHash);
+                }
+
+                if (canUse)
+                {
+                    UseItem();
+                }
+            }
+        }
+        else
+        {
+            if (!swinging && itemHold.enabled)
+            {
+                // No item do not show anything in hand
+
+                itemHold.enabled = false;
+            }
+            else if (lit)
+            {
+                lit = false;
+                Destroy(dynamicLight);
+            }
+        }
+    }
+
+    void FaceDirection()
+    {
+        if (moveInputs > 0)
+        {
+            transform.eulerAngles = new Vector3(0, 0, 0);
+        }
+        else if (moveInputs < 0)
+        {
+            transform.eulerAngles = new Vector3(0, 180, 0);
+        }
+    }
+
+    bool CanBreak(WorldLayer layer, Vector2Int pos)
+    {
+        switch (layer)
+        {
+            case WorldLayer.foreground: return wg.fgblockMap[pos.x, pos.y] != 0;
+            case WorldLayer.midground: return wg.mgblockMap[pos.x, pos.y] != 0;
+            case WorldLayer.background: return wg.bgblockMap[pos.x, pos.y] != 0;
+        }
+        return false;
+    }
+
+    bool CanPlace(WorldLayer layer, Vector2Int pos)
+    {
         if (layer == WorldLayer.foreground)
         {
-            if (wg.fgblockMap[pos.x, pos.y] == air)
+            if (wg.fgblockMap[pos.x, pos.y] == 0)
             {
-                if (wg.bgblockMap[pos.x, pos.y] != air || wg.fgblockMap[pos.x + 1, pos.y] != air || wg.fgblockMap[pos.x - 1, pos.y] != air || wg.fgblockMap[pos.x, pos.y - 1] != air || wg.fgblockMap[pos.x, pos.y + 1] != air)
+                if (wg.bgblockMap[pos.x, pos.y] != 0 || wg.fgblockMap[pos.x + 1, pos.y] != 0 || wg.fgblockMap[pos.x - 1, pos.y] != 0 || wg.fgblockMap[pos.x, pos.y - 1] != 0 || wg.fgblockMap[pos.x, pos.y + 1] != 0)
                 {
                     return true;
                 }
@@ -165,9 +277,9 @@ public class Player : MonoBehaviour
 
         if (layer == WorldLayer.midground)
         {
-            if (wg.mgblockMap[pos.x, pos.y] == air && wg.fgblockMap[pos.x,pos.y]==air)
+            if (wg.mgblockMap[pos.x, pos.y] == 0 && wg.fgblockMap[pos.x, pos.y] == 0)
             {
-                if (wg.bgblockMap[pos.x, pos.y] != air || wg.fgblockMap[pos.x + 1, pos.y] != air || wg.fgblockMap[pos.x - 1, pos.y] != air || wg.fgblockMap[pos.x, pos.y - 1] != air || wg.fgblockMap[pos.x, pos.y + 1] != air)
+                if (wg.bgblockMap[pos.x, pos.y] != 0 || wg.fgblockMap[pos.x + 1, pos.y] != 0 || wg.fgblockMap[pos.x - 1, pos.y] != 0 || wg.fgblockMap[pos.x, pos.y - 1] != 0 || wg.fgblockMap[pos.x, pos.y + 1] != 0)
                 {
                     return true;
                 }
@@ -178,9 +290,9 @@ public class Player : MonoBehaviour
             }
         }
 
-        if (wg.bgblockMap[pos.x, pos.y] == air)
+        if (wg.bgblockMap[pos.x, pos.y] == 0)
         {
-            if (wg.bgblockMap[pos.x + 1, pos.y] != air || wg.bgblockMap[pos.x - 1, pos.y] != air || wg.bgblockMap[pos.x, pos.y - 1] != air || wg.bgblockMap[pos.x, pos.y + 1] != air)
+            if (wg.bgblockMap[pos.x + 1, pos.y] != 0 || wg.bgblockMap[pos.x - 1, pos.y] != 0 || wg.bgblockMap[pos.x, pos.y - 1] != 0 || wg.bgblockMap[pos.x, pos.y + 1] != 0)
             {
                 return true;
             }
@@ -227,7 +339,8 @@ public class Player : MonoBehaviour
 
             //Send this to a pool instead
             Destroy(collision.gameObject);
-            inventoryManager.AddItem(pickup.itemData, pickup.count);
+
+            inventoryManager.AddItem(pickup.itemPackage);
         }
     }
 }

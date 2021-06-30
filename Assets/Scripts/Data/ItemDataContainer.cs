@@ -52,21 +52,28 @@ public enum ItemType
 
 public class ItemDataContainer : ScriptableObject
 {
+    [Header("Data")]
     public ItemType itemType;
     public TileData tileData;
     public WeaponData weaponData;
     public PlayerAction actionOnUse;
-    public Sprite itemSprite;
+    public float useTime;
+    public short maxStack;
+    public short value;
+    public short id;
+    [Header("Light")]
     public bool emitsLight;
     public Color emitColor;
+    [Header("Visuals")]
+    public Sprite itemSprite;
+    public Sprite selectedSprite;
+    public bool showOnSelect;
+    public bool hideOnUse;
 
+    [Header("Text")]
     public string itemName;
     public string description;
     public string rarity;
 
-    public float useSpeed;
 
-    public short maxStack;
-    public short value;
-    public short id;
 }

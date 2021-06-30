@@ -42,9 +42,10 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField] Tilemap foregroundTilemap;
     [SerializeField] Tilemap midgroundTilemap;
     [SerializeField] Tilemap backgroundTilemap;
+    [SerializeField] PickupManager pickupManager;
     [SerializeField] Player playerPrefab;
-    [SerializeField] List<Structure> structures;
     [SerializeField] Pickup pickupPrefab;
+    [SerializeField] List<Structure> structures;
     public List<ItemDataContainer> itemData;
 
     [Header("Settings")]
@@ -100,7 +101,17 @@ public class WorldGenerator : MonoBehaviour
 
         GenerateInitalTerrain();
 
-        GenerateStructure("TestStructure", worldWidth / 2, highestTiles[worldWidth / 2]);
+        var structureWidth = structureFromName["TestStructure"].width;
+        GenerateStructure("TestStructure", Random.Range(0,worldWidth - structureWidth), Random.Range(0, worldHeight/2));
+        GenerateStructure("TestStructure", Random.Range(0,worldWidth - structureWidth), Random.Range(0, worldHeight/2));
+        GenerateStructure("TestStructure", Random.Range(0,worldWidth - structureWidth), Random.Range(0, worldHeight/2));
+        GenerateStructure("TestStructure", Random.Range(0,worldWidth - structureWidth), Random.Range(0, worldHeight/2));
+        GenerateStructure("TestStructure", Random.Range(0,worldWidth - structureWidth), Random.Range(0, worldHeight/2));
+        GenerateStructure("TestStructure", Random.Range(0,worldWidth - structureWidth), Random.Range(0, worldHeight/2 ));
+        GenerateStructure("TestStructure", Random.Range(0,worldWidth - structureWidth), Random.Range(0, worldHeight/2 ));
+        GenerateStructure("TestStructure", Random.Range(0,worldWidth - structureWidth), Random.Range(0, worldHeight/2 ));
+        GenerateStructure("TestStructure", Random.Range(0,worldWidth - structureWidth), Random.Range(0, worldHeight/2 ));
+        GenerateStructure("TestStructure", Random.Range(0,worldWidth - structureWidth), Random.Range(0, worldHeight/2 ));
         GenerateTrees();
 
         //GenerateFlowers();
@@ -253,11 +264,6 @@ public class WorldGenerator : MonoBehaviour
         {
             case WorldLayer.foreground:
 
-                if (fgblockMap[x, y] == 0)
-                {
-                    return;
-                }
-
                 blockModifiedAt = new Vector2Int(x, y);
                 itemBroken = itemData[fgblockMap[x, y]];
                 fgblockMap[x, y] = 0;
@@ -266,11 +272,6 @@ public class WorldGenerator : MonoBehaviour
 
                 break;
             case WorldLayer.midground:
-
-                if (mgblockMap[x, y] == 0)
-                {
-                    return;
-                }
 
                 itemBroken = itemData[mgblockMap[x, y]];
 
@@ -322,11 +323,6 @@ public class WorldGenerator : MonoBehaviour
                 break;
             case WorldLayer.background:
 
-                if (bgblockMap[x, y] == 0)
-                {
-                    return;
-                }
-
                 itemBroken = itemData[bgblockMap[x, y]];
                 bgblockMap[x, y] = 0;
                 backgroundTilemap.SetTile(new Vector3Int(x, y, 0), null);
@@ -338,8 +334,8 @@ public class WorldGenerator : MonoBehaviour
         var rotation = Quaternion.Euler(0, 0, Random.Range(0, 360));
 
         var pickup = Instantiate(pickupPrefab, new Vector3(x + Random.Range(-.25f, .25f), y + Random.Range(-.25f, .25f), 0) + Vector3.one / 2, rotation);
-        //pickup.GetComponent<Pickup>()
-        pickup.SetItem(itemBroken.tileData.dropOnBreak, itemBroken.tileData.amountDropped);
+        pickup.SetItem(itemBroken.tileData.itemDroppedOnBreak);
+        pickupManager.AddPickup(pickup);
     }
 
     public void PlaceBlock(int x, int y, ItemDataContainer tileData)
@@ -380,10 +376,10 @@ public class WorldGenerator : MonoBehaviour
         for (int x = 2; x < worldWidth - 3; x += 3)
         {
             //do not put on uneven block
-            if (fgblockMap[x - 1, highestTiles[x]] == 0 || fgblockMap[x + 1, highestTiles[x]] == 0)
-            {
-                continue;
-            }
+            //if (fgblockMap[x - 1, highestTiles[x]] == 0 || fgblockMap[x + 1, highestTiles[x]] == 0)
+            //{
+            //    continue;
+            //}
 
             if (Random.Range(0f, 100f) <= chanceForTreeToSpawn)
             {

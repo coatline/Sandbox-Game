@@ -8,6 +8,6 @@ public class RecipeData : ScriptableObject
 {
     public RuleTile nearbyTile;
     public int amountPerCraft;
-    public Ingredient[] ingredients;
+    public ItemPackage[] ingredients;
     public TileData nearbyTilesForCrafting;
 }

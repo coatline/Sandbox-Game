@@ -418,7 +418,7 @@ GameObject:
   - component: {fileID: 266848233}
   - component: {fileID: 266848236}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: Inventory
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -517,6 +517,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cdaf9d346dd768458c8afe4d317d035, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startingItems:
+  - item: {fileID: 11400000, guid: 2dab57d867d8861409a0481d7d0d7391, type: 2}
+    count: 1
+  - item: {fileID: 11400000, guid: 90e7b688a8ddfae4293969f0aa6908d2, type: 2}
+    count: 1
+  - item: {fileID: 11400000, guid: 46afb2af641133b448c7c7fc69038da5, type: 2}
+    count: 999
   slotPrefab: {fileID: 4782726682756206770, guid: 1945920e2e1a7384f99156b2413fb8a9, type: 3}
   cursorText: {fileID: 0}
   inventorySize: {x: 10, y: 5}
@@ -1472,7 +1479,7 @@ MonoBehaviour:
   followObject: {fileID: 0}
   cameraSizeInUnits: {x: 0, y: 0}
   movement: {x: 0, y: 0, z: 0}
-  speed: 0.517
+  speed: 0.381
 --- !u!114 &677809622
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1999,6 +2006,50 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   display_Text: {fileID: 1019905924}
+--- !u!1 &1082501414
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1082501415}
+  - component: {fileID: 1082501416}
+  m_Layer: 0
+  m_Name: PickupManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1082501415
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1082501414}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1082501416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1082501414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dea4590fa8e170248ae91f3dfc548ccf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rl: {fileID: 1473898470}
 --- !u!1 &1280783395
 GameObject:
   m_ObjectHideFlags: 0
@@ -2163,8 +2214,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6c9201951fd7c74f9556c982fac3112, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldWidth: 1000
-  worldHeight: 500
+  worldWidth: 250
+  worldHeight: 250
   chunkSize: 5
   stoneStartOffset: 22
   sprinkleStoneStartOffset: 6
@@ -2181,10 +2232,11 @@ MonoBehaviour:
   foregroundTilemap: {fileID: 377442536}
   midgroundTilemap: {fileID: 439862296}
   backgroundTilemap: {fileID: 132104300}
+  pickupManager: {fileID: 1082501416}
   playerPrefab: {fileID: -5950935772551705473, guid: 67cd9c87b486eab43993994b379cee81, type: 3}
+  pickupPrefab: {fileID: 6249268390125590140, guid: e0198637f363d8845bfd61dda153666f, type: 3}
   structures:
   - {fileID: 11400000, guid: 6cc338f2fd9a5ed4bbdd19dfe6cd30c5, type: 2}
-  pickupPrefab: {fileID: 6249268390125590140, guid: e0198637f363d8845bfd61dda153666f, type: 3}
   itemData:
   - {fileID: 11400000, guid: 09d7db0c7ee9c094caa07c4599cf04bd, type: 2}
   - {fileID: 11400000, guid: 65a52429fc4ed7c4cb8c92774a532458, type: 2}
@@ -2365,10 +2417,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pixels: []
-  airDiagonalDropOff: 0
-  blockDiagonalDropOff: 0
   dnc: {fileID: 1961256899}
-  ambientColor: {r: 0, g: 0, b: 0, a: 0}
+  lightEmitters: []
+  ambientColor: {r: 1, g: 1, b: 1, a: 0}
   drawTiles: 0
   lightingPosition: {x: 0, y: 0}
 --- !u!114 &1473898469
@@ -2402,10 +2453,11 @@ MonoBehaviour:
   wg: {fileID: 1338082158}
   lightRadius: -1119
   fps: 0
-  airDropoff: 0.908
+  airDropoff: 0.88
   blockDropoff: 0.646
-  lowestLightLevel: 0.03
+  lowestLightLevel: 0.032
   drawLighting: 1
+  dynamicLightEmitters: []
 --- !u!1 &1578126800
 GameObject:
   m_ObjectHideFlags: 0
@@ -2600,8 +2652,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 512c0d17856957a41ae72d162360eed9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentItem: {fileID: 0}
-  count: 0
+  itemPackage:
+    item: {fileID: 0}
+    count: 0
 --- !u!1 &1653086528
 GameObject:
   m_ObjectHideFlags: 0
@@ -2951,5 +3004,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 512c0d17856957a41ae72d162360eed9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentItem: {fileID: 0}
-  count: 0
+  itemPackage:
+    item: {fileID: 0}
+    count: 0

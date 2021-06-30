@@ -21,9 +21,9 @@ public class RenderLighting : MonoBehaviour
     [SerializeField] float lowestLightLevel;
     [SerializeField] bool drawLighting;
 
+    public List<Transform> dynamicLightEmitters;
     CalculateColorLighting ccl;
     SpriteRenderer sr;
-    Rigidbody2D playerRB;
     Camera cam;
     int lightValuesPropertyID;
 
@@ -34,7 +34,6 @@ public class RenderLighting : MonoBehaviour
     {
         lightValuesPropertyID = Shader.PropertyToID("_LightValues");
         cam = Camera.main;
-        playerRB = FindObjectOfType<Player>().GetComponent<Rigidbody2D>();
 
         SetMinLightRadius();
         overlap = new Vector2Int((lightRadius - 4) * 2, (lightRadius - 4) * 2);
@@ -51,8 +50,6 @@ public class RenderLighting : MonoBehaviour
 
         ccl = GetComponent<CalculateColorLighting>();
         ccl.lightingPosition = new Vector2Int((int)transform.position.x, (int)transform.position.y);
-        //ccl.fgblockMap = wg.fgblockMap;
-        //ccl.mgblockMap = wg.mgblockMap;
         ccl.StartLighting(frameSize, wg, lightRadius, airDropoff, blockDropoff, lowestLightLevel);
     }
 
@@ -79,7 +76,6 @@ public class RenderLighting : MonoBehaviour
         texture.filterMode = filterMode;
         texture.Apply();
         lr.shaderMaterial.SetTexture(lightValuesPropertyID, texture);
-        //sr.sprite.texture
     }
 
     void InitializeSprite()
@@ -109,7 +105,6 @@ public class RenderLighting : MonoBehaviour
 
     void Update()
     {
-        //theoreticalPosition = new Vector2Int((int)transform.position.x,(int)transform.position.y);
         if (ccl.drawTiles)
         {
             //print(sw.ElapsedMilliseconds);
@@ -127,6 +122,23 @@ public class RenderLighting : MonoBehaviour
 
             theoreticalPosition = new Vector2Int((int)cam.transform.position.x - size.x / 2, (int)cam.transform.position.y - size.y / 2);
             ccl.lightingPosition = theoreticalPosition;
+
+            ccl.lightEmitters.Clear();
+
+            for (int i = 0; i < dynamicLightEmitters.Count; i++)
+            {
+                if (dynamicLightEmitters[i] == null)
+                {
+                    //does this skip over an element?
+                    dynamicLightEmitters.RemoveAt(i);
+                    i--;
+                }
+                else
+                {
+                    ccl.lightEmitters.Add(new Vector2Int((int)dynamicLightEmitters[i].position.x, (int)dynamicLightEmitters[i].position.y));
+                }
+            }
+
             ccl.drawTiles = false;
             //sw.Start();
         }
