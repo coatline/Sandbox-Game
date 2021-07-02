@@ -14,16 +14,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemType: 5
   tileData:
+    otherAttachTo:
+    - {fileID: 11400000, guid: 77b3aab8535db884e99045073d3108c8, type: 2}
+    - {fileID: 11400000, guid: b062730f5fd7c93468fb109e1625910b, type: 2}
     itemDroppedOnBreak:
       item: {fileID: 11400000}
       count: 1
-    layer: 1
+    attachToLayer: 0
+    placeOnLayer: 1
+    noAttachToBackground: 0
+    noAttachToCeiling: 0
+    noAttachToWalls: 0
+    noPlaceOnFloor: 0
+    requiredTool: 0
     tile: {fileID: 11400000, guid: 27b5d93433100b84987c98a2de5d235b, type: 2}
     hardness: 2
     partOfMultiTileData:
       itemStructurePartOf: {fileID: 0}
       relativePosition: {x: 0, y: 0}
-    multiBlockItem: {fileID: 0}
+    multiBlockStructure: {fileID: 0}
+    isPartOfMultiTile: 0
     treeTile: 0
   weaponData:
     damageType: 0
@@ -31,6 +41,7 @@ MonoBehaviour:
       enemiesPassThroughCount: 0
     toolData:
       worldLayer: 0
+      toolType: 0
       strength: 0
     criticalStrikeChance: 0
     damageVal: 0

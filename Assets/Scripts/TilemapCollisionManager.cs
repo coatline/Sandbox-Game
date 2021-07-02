@@ -49,7 +49,8 @@ public class TilemapCollisionManager : MonoBehaviour
     public void UpdateColliderAt(int x, int y, bool remove = false)
     {
         if (x < 0 || x >= wg.worldWidth || y < 0 || y >= wg.worldHeight) { return; }
-        if (wg.fgblockMap[x, y] == 0)
+
+        if (wg.blockMap[x, y, 0] == 0)
         {
             if (colliders[x, y] != null)
             {
@@ -70,7 +71,6 @@ public class TilemapCollisionManager : MonoBehaviour
     {
         if (collidersInQueue.Count <= 0)
         {
-            print("creating");
             CreateCollider();
         }
 

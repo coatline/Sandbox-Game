@@ -61,7 +61,7 @@ public class GenerateColliders : MonoBehaviour
 
             if (colliders.TryGetValue(new Vector2Int(x, y), out bc))
             {
-                if (wg.fgblockMap[checkPosX + x, checkPosY + y] != 0)
+                if (wg.blockMap[checkPosX + x, checkPosY + y, 0] != 0)
                 {
                     bc.enabled = true;
                     bc.offset = new Vector2(checkPosX + x + .5f, checkPosY + y + .5f);

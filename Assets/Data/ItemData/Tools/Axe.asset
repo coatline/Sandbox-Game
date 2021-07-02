@@ -14,16 +14,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemType: 2
   tileData:
+    otherAttachTo: []
     itemDroppedOnBreak:
       item: {fileID: 0}
       count: 0
-    layer: 0
+    attachToLayer: 0
+    placeOnLayer: 0
+    noAttachToBackground: 0
+    noAttachToCeiling: 0
+    noAttachToWalls: 0
+    noPlaceOnFloor: 0
+    requiredTool: 1
     tile: {fileID: 0}
     hardness: 0
     partOfMultiTileData:
       itemStructurePartOf: {fileID: 0}
       relativePosition: {x: 0, y: 0}
-    multiBlockItem: {fileID: 0}
+    multiBlockStructure: {fileID: 0}
+    isPartOfMultiTile: 0
     treeTile: 0
   weaponData:
     damageType: 0
@@ -31,11 +39,12 @@ MonoBehaviour:
       enemiesPassThroughCount: 0
     toolData:
       worldLayer: 1
+      toolType: 1
       strength: 1
     criticalStrikeChance: 5
     damageVal: 4
   actionOnUse: 1
-  useTime: 0.35
+  useTime: 0.3
   maxStack: 0
   value: 0
   id: 0
@@ -45,6 +54,6 @@ MonoBehaviour:
   selectedSprite: {fileID: 0}
   showOnSelect: 0
   hideOnUse: 0
-  itemName: 
+  itemName: Axe
   description: 
   rarity: 

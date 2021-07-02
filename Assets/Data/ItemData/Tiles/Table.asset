@@ -10,38 +10,50 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fa09bd11f12393d44bcf30c9b64de8af, type: 3}
-  m_Name: TreeStumpLeft
+  m_Name: Table
   m_EditorClassIdentifier: 
   itemType: 5
   tileData:
+    otherAttachTo: []
     itemDroppedOnBreak:
-      item: {fileID: 11400000, guid: 6d89c77261d7c344d966341fa441f874, type: 2}
-      count: 3
-    layer: 1
-    tile: {fileID: 11400000, guid: 7c987820706287c44b1605d8d4264252, type: 2}
-    hardness: 0
+      item: {fileID: 11400000}
+      count: 1
+    attachToLayer: 0
+    placeOnLayer: 1
+    noAttachToBackground: 1
+    noAttachToCeiling: 1
+    noAttachToWalls: 1
+    noPlaceOnFloor: 0
+    requiredTool: 0
+    tile: {fileID: 0}
+    hardness: 2
     partOfMultiTileData:
       itemStructurePartOf: {fileID: 0}
       relativePosition: {x: 0, y: 0}
-    multiBlockItem: {fileID: 0}
-    treeTile: 1
+    multiBlockStructure: {fileID: 11400000, guid: 942b8fbd91c409543b439160cb1aeb86, type: 2}
+    isPartOfMultiTile: 0
+    treeTile: 0
   weaponData:
     damageType: 0
     rangedData:
       enemiesPassThroughCount: 0
     toolData:
       worldLayer: 0
+      toolType: 0
       strength: 0
     criticalStrikeChance: 0
     damageVal: 0
   actionOnUse: 1
-  itemSprite: {fileID: 0}
-  emitsLight: 0
-  emitColor: {r: 0, g: 0, b: 0, a: 0}
-  itemName: TreeStumpLeft
-  description: 
-  rarity: Common
-  useSpeed: 1
+  useTime: 0.15
   maxStack: 999
   value: 0
-  id: 8
+  id: 14
+  emitsLight: 0
+  emitColor: {r: 0, g: 0, b: 0, a: 0}
+  itemSprite: {fileID: -637004521647427473, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
+  selectedSprite: {fileID: 0}
+  showOnSelect: 0
+  hideOnUse: 1
+  itemName: Table
+  description: wefoijoiefwoijefwoijwefoij
+  rarity: Common

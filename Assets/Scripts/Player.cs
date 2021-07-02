@@ -67,28 +67,58 @@ public class Player : MonoBehaviour
 
         HandleItems();
 
-        DoJump();
+        HandleInputs();
     }
+
+
+    GameObject dynamicLight;
+    ItemPackage currentItemPackage;
+    bool canUse = true;
+    bool cursorItem;
+
+    IEnumerator UseTimer()
+    {
+        float useTime=0;
+
+        if (currentItemPackage.item != null)
+        {
+            useTime = currentItemPackage.item.useTime;
+        }
+        else
+        {
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(useTime);
+        canUse = true;
+    }
+
+    public bool swinging;
+    public bool idle;
 
     void UseItem()
     {
         if (!currentItemPackage.item) { return; }
 
+        var mousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
+        Vector2Int blockPosition = new Vector2Int((int)mousePosition.x, (int)mousePosition.y);
+
         if (currentItemPackage.item.itemType == ItemType.tool)
         {
-            var mousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
-
-            if (CanBreak(currentItemPackage.item.weaponData.toolData.worldLayer, new Vector2Int((int)mousePosition.x, (int)mousePosition.y)) && Vector2.Distance(transform.position, mousePosition) < reach)
+            if (Vector2.Distance(transform.position, mousePosition) < reach)
             {
-                Vector2Int blockPosition = new Vector2Int((int)mousePosition.x, (int)mousePosition.y);
+                if (blockPosition.x < 0 || blockPosition.x >= wg.worldWidth || blockPosition.y < 0 || blockPosition.y >= wg.worldHeight) { return; }
 
-                if (wg.fgblockMap[blockPosition.x, blockPosition.y] == 0)
+                if (wg.CanBreak(blockPosition.x, blockPosition.y, currentItemPackage.item.weaponData.toolData.toolType))
                 {
-                    wg.BreakBlock(blockPosition.x, blockPosition.y, WorldLayer.midground);
-                }
-                else
-                {
-                    wg.BreakBlock(blockPosition.x, blockPosition.y, WorldLayer.foreground);
+                    if (wg.blockMap[blockPosition.x, blockPosition.y, 0] == 0)
+                    {
+                        wg.BreakBlock(blockPosition.x, blockPosition.y, 1);
+                    }
+                    else
+                    {
+                        wg.BreakBlock(blockPosition.x, blockPosition.y, 0);
+                    }
                 }
             }
             else
@@ -99,25 +129,20 @@ public class Player : MonoBehaviour
         }
         else if (currentItemPackage.item.itemType == ItemType.block)
         {
-            var mousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
-
             if (Vector2.Distance(transform.position, mousePosition) < reach)
             {
-                Vector2Int blockPosition = new Vector2Int((int)mousePosition.x, (int)mousePosition.y);
-
                 if (blockPosition.x < 0 || blockPosition.x >= wg.worldWidth || blockPosition.y < 0 || blockPosition.y >= wg.worldHeight) { return; }
 
                 var distance = Vector2.Distance(blockPosition, transform.position);
 
-                if (currentItemPackage != null && distance > .8f && distance < reach && CanPlace(currentItemPackage.item.tileData.layer, new Vector2Int(blockPosition.x, blockPosition.y)))
+                if (currentItemPackage != null && distance > .8f && distance < reach && wg.CanPlace(blockPosition.x, blockPosition.y, currentItemPackage.item))
                 {
                     if (currentItemPackage.count > 0)
                     {
-
                         if (cursorItem)
                         {
                             wg.PlaceBlock(blockPosition.x, blockPosition.y, currentItemPackage.item);
-                            cursor.UseItem(1);
+                            //cursor.UseItem(1);
                         }
                         else
                         {
@@ -138,21 +163,7 @@ public class Player : MonoBehaviour
         StartCoroutine(UseTimer());
     }
 
-    GameObject dynamicLight;
-    ItemPackage currentItemPackage;
-    bool canUse = true;
-    bool cursorItem;
-
-    IEnumerator UseTimer()
-    {
-        yield return new WaitForSeconds(currentItemPackage.item.useTime);
-        canUse = true;
-    }
-
-    public bool swinging;
-    public bool idle;
-
-    void HandleItems()
+    void SetCurrentItem()
     {
         if (cursor.itemPackage.item != null)
         {
@@ -163,50 +174,64 @@ public class Player : MonoBehaviour
         {
             currentItemPackage = inventoryManager.CurrentItemPackage();
         }
+    }
 
-        if (swinging && !itemHold.enabled)
+    void DoDynamicLighting()
+    {
+        if (currentItemPackage.item.emitsLight)
         {
-            itemHold.enabled = true;
+            if (!lit)
+            {
+                dynamicLight = new GameObject("Light");
+                dynamicLight.transform.SetParent(transform);
+                dynamicLight.transform.position = itemHold.transform.position;
+                rl.dynamicLightEmitters.Add(dynamicLight.transform);
+                lit = true;
+            }
         }
+        else if (lit)
+        {
+            Destroy(dynamicLight);
+            lit = false;
+        }
+    }
+
+    void DisplayHand()
+    {
+        if (currentItemPackage.item.showOnSelect && idle)
+        {
+            if (!itemHold.enabled)
+            {
+                itemHold.enabled = true;
+            }
+
+            itemHold.sprite = currentItemPackage.item.selectedSprite;
+        }
+        else if (!swinging && itemHold.enabled)
+        {
+            itemHold.enabled = false;
+        }
+    }
+
+    void HandleItems()
+    {
+        SetCurrentItem();
 
         if (currentItemPackage.item != null)
         {
-            if (currentItemPackage.item.showOnSelect && idle)
+            if (swinging && !itemHold.enabled && !currentItemPackage.item.hideOnUse)
             {
-                if (!itemHold.enabled)
-                {
-                    itemHold.enabled = true;
-                }
-
-                itemHold.sprite = currentItemPackage.item.selectedSprite;
-            }
-            else if (!swinging && itemHold.enabled)
-            {
-                itemHold.enabled = false;
+                itemHold.enabled = true;
             }
 
+            DisplayHand();
 
-            if (currentItemPackage.item.emitsLight)
-            {
-                if (!lit)
-                {
-                    dynamicLight = new GameObject("Light");
-                    dynamicLight.transform.SetParent(transform);
-                    dynamicLight.transform.position = itemHold.transform.position;
-                    rl.dynamicLightEmitters.Add(dynamicLight.transform);
-                    lit = true;
-                }
-            }
-            else if (lit)
-            {
-                Destroy(dynamicLight);
-                lit = false;
-            }
+            DoDynamicLighting();
 
             if (Input.GetMouseButton(0))
             {
                 itemHold.sprite = currentItemPackage.item.itemSprite;
-                a.speed = 2 - (currentItemPackage.item.useTime);
+                a.speed = 4 - (currentItemPackage.item.useTime * 8);
 
                 if (!swinging)
                 {
@@ -235,6 +260,16 @@ public class Player : MonoBehaviour
         }
     }
 
+    void HandleInputs()
+    {
+        DoJump();
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            transform.position = new Vector3(wg.worldWidth / 2, wg.highestTiles[wg.worldWidth / 2] + 2);
+        }
+    }
+
     void FaceDirection()
     {
         if (moveInputs > 0)
@@ -245,60 +280,6 @@ public class Player : MonoBehaviour
         {
             transform.eulerAngles = new Vector3(0, 180, 0);
         }
-    }
-
-    bool CanBreak(WorldLayer layer, Vector2Int pos)
-    {
-        switch (layer)
-        {
-            case WorldLayer.foreground: return wg.fgblockMap[pos.x, pos.y] != 0;
-            case WorldLayer.midground: return wg.mgblockMap[pos.x, pos.y] != 0;
-            case WorldLayer.background: return wg.bgblockMap[pos.x, pos.y] != 0;
-        }
-        return false;
-    }
-
-    bool CanPlace(WorldLayer layer, Vector2Int pos)
-    {
-        if (layer == WorldLayer.foreground)
-        {
-            if (wg.fgblockMap[pos.x, pos.y] == 0)
-            {
-                if (wg.bgblockMap[pos.x, pos.y] != 0 || wg.fgblockMap[pos.x + 1, pos.y] != 0 || wg.fgblockMap[pos.x - 1, pos.y] != 0 || wg.fgblockMap[pos.x, pos.y - 1] != 0 || wg.fgblockMap[pos.x, pos.y + 1] != 0)
-                {
-                    return true;
-                }
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        if (layer == WorldLayer.midground)
-        {
-            if (wg.mgblockMap[pos.x, pos.y] == 0 && wg.fgblockMap[pos.x, pos.y] == 0)
-            {
-                if (wg.bgblockMap[pos.x, pos.y] != 0 || wg.fgblockMap[pos.x + 1, pos.y] != 0 || wg.fgblockMap[pos.x - 1, pos.y] != 0 || wg.fgblockMap[pos.x, pos.y - 1] != 0 || wg.fgblockMap[pos.x, pos.y + 1] != 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        }
-
-        if (wg.bgblockMap[pos.x, pos.y] == 0)
-        {
-            if (wg.bgblockMap[pos.x + 1, pos.y] != 0 || wg.bgblockMap[pos.x - 1, pos.y] != 0 || wg.bgblockMap[pos.x, pos.y - 1] != 0 || wg.bgblockMap[pos.x, pos.y + 1] != 0)
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     void DoJump()

@@ -2,24 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum WorldLayer
-{
-    foreground,
-    midground,
-    background
-}
-
 [System.Serializable]
 
 public class TileData
 {
+    public List<ItemDataContainer> otherAttachTo;
     public ItemPackage itemDroppedOnBreak;
-    public WorldLayer layer;
+    public byte attachToLayer;
+    public byte placeOnLayer;
+    public bool noAttachToBackground;
+    public bool noAttachToCeiling;
+    public bool noAttachToWalls;
+    public bool noPlaceOnFloor;
+    public Tool requiredTool;
     public RuleTile tile;
-    public int hardness;
+    public byte hardness;
 
     public PartInMutliTileItemData partOfMultiTileData;
-    public Structure multiBlockItem;
+    public Structure multiBlockStructure;
+    public bool isPartOfMultiTile;
 
     public bool treeTile;
 }

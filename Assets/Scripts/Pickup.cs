@@ -11,4 +11,10 @@ public class Pickup : MonoBehaviour
         GetComponent<SpriteRenderer>().sprite = newItemPackage.item.itemSprite;
         itemPackage = newItemPackage;
     }
+
+    // When getting pulled disable collider?
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    GetComponent<Collider2D>().enabled = false;
+    //}
 }

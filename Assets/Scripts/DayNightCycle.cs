@@ -26,13 +26,13 @@ public class DayNightCycle : MonoBehaviour
 
     IEnumerator time()
     {
-        ccl.ambientColor = morningColor;
         timeOfDay = TimeOfDay.morning;
         sky.sprite = morningSky;
+        ccl.ambientColor = morningColor;
         yield return new WaitForSeconds(10);
-        ccl.ambientColor = nightColor;
         timeOfDay = TimeOfDay.night;
         sky.sprite = nightSky;
+        ccl.ambientColor = nightColor;
         yield return new WaitForSeconds(10);
         StartCoroutine(time());
     }

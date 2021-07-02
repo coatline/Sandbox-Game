@@ -19,7 +19,7 @@ public class CustomPickupPhysics : MonoBehaviour
     {
         //transform.position
 
-        if(Vector3.Distance(player.transform.position, transform.position) < 3f)
+        if (Vector3.Distance(player.transform.position, transform.position) < 3f)
         {
             bc.enabled = true;
         }
@@ -28,7 +28,7 @@ public class CustomPickupPhysics : MonoBehaviour
             bc.enabled = false;
         }
 
-        if (wg.fgblockMap[(int)transform.position.x, (int)transform.position.y] == 0)
+        if (wg.blockMap[(int)transform.position.x, (int)transform.position.y, 0] == 0)
         {
             transform.Translate(new Vector3(0, -1 * Time.deltaTime, 0));
         }

@@ -2,9 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum Tool
+{
+    pickaxe,
+    axe,
+    hammer
+}
+
 [System.Serializable]
 public class ToolData 
 {
-    public WorldLayer worldLayer;
+    public byte worldLayer;
+    public Tool toolType;
     public float strength;
 }

@@ -115,10 +115,10 @@ public class CalculateColorLighting : MonoBehaviour
 
                 if (!WithinWorldBounds(worldX, worldY)) { continue; }
 
-                short fgtile = wg.fgblockMap[worldX, worldY];
-                ItemDataContainer mgtile = wg.itemData[wg.mgblockMap[worldX, worldY]];
+                short fgtile = wg.blockMap[worldX, worldY, 0];
+                ItemDataContainer mgtile = wg.itemData[wg.blockMap[worldX, worldY, 1]];
 
-                if (worldY > wg.highestTiles[worldX] - wg.caveStartingOffset && fgtile == 0 && wg.bgblockMap[worldX, worldY] == 0)
+                if (/*worldY > wg.highestTiles[worldX] - wg.caveStartingOffset &&*/ fgtile == 0 && wg.blockMap[worldX, worldY, 2] == 0)
                 {
                     lightValues[x, y] = ambientColor;
                     toEmit[x, y] = 2;
@@ -244,7 +244,7 @@ public class CalculateColorLighting : MonoBehaviour
                     {
                         float dropOff;
 
-                        if (wg.fgblockMap[worldPosX, worldPosY] == 0)
+                        if (wg.blockMap[worldPosX, worldPosY, 0] == 0)
                         {
                             dropOff = (nx != x && ny != y) ? airDiagonalDropOff : airDropoff;
                         }

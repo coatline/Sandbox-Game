@@ -58,13 +58,13 @@ TextureImporter:
     second: HoldingTorch
   - first:
       213: 212898485578975189
-    second: Stone_Tile_6
+    second: Table1
   - first:
       213: 7673338932271465318
-    second: Stone_Tile_9
+    second: Table2
   - first:
       213: -637004521647427473
-    second: Stone_Tile_10
+    second: Table
   - first:
       213: 7799809764336630643
     second: Stone_Tile_11
@@ -793,12 +793,12 @@ TextureImporter:
       name: HoldingTorch
       rect:
         serializedVersion: 2
-        x: 25
-        y: 607
+        x: 24
+        y: 606
         width: 10
-        height: 11
+        height: 10
       alignment: 9
-      pivot: {x: 0.15550956, y: 0.1840099}
+      pivot: {x: 0.19927631, y: 0.21608989}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -806,6 +806,69 @@ TextureImporter:
       bones: []
       spriteID: c4fd32ce128bfad00800000000000000
       internalID: 986209299252633420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Table1
+      rect:
+        serializedVersion: 2
+        x: 317
+        y: 624
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5d7472e6b0e54f200800000000000000
+      internalID: 212898485578975189
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Table2
+      rect:
+        serializedVersion: 2
+        x: 333
+        y: 624
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 66347339a1d2d7a60800000000000000
+      internalID: 7673338932271465318
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Table
+      rect:
+        serializedVersion: 2
+        x: 317
+        y: 624
+        width: 32
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f6033e633c7e827f0800000000000000
+      internalID: -637004521647427473
       vertices: []
       indices: 
       edges: []

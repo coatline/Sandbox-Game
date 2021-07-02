@@ -53,19 +53,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 12
-  jumpForce: 15
-  jumpTime: 0.2
+  jumpForce: 11.6
+  jumpTime: 0.226
   fallingSpeedCap: 35
   feetPosition: {fileID: 8005720686574745082}
   itemHold: {fileID: 3228810202485694445}
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
-  reach: 6
+  reach: 7
   swingAnimation: {fileID: 0}
   backgroundTilemap: {fileID: 0}
   blockTilemap: {fileID: 0}
   swinging: 0
+  idle: 0
 --- !u!114 &-3961418860899705576
 MonoBehaviour:
   m_ObjectHideFlags: 0

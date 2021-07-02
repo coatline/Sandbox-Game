@@ -26,10 +26,7 @@ public class InventorySlot : MonoBehaviour
         im = FindObjectOfType<InventoryManager>();
         cursor = FindObjectOfType<CursorBehavior>();
 
-        if (!selected)
-        {
-            backgroundSr.color = normalBackgroundColor;
-        }
+        UpdateImage();
     }
 
     public void InteractWithCursor()
@@ -64,7 +61,7 @@ public class InventorySlot : MonoBehaviour
                 // Take item
 
                 ChangeItem(cursor.itemPackage);
-
+                //print($"I just took {itemPackage.count} of {itemPackage.item} from the cursor");
                 cursor.RemoveItem();
             }
         }
@@ -73,7 +70,6 @@ public class InventorySlot : MonoBehaviour
             if (itemPackage.item != null)
             {
                 // Give item
-
                 cursor.TakeItem(itemPackage);
                 ClearItem();
             }
@@ -86,7 +82,8 @@ public class InventorySlot : MonoBehaviour
 
     void ChangeItem(ItemPackage itemPackage)
     {
-        this.itemPackage = itemPackage;
+        this.itemPackage.count = itemPackage.count;
+        this.itemPackage.item = itemPackage.item;
 
         UpdateImage();
     }
@@ -162,7 +159,7 @@ public class InventorySlot : MonoBehaviour
 
         if (this.itemPackage.count <= 0)
         {
-            ClearItem();
+           ClearItem();
         }
         else
         {
