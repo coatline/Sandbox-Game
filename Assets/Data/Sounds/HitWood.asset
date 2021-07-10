@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d1b619879215644ebbceea07f700cec, type: 3}
+  m_Name: HitWood
+  m_EditorClassIdentifier: 
+  sound:
+    clips:
+    - {fileID: 8300000, guid: 1c13122ab22dc94448da481f7c62ac97, type: 3}
+    - {fileID: 8300000, guid: 1663e8ce48f823642a3d1940af6ac30a, type: 3}
+    - {fileID: 8300000, guid: de34c9a7a38ed1347b0ee5099e030943, type: 3}
+    - {fileID: 8300000, guid: e459b3801b5b03445b2ab6a8c054eae8, type: 3}
+    - {fileID: 8300000, guid: d09f0855514caab469736cd0088781e1, type: 3}
+    - {fileID: 8300000, guid: 0881ee1336950144ab5a3cffdf78aa2a, type: 3}
+    - {fileID: 8300000, guid: 527ffcb5bda130841a57399b90f440ff, type: 3}
+    - {fileID: 8300000, guid: 3552abb8e9bfeb34d875331335713b38, type: 3}

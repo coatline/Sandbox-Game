@@ -8,6 +8,7 @@ public class CalculateColorLighting : MonoBehaviour
 {
     [HideInInspector()] public Color[] pixels;
     [SerializeField] DayNightCycle dnc;
+    public bool doubleResolution;
     public List<Vector2Int> lightEmitters;
     float airDiagonalDropOff;
     float blockDiagonalDropOff;
@@ -58,11 +59,11 @@ public class CalculateColorLighting : MonoBehaviour
         lightValues = new Color[frameSize.x, frameSize.y];
         toEmit = new byte[frameSize.x, frameSize.y];
         pixels = new Color[frameSize.x * frameSize.y];
-        singleLightEmission = new Color[lightRadius * 2 + 1, lightRadius * 2 + 1];
+
         singleLightEmission = new Color[lightRadius * 2 + 1, lightRadius * 2 + 1];
     }
 
-    private void OnApplicationQuit()
+    private void OnDestroy()
     {
         if (lightingThread != null && lightingThread.IsAlive)
         {
@@ -116,23 +117,23 @@ public class CalculateColorLighting : MonoBehaviour
                 if (!WithinWorldBounds(worldX, worldY)) { continue; }
 
                 short fgtile = wg.blockMap[worldX, worldY, 0];
-                ItemDataContainer mgtile = wg.itemData[wg.blockMap[worldX, worldY, 1]];
+                ItemDataConatainer mgtile = wg.itemData[wg.blockMap[worldX, worldY, 1]];
 
                 if (/*worldY > wg.highestTiles[worldX] - wg.caveStartingOffset &&*/ fgtile == 0 && wg.blockMap[worldX, worldY, 2] == 0)
                 {
                     lightValues[x, y] = ambientColor;
                     toEmit[x, y] = 2;
 
-                    if (dnc.timeOfDay == TimeOfDay.night)
+                    //if (dnc.timeOfDay == TimeOfDay.night)
                     {
-                        if (mgtile.emitsLight)
+                        if (mgtile.itemData.emitsLight)
                         {
                             lightValues[x, y] = Color.white;
                             toEmit[x, y] = 1;
                         }
                     }
                 }
-                else if (mgtile.emitsLight)
+                else if (mgtile.itemData.emitsLight)
                 {
                     lightValues[x, y] = Color.white;
                     toEmit[x, y] = 1;
@@ -144,6 +145,8 @@ public class CalculateColorLighting : MonoBehaviour
         {
             var x = lightEmitters[i].x - lightingPosition.x;
             var y = lightEmitters[i].y - lightingPosition.y;
+
+            if (!WithinFrameBounds(x, y)) { continue; }
 
             lightValues[x, y] = Color.white;
             toEmit[x, y] = 1;
@@ -269,8 +272,6 @@ public class CalculateColorLighting : MonoBehaviour
             }
         }
     }
-
-
 
     bool WithinFrameBounds(int x, int y)
     {

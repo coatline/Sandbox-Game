@@ -7,16 +7,23 @@ public class CameraFollowWithBarriers : MonoBehaviour
     [Header("Automatically offsets barrier positions")]
     public Transform bottomLeftBarrier;
     public Transform topRightBarrier;
+    [SerializeField] float maxSpeed;
     public Transform followObject;
     public Vector2 cameraSizeInUnits;
     public Vector3 movement;
+    Camera cam;
 
     [Range(.01f, 1f)]
     [SerializeField] float speed;
 
+    public Vector2 CameraSizeInUnits()
+    {
+        return new Vector2(cam.orthographicSize * cam.aspect, cam.orthographicSize);
+    }
+
     private void Awake()
     {
-        var cam = GetComponent<Camera>();
+        cam = GetComponent<Camera>();
 
         cameraSizeInUnits.x = cam.orthographicSize * cam.aspect;
         cameraSizeInUnits.y = cam.orthographicSize;
@@ -66,6 +73,9 @@ public class CameraFollowWithBarriers : MonoBehaviour
                 movement.y = 0;
             }
         }
+
+        movement.x = Mathf.Clamp(movement.x, -maxSpeed, maxSpeed);
+        movement.y = Mathf.Clamp(movement.y, -maxSpeed, maxSpeed);
 
         transform.Translate(movement);
     }

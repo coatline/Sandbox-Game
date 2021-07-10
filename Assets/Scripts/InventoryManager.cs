@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,17 +16,7 @@ public class InventoryManager : MonoBehaviour
     public bool canEditInventory;
     InventorySlot[,] slotMap;
     int selectedSlotIndex;
-    bool started;
-
-    public InventorySlot CurrentSlot()
-    {
-        return slotMap[selectedSlotIndex, 0];
-    }
-
-    public ItemPackage CurrentItemPackage()
-    {
-        return slotMap[selectedSlotIndex, 0].itemPackage;
-    }
+    Player player;
 
     bool savable;
 
@@ -72,22 +63,57 @@ public class InventoryManager : MonoBehaviour
         Invoke("ToggleExtendedInventory", .2f);
     }
 
+    private void Start()
+    {
+        player = FindObjectOfType<Player>();
+        player.SetItemAndSlot(slotMap[selectedSlotIndex, 0].itemPackage, slotMap[selectedSlotIndex, 0]);
+    }
+
     public void Save()
     {
         if (!savable) { return; }
-
-        print("Saving Inventory");
-
+        print("Saving inventory");
         List<ItemPackage> items = new List<ItemPackage>();
+        int count = 0;
 
         for (int y = 0; y < inventorySize.y; y++)
             for (int x = 0; x < inventorySize.x; x++)
             {
+                if (slotMap[x, y].itemPackage.item != null) { count++; }
                 items.Add(slotMap[x, y].itemPackage);
             }
 
+        print($"Saved {count} items");
         SaveData.currentPlayer.Save(items);
     }
+
+    //List<KeyValuePair<ItemDataContainer, InventorySlot>> inventoryItem = new List<KeyValuePair<ItemDataContainer, InventorySlot>>();
+
+    public List<InventorySlot> CanCraft(RecipeData recipe)
+    {
+        int i = recipe.ingredients.Length;
+
+        List<InventorySlot> slotsWithIngredients = new List<InventorySlot>();
+
+    NextIngredient:
+
+        i--;
+
+        if (i < 0) { return slotsWithIngredients; }
+
+        for (int x = 0; x < inventorySize.x; x++)
+            for (int y = 0; y < inventorySize.y; y++)
+            {
+                if (slotMap[x, y].itemPackage.item == recipe.ingredients[i].item && slotMap[x,y].itemPackage.count >= recipe.ingredients[i].count)
+                {
+                    slotsWithIngredients.Add(slotMap[x, y]);
+                    goto NextIngredient;
+                }
+            }
+
+        return null;
+    }
+
 
     void LoadItems()
     {
@@ -121,7 +147,7 @@ public class InventoryManager : MonoBehaviour
                     seenEmpty = true;
                 }
 
-                if (slot.itemPackage.item == newItemPackage.item && slot.itemPackage.count < slot.itemPackage.item.maxStack + newItemPackage.count)
+                if (slot.itemPackage.item == newItemPackage.item && slot.itemPackage.count + newItemPackage.count <= slot.itemPackage.item.itemData.maxStack)
                 {
                     // Stack the items into one slot
                     slot.AddItem(newItemPackage.count);
@@ -172,11 +198,16 @@ public class InventoryManager : MonoBehaviour
 
         if (newSlot.itemPackage.item)
         {
-            currentItemText.text = newSlot.itemPackage.item.itemName;
+            currentItemText.text = newSlot.itemPackage.item.itemData.itemName;
         }
         else
         {
             currentItemText.text = "";
+        }
+
+        if (player)
+        {
+            player.SetItemAndSlot(slotMap[selectedSlotIndex, 0].itemPackage, slotMap[selectedSlotIndex, 0]);
         }
     }
 
@@ -187,19 +218,22 @@ public class InventoryManager : MonoBehaviour
             ToggleExtendedInventory();
         }
 
-        var scrollInput = Input.mouseScrollDelta.y;
-
-        if (scrollInput < 0)
+        if (!canEditInventory)
         {
-            // Scroll Up
+            var scrollInput = Input.mouseScrollDelta.y;
 
-            ScrollSlot(1);
-        }
-        else if (scrollInput > 0)
-        {
-            // Scroll Down
+            if (scrollInput < 0)
+            {
+                // Scroll Up
 
-            ScrollSlot(-1);
+                ScrollSlot(1);
+            }
+            else if (scrollInput > 0)
+            {
+                // Scroll Down
+
+                ScrollSlot(-1);
+            }
         }
     }
 }

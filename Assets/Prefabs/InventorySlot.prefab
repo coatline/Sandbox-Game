@@ -276,7 +276,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 0}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -353,8 +353,9 @@ MonoBehaviour:
   filledBackgroundColor: {r: 0.06750623, g: 0.06750623, b: 0.38679248, a: 0.6862745}
   selectedBackgroundColor: {r: 0.9960785, g: 0.8980393, b: 0.10980393, a: 0.9137255}
   scaleOnSelect: {x: 1.1, y: 1.1}
-  item: {fileID: 0}
-  count: 0
+  itemPackage:
+    item: {fileID: 0}
+    count: 0
 --- !u!114 &6582867226031204144
 MonoBehaviour:
   m_ObjectHideFlags: 0

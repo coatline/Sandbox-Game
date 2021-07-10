@@ -36,14 +36,14 @@ public class RenderLighting : MonoBehaviour
         cam = Camera.main;
 
         SetMinLightRadius();
-        overlap = new Vector2Int((lightRadius - 4) * 2, (lightRadius - 4) * 2);
+        overlap = new Vector2Int((lightRadius - 6) * 2, (lightRadius - 6) * 2);
 
         Vector3 viewDistance = cam.GetComponent<CameraFollowWithBarriers>().cameraSizeInUnits;
         size = new Vector2Int((int)viewDistance.x * 2, (int)viewDistance.y * 2) + overlap;
         frameSize = size;
 
         transform.position = new Vector3Int((int)cam.transform.position.x - size.x / 2, (int)cam.transform.position.y - size.y / 2, 0);
-        
+
         InitializeSprite();
 
         texture = new Texture2D(frameSize.x, frameSize.y);

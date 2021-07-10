@@ -46,7 +46,7 @@ public class GenerateColliders : MonoBehaviour
     void FixedUpdate()
     {
         if (Vector2.Distance(transform.position, new Vector2Int((int)transform.position.x, (int)transform.position.y)) < .5f && wg.blockModifiedAt == -Vector2Int.one) { return; }
-
+        if (colliders==null) { return; }
         int checkPosX = (int)transform.position.x - checkWidth / 2;
         int checkPosY = (int)transform.position.y - checkHeight / 2;
 

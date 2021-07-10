@@ -10,9 +10,7 @@ public class WorldSaveData
     public string worldName = "New World";
     public short worldHeight;
     public short worldWidth;
-    public short spawnX;
-    public short spawnY;
-    public int[] time;
+    public float[] timeData;
     public short[] highestTiles;
     public short[] blockData;
 
@@ -20,18 +18,16 @@ public class WorldSaveData
     {
         blockData = new short[worldWidth * worldHeight];
         highestTiles = new short[worldWidth];
-        time = new int[3] { 0, 7, 0 };
+        timeData = new float[12];
     }
 
-    public void Save(short worldWidth, short worldHeight, int[] time, short[] blockData/*, short spawnX, short spawnY*/, short[] highestTiles)
+    public void Save(short worldWidth, short worldHeight, float[] time, short[] blockData, short[] highestTiles)
     {
         this.highestTiles = highestTiles;
-        this.spawnX = spawnX;
-        this.spawnY = spawnY;
         this.worldWidth = worldWidth;
         this.worldHeight = worldHeight;
         this.blockData = blockData;
-        this.time = time;
+        this.timeData = time;
 
         string json = JsonUtility.ToJson(this);
         string fileName = string.Format(SAVE_GAME_NAME, worldName);
@@ -67,3 +63,30 @@ public class WorldSaveData
 
     public static string GetFullPath(string filename) => Path.Combine(Application.persistentDataPath, filename);
 }
+
+//[System.Serializable]
+//public class SerializableTree
+//{
+//    public Vector2Int key; public TreeData data;
+//    public SerializableTree(Vector2Int key, TreeData data) { this.key = key; this.data = data; }
+//}
+
+
+//[System.Serializable]
+//public class SerializableTreeDict
+//{
+//    public SerializableTree[] treesDictionary;
+
+//    public SerializableTreeDict(Dictionary<Vector2Int, TreeData> dictionary)
+//    {
+//        treesDictionary = new SerializableTree[dictionary.Count];
+
+//        int index = 0;
+
+//        foreach (KeyValuePair<Vector2Int, TreeData> d in dictionary)
+//        {
+//            treesDictionary[index] = new SerializableTree(d.Key, d.Value);
+//            index++;
+//        }
+//    }
+//}

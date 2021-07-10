@@ -13,8 +13,10 @@ MonoBehaviour:
   m_Name: Torch Recipe
   m_EditorClassIdentifier: 
   nearbyTile: {fileID: 0}
-  amountPerCraft: 0
   ingredients:
-  - ingredient: {fileID: 0}
-    amount: 0
-  nearbyTilesForCrafting: {fileID: 0}
+  - item: {fileID: 11400000, guid: 6d89c77261d7c344d966341fa441f874, type: 2}
+    count: 1
+  product:
+    item: {fileID: 11400000, guid: 46afb2af641133b448c7c7fc69038da5, type: 2}
+    count: 3
+  nearbyTilesForCrafting: []

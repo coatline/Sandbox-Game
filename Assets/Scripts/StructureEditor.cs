@@ -18,8 +18,8 @@ public class StructureEditor : MonoBehaviour
     [SerializeField] bool ClearTilemap;
     [InspectorButton("ClearItemData", ButtonWidth = 150)]
     [SerializeField] bool ClearItemDataList;
-    [SerializeField] List<ItemDataContainer> itemData;
-    List<ItemDataContainer> tiles;
+    [SerializeField] List<ItemDataConatainer> itemData;
+    List<ItemDataConatainer> tiles;
 
     void LoadStructureData()
     {
@@ -45,7 +45,7 @@ public class StructureEditor : MonoBehaviour
         Debug.ClearDeveloperConsole();
 
         structureToEdit.structureData = new int[structureToEdit.width * structureToEdit.height];
-        tiles = new List<ItemDataContainer>();
+        tiles = new List<ItemDataConatainer>();
         structureToEdit.tiles.Clear();
 
         for (int x = 0; x < structureToEdit.width; x++)

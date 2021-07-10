@@ -3997,7 +3997,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1203369695}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1468004174}
+        m_TargetAssemblyTypeName: ButtonManager, Assembly-CSharp
+        m_MethodName: QuitGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1203369695
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4648,7 +4660,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerProfilePrefab: {fileID: 1617695310093029671, guid: f28f7146db212b249ba7b95c6ef77eed, type: 3}
-  worldGenerator: {fileID: 1468004177}
+  wg: {fileID: 1468004177}
   worldProfilePrefab: {fileID: 1683823324054029395, guid: 5c6bf9a1b63ae1643ab188d255d2b31f, type: 3}
   playerProfileHolder: {fileID: 543845174}
   worldProfileHolder: {fileID: 1379926327}

@@ -7,7 +7,7 @@ using UnityEngine;
 public class RecipeData : ScriptableObject
 {
     public RuleTile nearbyTile;
-    public int amountPerCraft;
     public ItemPackage[] ingredients;
-    public TileData nearbyTilesForCrafting;
+    public ItemPackage product;
+    public ItemDataConatainer[] nearbyTilesForCrafting;
 }

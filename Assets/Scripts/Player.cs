@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Experimental.Rendering.Universal;
 using UnityEngine.Tilemaps;
 
 public class Player : MonoBehaviour
@@ -17,13 +16,14 @@ public class Player : MonoBehaviour
     [SerializeField] float fallingSpeedCap;
     [SerializeField] Transform feetPosition;
     [SerializeField] SpriteRenderer itemHold;
+    [SerializeField] PolygonCollider2D itemHoldCollider;
     [SerializeField] LayerMask groundLayer;
     [SerializeField] float reach;
-    [SerializeField] Animation swingAnimation;
     InventoryManager inventoryManager;
     CursorBehavior cursor;
     RenderLighting rl;
     WorldGenerator wg;
+    AudioSource audioS;
     Rigidbody2D rb;
     Camera cam;
     Animator a;
@@ -34,19 +34,26 @@ public class Player : MonoBehaviour
     bool isGrounded;
     bool jumping;
     float jumpTimer;
+    float moveInputs;
+    GameObject dynamicLight;
+    ItemPackage currentItemPackage;
+    InventorySlot currentSlot;
+    bool canUse = true;
+    bool cursorItem;
+    bool timerRunning;
 
     void Start()
     {
         cam = Camera.main;
         a = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
+        audioS = GetComponent<AudioSource>();
         rl = FindObjectOfType<RenderLighting>();
         wg = FindObjectOfType<WorldGenerator>();
         cursor = FindObjectOfType<CursorBehavior>();
         inventoryManager = FindObjectOfType<InventoryManager>();
+        //currentItemPackage = new ItemPackage(null, 0);
     }
-
-    float moveInputs;
 
     private void FixedUpdate()
     {
@@ -70,19 +77,14 @@ public class Player : MonoBehaviour
         HandleInputs();
     }
 
-
-    GameObject dynamicLight;
-    ItemPackage currentItemPackage;
-    bool canUse = true;
-    bool cursorItem;
-
     IEnumerator UseTimer()
     {
-        float useTime=0;
+        float useTime = 0;
+        timerRunning = true;
 
         if (currentItemPackage.item != null)
         {
-            useTime = currentItemPackage.item.useTime;
+            useTime = currentItemPackage.item.itemData.useTime;
         }
         else
         {
@@ -90,18 +92,45 @@ public class Player : MonoBehaviour
         }
 
         yield return new WaitForSeconds(useTime);
+        timerRunning = false;
         canUse = true;
     }
 
     public bool swinging;
     public bool idle;
 
+    public int DamageValue()
+    {
+        WeaponData weaponData = null;
+
+        if (currentItemPackage.item && currentItemPackage.item.weaponData.damageVal > 0)
+        {
+            weaponData = currentItemPackage.item.weaponData;
+        }
+        else
+        {
+            return 0;
+        }
+
+
+        float multiplier = 1f;
+
+        if (Random.Range(0, 100f) <= weaponData.criticalStrikeChance)
+        {
+            multiplier = Random.Range(1.5f, 3f);
+        }
+
+        return (int)(weaponData.damageVal * multiplier);
+    }
+
     void UseItem()
     {
-        if (!currentItemPackage.item) { return; }
+        if (!currentItemPackage.item || currentItemPackage.item.itemType == ItemType.meleeWeapon) { return; }
 
         var mousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
         Vector2Int blockPosition = new Vector2Int((int)mousePosition.x, (int)mousePosition.y);
+        ItemDataConatainer currentItem = currentItemPackage.item;
+        bool used = false;
 
         if (currentItemPackage.item.itemType == ItemType.tool)
         {
@@ -109,22 +138,13 @@ public class Player : MonoBehaviour
             {
                 if (blockPosition.x < 0 || blockPosition.x >= wg.worldWidth || blockPosition.y < 0 || blockPosition.y >= wg.worldHeight) { return; }
 
-                if (wg.CanBreak(blockPosition.x, blockPosition.y, currentItemPackage.item.weaponData.toolData.toolType))
+                short canBreak = wg.CanBreak(blockPosition.x, blockPosition.y, currentItemPackage.item.weaponData.toolData.toolType);
+
+                if (canBreak >= 0)
                 {
-                    if (wg.blockMap[blockPosition.x, blockPosition.y, 0] == 0)
-                    {
-                        wg.BreakBlock(blockPosition.x, blockPosition.y, 1);
-                    }
-                    else
-                    {
-                        wg.BreakBlock(blockPosition.x, blockPosition.y, 0);
-                    }
+                    wg.DamageBlock(blockPosition.x, blockPosition.y, (byte)canBreak, currentItemPackage.item.weaponData.toolData.strength);
+                    used = true;
                 }
-            }
-            else
-            {
-                canUse = true;
-                return;
             }
         }
         else if (currentItemPackage.item.itemType == ItemType.block)
@@ -142,43 +162,71 @@ public class Player : MonoBehaviour
                         if (cursorItem)
                         {
                             wg.PlaceBlock(blockPosition.x, blockPosition.y, currentItemPackage.item);
-                            //cursor.UseItem(1);
+                            cursor.UseItem(1);
                         }
                         else
                         {
                             wg.PlaceBlock(blockPosition.x, blockPosition.y, currentItemPackage.item);
-                            inventoryManager.CurrentSlot().RemoveItem(1);
+                            currentSlot.RemoveCount(1);
                         }
+
+                        used = true;
                     }
-                }
-                else
-                {
-                    canUse = true;
-                    return;
                 }
             }
         }
 
-        canUse = false;
-        StartCoroutine(UseTimer());
+
+        if (used && !timerRunning)
+        {
+            if (currentItem.itemData.useSound)
+            {
+                audioS.PlayOneShot(currentItem.itemData.useSound.sound.RandomSound());
+            }
+
+            canUse = false;
+            StartCoroutine(UseTimer());
+        }
     }
 
-    void SetCurrentItem()
+    public void SetItemAndSlot(ItemPackage newItem, InventorySlot newSlot = null)
     {
-        if (cursor.itemPackage.item != null)
+        currentItemPackage = newItem;
+
+        if (newSlot)
         {
-            currentItemPackage = cursor.itemPackage;
-            cursorItem = true;
+            currentSlot = newSlot;
         }
-        else
+
+        if (currentItemPackage.item != null)
         {
-            currentItemPackage = inventoryManager.CurrentItemPackage();
+            if (currentItemPackage.item.itemData.generateCollider)
+            {
+                itemHoldCollider.enabled = true;
+                List<Vector2> shape = new List<Vector2>();
+                currentItemPackage.item.itemData.itemSprite.GetPhysicsShape(0, shape);
+                itemHoldCollider.SetPath(0, shape);
+            }
+            else
+            {
+                itemHoldCollider.enabled = false;
+            }
         }
+
+        //if (cursor.itemPackage.item != null)
+        //{
+        //    currentItemPackage = cursor.itemPackage;
+        //    cursorItem = true;
+        //}
+        //else
+        //{
+        //    currentItemPackage = inventoryManager.CurrentItemPackage();
+        //}
     }
 
     void DoDynamicLighting()
     {
-        if (currentItemPackage.item.emitsLight)
+        if (currentItemPackage.item.itemData.emitsLight)
         {
             if (!lit)
             {
@@ -198,14 +246,14 @@ public class Player : MonoBehaviour
 
     void DisplayHand()
     {
-        if (currentItemPackage.item.showOnSelect && idle)
+        if (currentItemPackage.item.itemData.showOnSelect && idle)
         {
             if (!itemHold.enabled)
             {
                 itemHold.enabled = true;
             }
 
-            itemHold.sprite = currentItemPackage.item.selectedSprite;
+            itemHold.sprite = currentItemPackage.item.itemData.heldSprite;
         }
         else if (!swinging && itemHold.enabled)
         {
@@ -215,13 +263,20 @@ public class Player : MonoBehaviour
 
     void HandleItems()
     {
-        SetCurrentItem();
-
         if (currentItemPackage.item != null)
         {
-            if (swinging && !itemHold.enabled && !currentItemPackage.item.hideOnUse)
+            if (swinging && !itemHold.enabled && !currentItemPackage.item.itemData.hideOnUse)
             {
                 itemHold.enabled = true;
+            }
+
+            if (swinging && currentItemPackage.item.itemData.generateCollider)
+            {
+                itemHoldCollider.enabled = true;
+            }
+            else
+            {
+                itemHoldCollider.enabled = false;
             }
 
             DisplayHand();
@@ -230,10 +285,10 @@ public class Player : MonoBehaviour
 
             if (Input.GetMouseButton(0))
             {
-                itemHold.sprite = currentItemPackage.item.itemSprite;
-                a.speed = 4 - (currentItemPackage.item.useTime * 8);
+                itemHold.sprite = currentItemPackage.item.itemData.itemSprite;
+                a.speed = 7f - (currentItemPackage.item.itemData.useTime * 10);
 
-                if (!swinging)
+                if (currentItemPackage.item.actionOnUse == PlayerAction.swing && !swinging)
                 {
                     a.Play(swingAnimationHash);
                 }
@@ -284,7 +339,7 @@ public class Player : MonoBehaviour
 
     void DoJump()
     {
-        isGrounded = Physics2D.OverlapBox(feetPosition.position, new Vector2(.55f, .4f), 0, groundLayer);
+        isGrounded = Physics2D.OverlapBox(feetPosition.position, new Vector2(.725f, .4f), 0, groundLayer);
 
         if (isGrounded && Input.GetKeyDown(KeyCode.Space))
         {

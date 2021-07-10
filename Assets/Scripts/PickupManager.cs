@@ -8,7 +8,7 @@ public class PickupManager : MonoBehaviour
 
     public void AddPickup(Pickup pickup)
     {
-        if (pickup.itemPackage.item.emitsLight)
+        if (pickup.itemPackage.item.itemData.emitsLight)
         {
             rl.dynamicLightEmitters.Add(pickup.transform);
         }

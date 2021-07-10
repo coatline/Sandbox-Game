@@ -53,7 +53,7 @@ public class CursorBehavior : MonoBehaviour
         this.itemPackage.count = newItem.count;
         image.enabled = true;
         itemPackage.item = newItem.item;
-        image.sprite = itemPackage.item.itemSprite;
+        image.sprite = itemPackage.item.itemData.itemSprite;
         UpdateText();
     }
 

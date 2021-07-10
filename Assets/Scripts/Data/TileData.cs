@@ -6,21 +6,30 @@ using UnityEngine;
 
 public class TileData
 {
-    public List<ItemDataContainer> otherAttachTo;
+    [Header("General Tile Options")]
     public ItemPackage itemDroppedOnBreak;
+    public byte hardness;
+    public Tool requiredTool;
+    public RuleTile tile;
     public byte attachToLayer;
     public byte placeOnLayer;
+    public SoundData breakSound;
+    public bool interactable;
+
+    [Header("Attachment Options")]
+    public List<ItemDataConatainer> otherAttachTo;
     public bool noAttachToBackground;
     public bool noAttachToCeiling;
     public bool noAttachToWalls;
     public bool noPlaceOnFloor;
-    public Tool requiredTool;
-    public RuleTile tile;
-    public byte hardness;
 
+    [Header("MultiTileItem Options")]
     public PartInMutliTileItemData partOfMultiTileData;
     public Structure multiBlockStructure;
     public bool isPartOfMultiTile;
 
+    [Header("Item Specifics")]
+    public bool hideBreakingGraphic;
     public bool treeTile;
+
 }

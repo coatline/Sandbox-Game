@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class ItemDataEditor : MonoBehaviour
 {
-    [SerializeField] List<ItemDataContainer> items;
+    [SerializeField] List<ItemDataConatainer> items;
     [SerializeField] List<Structure> structures;
     [SerializeField] List<RuleTile> ruleTiles;
 
@@ -33,7 +33,7 @@ public class ItemDataEditor : MonoBehaviour
     {
         for (int i = 0; i < items.Count; i++)
         {
-            items[i].itemName = items[i].name;
+            items[i].itemData.itemName = items[i].name;
             EditorUtility.SetDirty(items[i]);
         }
 

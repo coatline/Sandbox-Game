@@ -14,5 +14,5 @@ public class ToolData
 {
     public byte worldLayer;
     public Tool toolType;
-    public float strength;
+    public int strength;
 }

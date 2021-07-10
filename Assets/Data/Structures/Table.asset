@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Table
   width: 2
-  height: 1
+  height: 2
   tiles:
   - {fileID: 11400000, guid: cc290b5db82aee4489d69b308c91dccc, type: 2}
+  - {fileID: 11400000, guid: b6c373784af7a394fb6e727425526d0b, type: 2}
   - {fileID: 11400000, guid: 3d951ba900d97f94eabff14a294ee5bf, type: 2}
-  structureData: 0000000001000000
+  - {fileID: 11400000, guid: c27ae0e9b7a008740ac2ff297c3538f0, type: 2}
+  structureData: 00000000020000000100000003000000
