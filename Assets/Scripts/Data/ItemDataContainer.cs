@@ -51,7 +51,7 @@ public enum ItemType
 
 [CreateAssetMenu(fileName = "New Item", menuName = "Item")]
 
-public class ItemDataConatainer : ScriptableObject
+public class ItemDataContainer : ScriptableObject
 {
     public ItemData itemData;
     public ItemType itemType;

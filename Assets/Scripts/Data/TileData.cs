@@ -17,7 +17,7 @@ public class TileData
     public bool interactable;
 
     [Header("Attachment Options")]
-    public List<ItemDataConatainer> otherAttachTo;
+    public List<ItemDataContainer> otherAttachTo;
     public bool noAttachToBackground;
     public bool noAttachToCeiling;
     public bool noAttachToWalls;

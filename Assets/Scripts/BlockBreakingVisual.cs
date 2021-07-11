@@ -15,7 +15,7 @@ public class BlockBreakingVisual : MonoBehaviour
     }
 
     // I could add a small amount of randomness
-    public void BreakBlock(int x, int y, int blockHardness, int currentDurability)
+    public void DisplayDamage(int x, int y, int blockHardness, int currentDurability)
     {
         EmitParticles(x, y);
 

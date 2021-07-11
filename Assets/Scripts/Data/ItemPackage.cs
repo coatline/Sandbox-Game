@@ -5,10 +5,10 @@ using UnityEngine;
 [System.Serializable]
 public class ItemPackage
 {
-    public ItemDataConatainer item;
+    public ItemDataContainer item;
     public int count;
 
-    public ItemPackage(ItemDataConatainer item, int count)
+    public ItemPackage(ItemDataContainer item, int count)
     {
         this.item = item;
         this.count = count;

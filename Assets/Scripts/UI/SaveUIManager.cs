@@ -152,7 +152,7 @@ public class SaveUIManager : MonoBehaviour
         //var trees = new SerializableTreeDict (wg.trees);
 
         print($"Creating world with a width of {width} and a height of {height}. The blockData we are going to be using is {blockData}. \nThere are {/*wg.trees.Count*/null} trees and we will be using {/*trees*/null}. The highestTiles we will be using is {wg.highestTiles.ToArray()}.");
-        newWorldSave.Save(width, height, new float[2], blockData, /*new SerializableTreeDict(wg.trees),*/ wg.highestTiles.ToArray());
+        newWorldSave.Save(width, height, new float[0], blockData, /*new SerializableTreeDict(wg.trees),*/ wg.highestTiles.ToArray());
         gameData.worldNames.Add(_name);
         gameData.Save();
         screenManager.SwitchScreen(3);

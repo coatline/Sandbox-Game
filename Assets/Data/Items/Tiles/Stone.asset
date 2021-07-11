@@ -33,7 +33,7 @@ MonoBehaviour:
     itemDroppedOnBreak:
       item: {fileID: 11400000}
       count: 1
-    hardness: 4
+    hardness: 3
     requiredTool: 0
     tile: {fileID: 11400000, guid: ef106a8a704b97945b869e875e254e56, type: 2}
     attachToLayer: 0

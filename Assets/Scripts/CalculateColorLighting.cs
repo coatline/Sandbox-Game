@@ -117,7 +117,7 @@ public class CalculateColorLighting : MonoBehaviour
                 if (!WithinWorldBounds(worldX, worldY)) { continue; }
 
                 short fgtile = wg.blockMap[worldX, worldY, 0];
-                ItemDataConatainer mgtile = wg.itemData[wg.blockMap[worldX, worldY, 1]];
+                ItemDataContainer mgtile = wg.itemData[wg.blockMap[worldX, worldY, 1]];
 
                 if (/*worldY > wg.highestTiles[worldX] - wg.caveStartingOffset &&*/ fgtile == 0 && wg.blockMap[worldX, worldY, 2] == 0)
                 {

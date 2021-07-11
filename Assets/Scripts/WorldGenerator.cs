@@ -51,7 +51,7 @@ public class WorldGenerator : MonoBehaviour
     //[SerializeField] List<SoundData> sounds;
 
     [SerializeField] List<Structure> structures;
-    public List<ItemDataConatainer> itemData;
+    public List<ItemDataContainer> itemData;
     AudioSource audioS;
 
     [Header("Settings")]
@@ -62,7 +62,7 @@ public class WorldGenerator : MonoBehaviour
     [SerializeField] int maxTreeHeight;
 
     Vector3 viewDistance;
-    public Dictionary<Vector2Int, ItemDataConatainer> multiTileItems;
+    public Dictionary<Vector2Int, ItemDataContainer> multiTileItems;
     Dictionary<string, Structure> structureFromName;
     //Dictionary<string, SoundData> soundFromName;
     Dictionary<Vector2Int, int> blockDurability;
@@ -85,7 +85,7 @@ public class WorldGenerator : MonoBehaviour
         viewDistance.x += chunkSize / 2;
         viewDistance.y += chunkSize / 2;
 
-        multiTileItems = new Dictionary<Vector2Int, ItemDataConatainer>();
+        multiTileItems = new Dictionary<Vector2Int, ItemDataContainer>();
         blockDurability = new Dictionary<Vector2Int, int>();
         highestTiles = new List<short>();
 
@@ -160,7 +160,7 @@ public class WorldGenerator : MonoBehaviour
 
     void GenerateWorldValues()
     {
-        multiTileItems = new Dictionary<Vector2Int, ItemDataConatainer>();
+        multiTileItems = new Dictionary<Vector2Int, ItemDataContainer>();
         highestTiles = new List<short>();
 
         terrainStartingHeight = worldHeight / 2;
@@ -333,7 +333,8 @@ public class WorldGenerator : MonoBehaviour
         while (treeBlocksToChop.Count > 0)
         {
             Vector2Int pos = treeBlocksToChop[0];
-            DamageBlock(pos.x, pos.y, 1, 255, true);
+            BreakTreeBlock(pos.x, pos.y);
+            //DamageBlock(pos.x, pos.y, 1, 255, true);
             treeBlocksToChop.RemoveAt(0);
             yield return new WaitForSeconds(.015f);
         }
@@ -341,7 +342,7 @@ public class WorldGenerator : MonoBehaviour
         chopping = false;
     }
 
-    bool CanAttach(int x, int y, ItemDataConatainer item)
+    bool CanAttach(int x, int y, ItemDataContainer item)
     {
         if (!item.tileData.noAttachToBackground)
         {
@@ -373,7 +374,7 @@ public class WorldGenerator : MonoBehaviour
         return false;
     }
 
-    public bool CanPlace(int x, int y, ItemDataConatainer item)
+    public bool CanPlace(int x, int y, ItemDataContainer item)
     {
         var layer = item.tileData.placeOnLayer;
 
@@ -410,7 +411,7 @@ public class WorldGenerator : MonoBehaviour
         return -1;
     }
 
-    void TryPlayClip(ItemDataConatainer item, bool breakS = false)
+    void TryPlayClip(ItemDataContainer item, bool breakS = false)
     {
         if (breakS)
         {
@@ -425,135 +426,188 @@ public class WorldGenerator : MonoBehaviour
         }
     }
 
-    public void DamageBlock(int x, int y, byte layer, int strength, bool isRecursiveTreeChopping = false, bool isMultiTileBroken = false)
+    public void BreakBlock(int x, int y, byte layer, bool tryDropPickup = true, bool playBreakSound = true)
     {
-        var chunkCoordinates = WorldCoordinatesToNearestChunkCoordinates(new Vector2(x, y));
-        var chunkWorldCoordinates = chunkCoordinates * new Vector2Int(chunkSize, chunkSize);
-        ItemDataConatainer itemBroken = itemData[blockMap[x, y, layer]];
+        ItemDataContainer targetBlock = itemData[blockMap[x, y, layer]];
+        SetBlockInTilemap(x, y, layer);
+
+        blockMap[x, y, layer] = 0;
+
+        if (layer == 0) { blockModifiedAt = new Vector2Int(x, y); }
+
+        if (tryDropPickup)
+        {
+            SpawnPickup(x, y, targetBlock);
+        }
+
+        if (playBreakSound)
+        {
+            TryPlayClip(targetBlock, true);
+        }
+    }
+
+    bool DamageBlock(int x, int y, byte layer, int strength, ItemDataContainer targetBlock)
+    {
         Vector2Int blockPos = new Vector2Int(x, y);
 
         if (blockDurability.TryGetValue(blockPos, out int val))
         {
+            // There is already damage done to this block
+
             blockDurability[blockPos] -= strength;
 
             if (blockDurability[blockPos] > 0)
             {
-                if (!itemBroken.tileData.hideBreakingGraphic)
+                if (!targetBlock.tileData.hideBreakingGraphic)
                 {
-                    bbv.BreakBlock(x, y, itemBroken.tileData.hardness, blockDurability[blockPos]);
+                    bbv.DisplayDamage(x, y, targetBlock.tileData.hardness, blockDurability[blockPos]);
                 }
 
-                TryPlayClip(itemBroken);
-                return;
+                TryPlayClip(targetBlock);
+                return false;
             }
             else
             {
-                TryPlayClip(itemBroken, true);
                 blockDurability.Remove(blockPos);
                 bbv.EmitParticles(x, y);
                 bbv.Finish();
+
+                return true;
             }
         }
         else
         {
-            blockDurability.Add(blockPos, itemBroken.tileData.hardness - strength);
+            // There is NOT already damage done to this block
 
-            if (itemBroken.tileData.hardness - strength > 0)
+            if (targetBlock.tileData.hardness - strength > 0)
             {
-                if (!itemBroken.tileData.hideBreakingGraphic)
+                blockDurability.Add(blockPos, targetBlock.tileData.hardness - strength);
+
+                if (!targetBlock.tileData.hideBreakingGraphic)
                 {
-                    bbv.BreakBlock(x, y, itemBroken.tileData.hardness, itemBroken.tileData.hardness - strength);
-                    TryPlayClip(itemBroken);
+                    bbv.DisplayDamage(x, y, targetBlock.tileData.hardness, targetBlock.tileData.hardness - strength);
+                    TryPlayClip(targetBlock);
                 }
 
-                return;
+                return false;
             }
             else
             {
+                blockDurability.Remove(blockPos);
                 bbv.EmitParticles(x, y);
+                bbv.Finish();
+
+                return true;
             }
         }
+    }
 
-        blockMap[x, y, layer] = 0;
+    public void HitBlock(int x, int y, byte layer, int strength)
+    {
+        ItemDataContainer targetBlock = itemData[blockMap[x, y, layer]];
+
+        if (!DamageBlock(x, y, layer, strength, targetBlock)) { return; }
 
         switch (layer)
         {
-            case 0:
-
-                blockModifiedAt = new Vector2Int(x, y);
-                foregroundTilemap.SetTile(new Vector3Int(x, y, 0), null);
-                chunks[chunkCoordinates].fgtiles[(x - chunkWorldCoordinates.x) + ((y - chunkWorldCoordinates.y) * chunkSize)] = null;
-
-                break;
+            case 0: BreakBlock(x, y, layer, true); break;
             case 1:
 
-                if (itemBroken.tileData.treeTile)
+                if (targetBlock.tileData.treeTile)
                 {
-                    if (itemData[blockMap[x, y + 1, layer]].tileData.treeTile)
-                    {
-                        treeBlocksToChop.Add(new Vector2Int(x, y + 1));
-
-                        if (!isRecursiveTreeChopping)
-                        {
-                            // Check for stumps
-
-                            if (itemData[blockMap[x + 1, y, layer]].tileData.treeTile)
-                            {
-                                treeBlocksToChop.Add(new Vector2Int(x + 1, y));
-                            }
-
-                            if (itemData[blockMap[x - 1, y, layer]].tileData.treeTile)
-                            {
-                                treeBlocksToChop.Add(new Vector2Int(x - 1, y));
-                            }
-                        }
-
-                        if (!chopping)
-                        {
-                            chopping = true;
-
-                            StartCoroutine(ChopTree());
-                        }
-                    }
+                    BreakTreeBlock(x, y);
+                    TryPlayClip(targetBlock, true);
                 }
-
-                midgroundTilemap.SetTile(new Vector3Int(x, y, 0), null);
-                chunks[chunkCoordinates].mgtiles[(x - chunkWorldCoordinates.x) + ((y - chunkWorldCoordinates.y) * chunkSize)] = null;
-
+                else
+                {
+                    BreakBlock(x, y, layer, true, true);
+                }
                 break;
             case 2:
-
-                backgroundTilemap.SetTile(new Vector3Int(x, y, 0), null);
-                chunks[chunkCoordinates].bgtiles[(x - chunkWorldCoordinates.x) + ((y - chunkWorldCoordinates.y) * chunkSize)] = null;
-
+                BreakBlock(x, y, layer, true);
                 break;
         }
 
-        if (itemBroken.tileData.isPartOfMultiTile && !isMultiTileBroken)
+        if (targetBlock.tileData.isPartOfMultiTile)
         {
-            var rootPosition = new Vector2Int(x - itemBroken.tileData.partOfMultiTileData.relativePosition.x, y - itemBroken.tileData.partOfMultiTileData.relativePosition.y);
-            var structureData = multiTileItems[rootPosition];
-
-            for (int sx = 0; sx < structureData.tileData.multiBlockStructure.width; sx++)
-            {
-                for (int sy = 0; sy < structureData.tileData.multiBlockStructure.height; sy++)
-                {
-                    var posx = rootPosition.x + sx;
-                    var posy = rootPosition.y + sy;
-
-                    if (posx == x && posy == y) { continue; }
-                    DamageBlock(posx, posy, layer, 255, false, true);
-                }
-            }
-
-            SpawnPickup(x, y, structureData);
-            multiTileItems.Remove(rootPosition);
+            BreakMultiTileBlock(x, y, layer);
         }
-
-        SpawnPickup(x, y, itemBroken);
     }
 
-    void SpawnPickup(int x, int y, ItemDataConatainer itemBroken)
+    void BreakMultiTileBlock(int x, int y, byte layer)
+    {
+        TileData targetBlock = itemData[blockMap[x, y, layer]].tileData;
+        var rootPosition = new Vector2Int(x - targetBlock.partOfMultiTileData.relativePosition.x, y - targetBlock.partOfMultiTileData.relativePosition.y);
+        var structureData = multiTileItems[rootPosition];
+
+        for (int sx = 0; sx < structureData.tileData.multiBlockStructure.width; sx++)
+        {
+            for (int sy = 0; sy < structureData.tileData.multiBlockStructure.height; sy++)
+            {
+                var posx = rootPosition.x + sx;
+                var posy = rootPosition.y + sy;
+
+                if (posx == x && posy == y) { continue; }
+                BreakBlock(posx, posy, layer, false);
+            }
+        }
+
+        SpawnPickup(x, y, structureData);
+        multiTileItems.Remove(rootPosition);
+    }
+
+    void BreakTreeBlock(int x, int y)
+    {
+        BreakBlock(x, y, 1, true, false);
+
+        if (itemData[blockMap[x, y + 1, 1]].tileData.treeTile)
+        {
+
+            treeBlocksToChop.Add(new Vector2Int(x, y + 1));
+
+            // Check for stumps
+
+            if (itemData[blockMap[x + 1, y, 1]].tileData.treeTile)
+            {
+                treeBlocksToChop.Add(new Vector2Int(x + 1, y));
+            }
+
+            if (itemData[blockMap[x - 1, y, 1]].tileData.treeTile)
+            {
+                treeBlocksToChop.Add(new Vector2Int(x - 1, y));
+            }
+
+            if (!chopping)
+            {
+                chopping = true;
+                StartCoroutine(ChopTree());
+            }
+        }
+    }
+
+    void SetBlockInTilemap(int x, int y, byte layer, RuleTile tile = null)
+    {
+        var chunkCoordinates = WorldCoordinatesToNearestChunkCoordinates(new Vector2(x, y));
+        var chunkWorldCoordinates = chunkCoordinates * new Vector2Int(chunkSize, chunkSize);
+
+        if (layer == 0)
+        {
+            foregroundTilemap.SetTile(new Vector3Int(x, y, 0), tile);
+            chunks[chunkCoordinates].fgtiles[(x - chunkWorldCoordinates.x) + ((y - chunkWorldCoordinates.y) * chunkSize)] = tile;
+        }
+        else if (layer == 1)
+        {
+            midgroundTilemap.SetTile(new Vector3Int(x, y, 0), tile);
+            chunks[chunkCoordinates].mgtiles[(x - chunkWorldCoordinates.x) + ((y - chunkWorldCoordinates.y) * chunkSize)] = tile;
+        }
+        else
+        {
+            backgroundTilemap.SetTile(new Vector3Int(x, y, 0), tile);
+            chunks[chunkCoordinates].bgtiles[(x - chunkWorldCoordinates.x) + ((y - chunkWorldCoordinates.y) * chunkSize)] = tile;
+        }
+    }
+
+    void SpawnPickup(int x, int y, ItemDataContainer itemBroken)
     {
         if (itemBroken.tileData.itemDroppedOnBreak.item == null) { return; }
         var rotation = Quaternion.Euler(0, 0, Random.Range(0, 360));
@@ -562,7 +616,7 @@ public class WorldGenerator : MonoBehaviour
         pickupManager.AddPickup(pickup);
     }
 
-    public void PlaceBlock(int x, int y, ItemDataConatainer tileData, bool generatingStructure = false)
+    public void PlaceBlock(int x, int y, ItemDataContainer tileData, bool generatingStructure = false)
     {
         if (tileData.tileData.placeOnLayer == 0)
         {

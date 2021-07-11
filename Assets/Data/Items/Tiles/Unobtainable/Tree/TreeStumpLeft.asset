@@ -38,7 +38,7 @@ MonoBehaviour:
     tile: {fileID: 11400000, guid: 7c987820706287c44b1605d8d4264252, type: 2}
     attachToLayer: 1
     placeOnLayer: 1
-    breakSound: {fileID: 0}
+    breakSound: {fileID: 11400000, guid: 4b2177dd51bc29a428160dfb14f1d61e, type: 2}
     interactable: 0
     otherAttachTo: []
     noAttachToBackground: 0

@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Pickup : MonoBehaviour
 {
+    //[SerializeField] LayerMask pickupLayer;
+    //[SerializeField] float pickupDelay;
+    [SerializeField] Collider2D wCol;
     public ItemPackage itemPackage;
-    [SerializeField] Collider2D c;
 
     public void SetItem(ItemPackage newItemPackage)
     {
@@ -13,12 +16,23 @@ public class Pickup : MonoBehaviour
         itemPackage = newItemPackage;
     }
 
+    //private void Start()
+    //{
+    //    StartCoroutine(EnablePickupCollider());
+    //}
+
+    //IEnumerator EnablePickupCollider()
+    //{
+    //    yield return new WaitForSeconds(pickupDelay);
+    //    gameObject.layer = 9 << (pickupLayer);
+    //}
+
     // When getting pulled disable collider?
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Player")
         {
-            c.enabled = false;
+            wCol.enabled = false;
         }
     }
 
@@ -26,7 +40,7 @@ public class Pickup : MonoBehaviour
     {
         if (collision.gameObject.tag == "Player")
         {
-            c.enabled = true;
+            wCol.enabled = true;
         }
     }
 }

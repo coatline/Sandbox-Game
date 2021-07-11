@@ -18,7 +18,7 @@ public class WorldSaveData
     {
         blockData = new short[worldWidth * worldHeight];
         highestTiles = new short[worldWidth];
-        timeData = new float[12];
+        timeData = new float[0];
     }
 
     public void Save(short worldWidth, short worldHeight, float[] time, short[] blockData, short[] highestTiles)

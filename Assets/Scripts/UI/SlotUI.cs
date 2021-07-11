@@ -57,7 +57,7 @@ public class SlotUI : MonoBehaviour
         }
     }
 
-    public void AddItem(int count, ItemDataConatainer newItem = null)
+    public void AddItem(int count, ItemDataContainer newItem = null)
     {
         if (itemPackage.item == null)
         {

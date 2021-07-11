@@ -47,7 +47,7 @@ MonoBehaviour:
     noPlaceOnFloor: 0
     partOfMultiTileData:
       itemStructurePartOf: {fileID: 11400000, guid: 3abfb4e6ff841cb4b8dfde19fd390d4a, type: 2}
-      relativePosition: {x: 1, y: 0}
+      relativePosition: {x: 0, y: 1}
     multiBlockStructure: {fileID: 0}
     isPartOfMultiTile: 1
     hideBreakingGraphic: 1

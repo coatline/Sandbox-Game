@@ -13,8 +13,9 @@ public enum TimeOfDay
 
 public class DayNightCycle : MonoBehaviour
 {
-    [SerializeField] CalculateColorLighting ccl;
+    [SerializeField] SpriteRenderer backgroundOverlay;
     [SerializeField] SpriteRenderer skyBackground;
+    [SerializeField] CalculateColorLighting ccl;
     [SerializeField] float timeScale;
     [SerializeField] TMP_Text timeText;
 
@@ -38,7 +39,7 @@ public class DayNightCycle : MonoBehaviour
 
     void Start()
     {
-        if (SaveData.currentWorld != null && SaveData.currentWorld.blockData.Length > 0)
+        if (SaveData.currentWorld != null && SaveData.currentWorld.timeData.Length > 11)
         {
             // Not a new world load time
             LoadLight();
@@ -56,7 +57,7 @@ public class DayNightCycle : MonoBehaviour
         days = (int)timeData[1];
         hours = (int)timeData[2];
         minutes = (int)timeData[3];
-        skyBackground.color = new Color(timeData[4], timeData[5], timeData[6], timeData[7]);
+        backgroundOverlay.color = new Color(timeData[4], timeData[5], timeData[6], timeData[7]);
         ccl.ambientColor = new Color(timeData[8], timeData[9], timeData[10], timeData[11]);
     }
 
@@ -65,7 +66,7 @@ public class DayNightCycle : MonoBehaviour
         // This is to set the target colors
         timeOfDay = TimeOfDay.dawn;
 
-        skyBackground.color = skyDayColor;
+        backgroundOverlay.color = skyDayColor;
         ccl.ambientColor = dayLightColor;
         hours = 8;
     }
@@ -101,7 +102,7 @@ public class DayNightCycle : MonoBehaviour
         }
         if (hours >= 24)
         {
-            hours = 0;
+            hours = 1;
             days++;
         }
         if (days >= 365)
@@ -109,28 +110,28 @@ public class DayNightCycle : MonoBehaviour
             years++;
         }
 
-        if (timeOfDay != TimeOfDay.day && hours >= 7 && hours <= 20)
+        if (timeOfDay != TimeOfDay.day && hours >= 8 && hours < 19)
         {
             timeOfDay = TimeOfDay.day;
 
             targetLightColor = dayLightColor;
             targetSkyColor = skyDayColor;
         }
-        else if (timeOfDay != TimeOfDay.dusk && hours >= 20 && hours <= 21)
+        else if (timeOfDay != TimeOfDay.dusk && hours >= 19 && hours < 20)
         {
             timeOfDay = TimeOfDay.dusk;
 
             targetLightColor = duskLightColor;
             targetSkyColor = skyDuskColor;
         }
-        else if (timeOfDay != TimeOfDay.night && hours >= 21 && hours <= 6)
+        else if (timeOfDay != TimeOfDay.night && (hours >= 20 || hours < 7))
         {
             timeOfDay = TimeOfDay.night;
 
             targetLightColor = nightLightColor;
             targetSkyColor = skyNightColor;
         }
-        else if (timeOfDay != TimeOfDay.dawn && hours >= 6 && hours <= 7)
+        else if (timeOfDay != TimeOfDay.dawn && hours >= 7 && hours < 8)
         {
             timeOfDay = TimeOfDay.dawn;
 
@@ -141,12 +142,13 @@ public class DayNightCycle : MonoBehaviour
 
     void DisplaySky()
     {
-        ccl.ambientColor = Color.Lerp(ccl.ambientColor, targetLightColor, Time.deltaTime / 22);
-        skyBackground.color = Color.Lerp(skyBackground.color, targetSkyColor + new Color(0, 0, 0, 1), Time.deltaTime / 25);
+        ccl.ambientColor = Color.Lerp(ccl.ambientColor, targetLightColor, Time.fixedDeltaTime / 22 * timeScale);
+        backgroundOverlay.color = Color.Lerp(backgroundOverlay.color, targetSkyColor/* + new Color(0, 0, 0, 1)*/, Time.fixedDeltaTime / 25 * timeScale);
+        //backgroundOverlay.color = new Color(0, 0, 0, 1 - skyBackground.r);
     }
 
     public float[] GetTime()
     {
-        return new float[12] { years, days, hours, minutes, skyBackground.color.r, skyBackground.color.g, skyBackground.color.b, skyBackground.color.a, ccl.ambientColor.r, ccl.ambientColor.g, ccl.ambientColor.b, ccl.ambientColor.a };
+        return new float[12] { years, days, hours, minutes, backgroundOverlay.color.r, backgroundOverlay.color.g, backgroundOverlay.color.b, backgroundOverlay.color.a, ccl.ambientColor.r, ccl.ambientColor.g, ccl.ambientColor.b, ccl.ambientColor.a };
     }
 }

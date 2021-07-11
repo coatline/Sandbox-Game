@@ -129,7 +129,7 @@ public class Player : MonoBehaviour
 
         var mousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
         Vector2Int blockPosition = new Vector2Int((int)mousePosition.x, (int)mousePosition.y);
-        ItemDataConatainer currentItem = currentItemPackage.item;
+        ItemDataContainer currentItem = currentItemPackage.item;
         bool used = false;
 
         if (currentItemPackage.item.itemType == ItemType.tool)
@@ -142,7 +142,7 @@ public class Player : MonoBehaviour
 
                 if (canBreak >= 0)
                 {
-                    wg.DamageBlock(blockPosition.x, blockPosition.y, (byte)canBreak, currentItemPackage.item.weaponData.toolData.strength);
+                    wg.HitBlock(blockPosition.x, blockPosition.y, (byte)canBreak, currentItemPackage.item.weaponData.toolData.strength);
                     used = true;
                 }
             }

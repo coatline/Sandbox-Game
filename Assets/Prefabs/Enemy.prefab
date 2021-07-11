@@ -84,6 +84,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   invincibilityTime: 0.1
   feetPosition: {fileID: 6870943563936670357}
+  msk:
+    serializedVersion: 2
+    m_Bits: 0
   rb: {fileID: 1853783897216964922}
   health: 75
   speed: 3
@@ -157,7 +160,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 1833374003608817324, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

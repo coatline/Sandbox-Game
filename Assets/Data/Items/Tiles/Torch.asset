@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Torch
   m_EditorClassIdentifier: 
   itemData:
-    useSound: {fileID: 0}
+    useSound: {fileID: 11400000, guid: 7d70bc61218e7c045bac6cb861ff2ea7, type: 2}
     useTime: 0.25
     generateCollider: 0
     maxStack: 999

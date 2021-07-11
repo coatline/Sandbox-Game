@@ -6,6 +6,6 @@ using UnityEngine;
 
 public class PartInMutliTileItemData
 {
-    public ItemDataConatainer itemStructurePartOf;
+    public ItemDataContainer itemStructurePartOf;
     public Vector2Int relativePosition;
 }

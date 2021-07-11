@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Dirt
   m_EditorClassIdentifier: 
   itemData:
-    useSound: {fileID: 11400000, guid: 7d70bc61218e7c045bac6cb861ff2ea7, type: 2}
+    useSound: {fileID: 11400000, guid: adbc4c393bcadb6489c8cea1d00f07ac, type: 2}
     useTime: 0.25
     generateCollider: 0
     maxStack: 999
@@ -38,7 +38,7 @@ MonoBehaviour:
     tile: {fileID: 11400000, guid: 115deafa0355eaa46bf3534e919c8da6, type: 2}
     attachToLayer: 0
     placeOnLayer: 0
-    breakSound: {fileID: 11400000, guid: adbc4c393bcadb6489c8cea1d00f07ac, type: 2}
+    breakSound: {fileID: 11400000, guid: 7d70bc61218e7c045bac6cb861ff2ea7, type: 2}
     interactable: 0
     otherAttachTo: []
     noAttachToBackground: 0

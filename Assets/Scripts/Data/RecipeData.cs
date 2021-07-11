@@ -9,5 +9,5 @@ public class RecipeData : ScriptableObject
     public RuleTile nearbyTile;
     public ItemPackage[] ingredients;
     public ItemPackage product;
-    public ItemDataConatainer[] nearbyTilesForCrafting;
+    public ItemDataContainer[] nearbyTilesForCrafting;
 }

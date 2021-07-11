@@ -53,7 +53,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03a21c1723a34134e9cff7b07bd60f86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 12
+  movementSpeed: 11
   jumpForce: 11.6
   jumpTime: 0.226
   fallingSpeedCap: 35
@@ -137,7 +137,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: -2311659948842064771, guid: acb5a93ff0dce7646a70d15ebb5ceb45, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -499,7 +499,7 @@ PointEffector2D:
     m_Bits: 512
   m_ForceMagnitude: -30
   m_ForceVariation: 0
-  m_DistanceScale: 1
+  m_DistanceScale: 0.0001
   m_ForceSource: 0
   m_ForceTarget: 0
   m_ForceMode: 0

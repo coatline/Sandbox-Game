@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemData:
     useSound: {fileID: 0}
-    useTime: 0.025
+    useTime: 0.55
     generateCollider: 1
     maxStack: 1
     value: 0

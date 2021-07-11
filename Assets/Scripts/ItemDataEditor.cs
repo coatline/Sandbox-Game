@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class ItemDataEditor : MonoBehaviour
 {
-    [SerializeField] List<ItemDataConatainer> items;
+    [SerializeField] List<ItemDataContainer> items;
     [SerializeField] List<Structure> structures;
     [SerializeField] List<RuleTile> ruleTiles;
 
