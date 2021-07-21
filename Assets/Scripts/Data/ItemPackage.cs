@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class ItemPackage
+public struct ItemPackage
 {
     public ItemDataContainer item;
     public int count;

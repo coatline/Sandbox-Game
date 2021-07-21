@@ -13,22 +13,23 @@ MonoBehaviour:
   m_Name: Dirt
   m_EditorClassIdentifier: 
   itemData:
-    useSound: {fileID: 11400000, guid: adbc4c393bcadb6489c8cea1d00f07ac, type: 2}
+    useSound: {fileID: 11400000, guid: 694b988ac8d7be04c82e8dc3cf185219, type: 2}
+    animationTime: 0.3
     useTime: 0.25
     generateCollider: 0
     maxStack: 999
     value: 0
-    id: 2
     emitsLight: 0
     emitColor: {r: 0, g: 0, b: 0, a: 0}
     itemSprite: {fileID: 3069411614605551677, guid: 190c018e56eca1a4e9b7dd8bf7a3e1d7, type: 3}
     heldSprite: {fileID: 0}
+    showPlacement: 0
     showOnSelect: 0
     hideOnUse: 0
-    itemName: Dirt
     description: 
     rarity: 
-  itemType: 6
+    itemName: Dirt
+    id: 18
   tileData:
     itemDroppedOnBreak:
       item: {fileID: 11400000}
@@ -39,18 +40,23 @@ MonoBehaviour:
     attachToLayer: 0
     placeOnLayer: 0
     breakSound: {fileID: 11400000, guid: 7d70bc61218e7c045bac6cb861ff2ea7, type: 2}
+    hitSound: {fileID: 11400000, guid: 694b988ac8d7be04c82e8dc3cf185219, type: 2}
     interactable: 0
     otherAttachTo: []
+    placeBehindForeground: 0
     noAttachToBackground: 0
     noAttachToCeiling: 0
     noAttachToWalls: 0
     noPlaceOnFloor: 0
+    canFloat: 0
     partOfMultiTileData:
       itemStructurePartOf: {fileID: 0}
       relativePosition: {x: 0, y: 0}
     multiBlockStructure: {fileID: 0}
     isPartOfMultiTile: 0
+    isChest: 0
     hideBreakingGraphic: 0
+    cementBlockBelow: 0
     treeTile: 0
   weaponData:
     damageType: 0
@@ -62,4 +68,5 @@ MonoBehaviour:
       strength: 0
     criticalStrikeChance: 0
     damageVal: 0
+  itemType: 6
   actionOnUse: 1

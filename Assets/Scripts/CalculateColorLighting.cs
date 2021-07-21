@@ -8,12 +8,12 @@ public class CalculateColorLighting : MonoBehaviour
 {
     [HideInInspector()] public Color[] pixels;
     [SerializeField] DayNightCycle dnc;
+    [SerializeField] DataManager dm;
     public bool doubleResolution;
     public List<Vector2Int> lightEmitters;
     float airDiagonalDropOff;
     float blockDiagonalDropOff;
     public Color ambientColor;
-    WorldGenerator wg;
     int lightRadius;
     float airDropoff;
     float blockDropoff;
@@ -22,14 +22,13 @@ public class CalculateColorLighting : MonoBehaviour
     Vector2Int frameSize;
     bool running;
 
-    public void StartLighting(Vector2Int frameSize, WorldGenerator wg, int lightRadius, float airDropoff, float blockDropoff, float lowestLightLevel)
+    public void StartLighting(Vector2Int frameSize, int lightRadius, float airDropoff, float blockDropoff, float lowestLightLevel)
     {
         this.frameSize = frameSize;
         this.lowestLightLevel = lowestLightLevel;
         this.blockDropoff = blockDropoff;
         this.lightRadius = lightRadius;
         this.airDropoff = airDropoff;
-        this.wg = wg;
 
         if (running) return;
         running = true;
@@ -51,8 +50,6 @@ public class CalculateColorLighting : MonoBehaviour
 
     private void Setup()
     {
-        wg = FindObjectOfType<WorldGenerator>();
-
         blockDiagonalDropOff = Mathf.Pow(blockDropoff, Mathf.Sqrt(1.5f));
         airDiagonalDropOff = Mathf.Pow(airDropoff, Mathf.Sqrt(1.5f));
 
@@ -116,10 +113,10 @@ public class CalculateColorLighting : MonoBehaviour
 
                 if (!WithinWorldBounds(worldX, worldY)) { continue; }
 
-                short fgtile = wg.blockMap[worldX, worldY, 0];
-                ItemDataContainer mgtile = wg.itemData[wg.blockMap[worldX, worldY, 1]];
+                short fgtile = GD.wd.blockMap[worldX, worldY, 0];
+                ItemDataContainer mgtile = dm.GetItem(GD.wd.blockMap[worldX, worldY, 1]);
 
-                if (/*worldY > wg.highestTiles[worldX] - wg.caveStartingOffset &&*/ fgtile == 0 && wg.blockMap[worldX, worldY, 2] == 0)
+                if (/*worldY > wg.highestTiles[worldX] - wg.caveStartingOffset &&*/ fgtile == 0 && GD.wd.blockMap[worldX, worldY, 2] == 0)
                 {
                     lightValues[x, y] = ambientColor;
                     toEmit[x, y] = 2;
@@ -197,7 +194,7 @@ public class CalculateColorLighting : MonoBehaviour
         lightFillQueue.Clear();
 
         //Clear SingleLightEmmision
-        //singleLightEmission = new Color[lightRadius * 2 + 1, lightRadius * 2+1];
+        //singleLightEmission = new Color[lightRadius * 2 + 1, lightRadius * 2 + 1];
         for (int x = 0; x < lightRadius * 2 + 1; x++)
         {
             for (int y = 0; y < lightRadius * 2 + 1; y++)
@@ -205,7 +202,6 @@ public class CalculateColorLighting : MonoBehaviour
                 singleLightEmission[x, y] = Color.black;
             }
         }
-
 
         singleLightEmission[lightRadius, lightRadius] = color;
         lightFillQueue.Add(new int[] { rootX, rootY });
@@ -247,7 +243,7 @@ public class CalculateColorLighting : MonoBehaviour
                     {
                         float dropOff;
 
-                        if (wg.blockMap[worldPosX, worldPosY, 0] == 0)
+                        if (GD.wd.blockMap[worldPosX, worldPosY, 0] == 0)
                         {
                             dropOff = (nx != x && ny != y) ? airDiagonalDropOff : airDropoff;
                         }
@@ -280,7 +276,7 @@ public class CalculateColorLighting : MonoBehaviour
 
     bool WithinWorldBounds(int x, int y)
     {
-        return x < wg.worldWidth && x >= 0 && y < wg.worldHeight && y >= 0;
+        return x < GD.wd.worldWidth && x >= 0 && y < GD.wd.worldHeight && y >= 0;
     }
 }
 //void EmitNeighbor(Vector2Int neighbor, Vector2Int pos, Vector2Int rootPos, Color color, float dropoff)

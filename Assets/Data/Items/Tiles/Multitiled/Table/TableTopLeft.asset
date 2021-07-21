@@ -14,21 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemData:
     useSound: {fileID: 0}
+    animationTime: 0
     useTime: 0.25
     generateCollider: 0
     maxStack: 0
     value: 0
-    id: 0
     emitsLight: 0
     emitColor: {r: 0, g: 0, b: 0, a: 0}
     itemSprite: {fileID: 0}
     heldSprite: {fileID: 0}
+    showPlacement: 0
     showOnSelect: 0
     hideOnUse: 0
-    itemName: TableTopLeft
     description: 
     rarity: 
-  itemType: 6
+    itemName: TableTopLeft
+    id: 11
   tileData:
     itemDroppedOnBreak:
       item: {fileID: 0}
@@ -36,21 +37,26 @@ MonoBehaviour:
     hardness: 2
     requiredTool: 0
     tile: {fileID: 11400000, guid: 934efe8276349c44cb470cfcad1fbc72, type: 2}
-    attachToLayer: 0
+    attachToLayer: 1
     placeOnLayer: 1
     breakSound: {fileID: 0}
+    hitSound: {fileID: 0}
     interactable: 0
     otherAttachTo: []
+    placeBehindForeground: 0
     noAttachToBackground: 1
     noAttachToCeiling: 1
     noAttachToWalls: 1
     noPlaceOnFloor: 0
+    canFloat: 1
     partOfMultiTileData:
       itemStructurePartOf: {fileID: 11400000, guid: 3abfb4e6ff841cb4b8dfde19fd390d4a, type: 2}
       relativePosition: {x: 0, y: 1}
     multiBlockStructure: {fileID: 0}
     isPartOfMultiTile: 1
+    isChest: 0
     hideBreakingGraphic: 1
+    cementBlockBelow: 0
     treeTile: 0
   weaponData:
     damageType: 0
@@ -62,4 +68,5 @@ MonoBehaviour:
       strength: 0
     criticalStrikeChance: 0
     damageVal: 0
+  itemType: 6
   actionOnUse: 1

@@ -35,7 +35,7 @@ public class CalculateLighting : MonoBehaviour
 
         sr = GetComponent<SpriteRenderer>();
         cam = Camera.main;
-        lightValues = new float[wg.worldWidth, wg.worldHeight];
+        lightValues = new float[GD.wd.worldWidth, GD.wd.worldHeight];
 
         viewDistance = new Vector3((cam.orthographicSize * 1.78f), cam.orthographicSize + .01f, 0);
         size = new Vector2Int(3 + (int)viewDistance.x * 2, 3 + (int)viewDistance.y * 2) + overlap;
@@ -59,11 +59,11 @@ public class CalculateLighting : MonoBehaviour
 
     void InitializeLights()
     {
-        for (int x = 0; x < wg.worldWidth; x++)
+        for (int x = 0; x < GD.wd.worldWidth; x++)
         {
-            for (int y = 0; y < wg.worldHeight; y++)
+            for (int y = 0; y < GD.wd.worldHeight; y++)
             {
-                if (y > wg.highestTiles[x] - wg.caveStartingOffset && wg.blockMap[x, y, 0] == 0)
+                if (y > GD.wd.highestTiles[x] - wg.caveStartingOffset && GD.wd.blockMap[x, y, 0] == 0)
                 {
                     LightBlock(new Vector2Int(x, y), new Vector2Int(x, y), 1, 1);
                 }
@@ -80,7 +80,7 @@ public class CalculateLighting : MonoBehaviour
 
         var dropoff = airDropoff;
 
-        if (wg.blockMap[pos.x, pos.y, 0] != 0) { dropoff = inBlockDropoff; }
+        if (GD.wd.blockMap[pos.x, pos.y, 0] != 0) { dropoff = inBlockDropoff; }
 
         lightValues[pos.x, pos.y] = intensity;
 
@@ -175,7 +175,7 @@ public class CalculateLighting : MonoBehaviour
     {
         neighborPosition += myPosition;
 
-        if (neighborPosition.x < 0 || neighborPosition.y < 0 || neighborPosition.x >= wg.worldWidth || neighborPosition.y >= wg.worldHeight) { return; }
+        if (neighborPosition.x < 0 || neighborPosition.y < 0 || neighborPosition.x >= GD.wd.worldWidth || neighborPosition.y >= GD.wd.worldHeight) { return; }
 
         //var dist = Mathf.Sqrt((neighborPosition.x - myPosition.x) * (neighborPosition.x - myPosition.x) + (neighborPosition.y - myPosition.y) * (neighborPosition.y - myPosition.y));
         var targetIntensity = intensity * dropoff /** Mathf.Pow(dropoff, dist)*/;
@@ -190,7 +190,7 @@ public class CalculateLighting : MonoBehaviour
     {
         neighborPosition += myPosition;
 
-        if (neighborPosition.x < 0 || neighborPosition.y < 0 || neighborPosition.x >= wg.worldWidth || neighborPosition.y >= wg.worldHeight) { return; }
+        if (neighborPosition.x < 0 || neighborPosition.y < 0 || neighborPosition.x >= GD.wd.worldWidth || neighborPosition.y >= GD.wd.worldHeight) { return; }
 
         if (lightValues[neighborPosition.x, neighborPosition.y] < 1)
         {
@@ -204,7 +204,7 @@ public class CalculateLighting : MonoBehaviour
 
     void UnlightBlock(Vector2Int pos, Vector2Int initialPos, bool justChecking, int iteration)
     {
-        if (pos.x >= wg.worldWidth || pos.x < 0 || pos.y < 0 || pos.y >= wg.worldHeight) { return; }
+        if (pos.x >= GD.wd.worldWidth || pos.x < 0 || pos.y < 0 || pos.y >= GD.wd.worldHeight) { return; }
 
         if (iteration > lightRadius)
         {
@@ -314,7 +314,7 @@ public class CalculateLighting : MonoBehaviour
 
         if (!placingBlock)
         {
-            if (pos.y > wg.highestTiles[pos.x] - wg.caveStartingOffset)
+            if (pos.y > GD.wd.highestTiles[pos.x] - wg.caveStartingOffset)
             {
                 LightBlock(pos, pos, 1, 1);
             }
@@ -340,7 +340,7 @@ public class CalculateLighting : MonoBehaviour
     void AddBlocksToRelight(ref List<Vector2Int> blocksToRelight, Vector2Int neighborPos, Vector2Int initialPos)
     {
         neighborPos += initialPos;
-        if (neighborPos.x < 0 || neighborPos.y < 0 || neighborPos.x >= wg.worldWidth || neighborPos.y >= wg.worldHeight) { return; }
+        if (neighborPos.x < 0 || neighborPos.y < 0 || neighborPos.x >= GD.wd.worldWidth || neighborPos.y >= GD.wd.worldHeight) { return; }
 
         if (lightValues[neighborPos.x, neighborPos.y] > lightValues[initialPos.x, initialPos.y] && !blocksToRelight.Contains(neighborPos))
         {
@@ -439,7 +439,7 @@ public class CalculateLighting : MonoBehaviour
                 var blockmapX = x + (int)transform.position.x;
                 var blockmapY = y + (int)transform.position.y;
 
-                if (blockmapX < 0 || blockmapY < 0 || blockmapX >= wg.worldWidth || blockmapY >= wg.worldHeight)
+                if (blockmapX < 0 || blockmapY < 0 || blockmapX >= GD.wd.worldWidth || blockmapY >= GD.wd.worldHeight)
                 {
                     continue;
                 }

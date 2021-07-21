@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fa09bd11f12393d44bcf30c9b64de8af, type: 3}
+  m_Name: ChestRight
+  m_EditorClassIdentifier: 
+  itemData:
+    useSound: {fileID: 11400000, guid: 7d70bc61218e7c045bac6cb861ff2ea7, type: 2}
+    animationTime: 0
+    useTime: 0.25
+    generateCollider: 0
+    maxStack: 999
+    value: 0
+    emitsLight: 0
+    emitColor: {r: 0, g: 0, b: 0, a: 0}
+    itemSprite: {fileID: -9086423209051200666, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
+    heldSprite: {fileID: 0}
+    showPlacement: 0
+    showOnSelect: 0
+    hideOnUse: 0
+    description: 
+    rarity: 
+    itemName: ChestRight
+    id: 4
+  tileData:
+    itemDroppedOnBreak:
+      item: {fileID: 0}
+      count: 0
+    hardness: 4
+    requiredTool: 0
+    tile: {fileID: 11400000, guid: b4582596d25737b4591073edbcd39b12, type: 2}
+    attachToLayer: 0
+    placeOnLayer: 1
+    breakSound: {fileID: 0}
+    hitSound: {fileID: 0}
+    interactable: 1
+    otherAttachTo: []
+    placeBehindForeground: 0
+    noAttachToBackground: 1
+    noAttachToCeiling: 1
+    noAttachToWalls: 1
+    noPlaceOnFloor: 0
+    canFloat: 0
+    partOfMultiTileData:
+      itemStructurePartOf: {fileID: 11400000, guid: f12baea676d94744fb673f913bf2391e, type: 2}
+      relativePosition: {x: 1, y: 0}
+    multiBlockStructure: {fileID: 0}
+    isPartOfMultiTile: 1
+    isChest: 1
+    hideBreakingGraphic: 0
+    cementBlockBelow: 0
+    treeTile: 0
+  weaponData:
+    damageType: 0
+    rangedData:
+      enemiesPassThroughCount: 0
+    toolData:
+      worldLayer: 0
+      toolType: 0
+      strength: 0
+    criticalStrikeChance: 0
+    damageVal: 0
+  itemType: 6
+  actionOnUse: 1

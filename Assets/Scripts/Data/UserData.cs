@@ -4,39 +4,43 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class GameData
+public class UserData
 {
-    const string FILE_NAME = "GameData.json";
+    const string FILE_NAME = "!UserData.json";
 
     public List<string> worldNames;
     public List<string> playerNames;
+    public string version;
 
-    protected GameData()
+    protected UserData()
     {
         worldNames = new List<string>();
         playerNames = new List<string>();
     }
 
-    public void Save(/*List<string> worlds, List<string> players*/)
+    public void Save()
     {
-        //playerNames = players;
-        //worldNames = worlds;
+        if (version != Application.version)
+        {
+            Debug.Log($"New version detected! old: {version} new: {Application.version}");
+            version = Application.version;
+        }
 
         string json = JsonUtility.ToJson(this);
         File.WriteAllText(GetFullPath(FILE_NAME), json);
     }
 
-    public static GameData Load()
+    public static UserData Load()
     {
         if (!File.Exists(GetFullPath(FILE_NAME)))
         {
             Debug.Log("Welcome New Player!");
-            var gd = new GameData();
+            var gd = new UserData();
             return gd;
         }
 
         string json = File.ReadAllText(Path.Combine(Application.persistentDataPath, FILE_NAME));
-        var sg = JsonUtility.FromJson<GameData>(json);
+        var sg = JsonUtility.FromJson<UserData>(json);
         return sg;
     }
 

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 
 public class Player : MonoBehaviour
@@ -17,12 +18,14 @@ public class Player : MonoBehaviour
     [SerializeField] Transform feetPosition;
     [SerializeField] SpriteRenderer itemHold;
     [SerializeField] PolygonCollider2D itemHoldCollider;
+    [SerializeField] AnimationClip swingAnimation;
     [SerializeField] LayerMask groundLayer;
     [SerializeField] float reach;
     InventoryManager inventoryManager;
+    ChestInventory cim;
     CursorBehavior cursor;
     RenderLighting rl;
-    WorldGenerator wg;
+    WorldModifier wm;
     AudioSource audioS;
     Rigidbody2D rb;
     Camera cam;
@@ -49,10 +52,10 @@ public class Player : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         audioS = GetComponent<AudioSource>();
         rl = FindObjectOfType<RenderLighting>();
-        wg = FindObjectOfType<WorldGenerator>();
+        wm = FindObjectOfType<WorldModifier>();
         cursor = FindObjectOfType<CursorBehavior>();
+        cim = FindObjectOfType<ChestInventory>();
         inventoryManager = FindObjectOfType<InventoryManager>();
-        //currentItemPackage = new ItemPackage(null, 0);
     }
 
     private void FixedUpdate()
@@ -70,11 +73,25 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        CheckChestDist();
+
         FaceDirection();
 
         HandleItems();
 
         HandleInputs();
+    }
+
+    public Vector2Int currentChest;
+
+    void CheckChestDist()
+    {
+        if (currentChest == -Vector2Int.one) { return; }
+
+        if (!CanBeUsingChest(currentChest))
+        {
+            cim.CloseChest();
+        }
     }
 
     IEnumerator UseTimer()
@@ -136,13 +153,11 @@ public class Player : MonoBehaviour
         {
             if (Vector2.Distance(transform.position, mousePosition) < reach)
             {
-                if (blockPosition.x < 0 || blockPosition.x >= wg.worldWidth || blockPosition.y < 0 || blockPosition.y >= wg.worldHeight) { return; }
-
-                short canBreak = wg.CanBreak(blockPosition.x, blockPosition.y, currentItemPackage.item.weaponData.toolData.toolType);
+                short canBreak = wm.CanBreak(blockPosition.x, blockPosition.y, currentItemPackage.item.weaponData.toolData.toolType);
 
                 if (canBreak >= 0)
                 {
-                    wg.HitBlock(blockPosition.x, blockPosition.y, (byte)canBreak, currentItemPackage.item.weaponData.toolData.strength);
+                    wm.HitBlock(blockPosition.x, blockPosition.y, (byte)canBreak, currentItemPackage.item.weaponData.toolData.strength);
                     used = true;
                 }
             }
@@ -151,23 +166,26 @@ public class Player : MonoBehaviour
         {
             if (Vector2.Distance(transform.position, mousePosition) < reach)
             {
-                if (blockPosition.x < 0 || blockPosition.x >= wg.worldWidth || blockPosition.y < 0 || blockPosition.y >= wg.worldHeight) { return; }
-
                 var distance = Vector2.Distance(blockPosition, transform.position);
 
-                if (currentItemPackage != null && distance > .8f && distance < reach && wg.CanPlace(blockPosition.x, blockPosition.y, currentItemPackage.item))
+                if (/*currentItemPackage.item != null &&*/ distance > .8f && distance < reach && wm.CanPlace(blockPosition.x, blockPosition.y, currentItemPackage.item))
                 {
+                    if (currentItem.tileData.multiBlockStructure && !wm.CanPlaceStructure(blockPosition.x, blockPosition.y, currentItem.tileData.multiBlockStructure))
+                    {
+                        return;
+                    }
+
                     if (currentItemPackage.count > 0)
                     {
+                        wm.PlaceBlock(blockPosition.x, blockPosition.y, currentItemPackage.item);
+
                         if (cursorItem)
                         {
-                            wg.PlaceBlock(blockPosition.x, blockPosition.y, currentItemPackage.item);
-                            cursor.UseItem(1);
+                            cursor.TryModifyItem(currentItemPackage, -1);
                         }
                         else
                         {
-                            wg.PlaceBlock(blockPosition.x, blockPosition.y, currentItemPackage.item);
-                            currentSlot.RemoveCount(1);
+                            currentSlot.TryModifyItem(currentItemPackage, -1);
                         }
 
                         used = true;
@@ -211,17 +229,20 @@ public class Player : MonoBehaviour
             {
                 itemHoldCollider.enabled = false;
             }
+
+            if (cursor)
+            {
+                if (currentItemPackage.item.itemData.showPlacement)
+                {
+                    cursor.DisplayPlacement(currentItemPackage.item.itemData.heldSprite);
+                }
+                else
+                {
+                    cursor.EndDisplayPlacement();
+                }
+            }
         }
 
-        //if (cursor.itemPackage.item != null)
-        //{
-        //    currentItemPackage = cursor.itemPackage;
-        //    cursorItem = true;
-        //}
-        //else
-        //{
-        //    currentItemPackage = inventoryManager.CurrentItemPackage();
-        //}
     }
 
     void DoDynamicLighting()
@@ -259,10 +280,24 @@ public class Player : MonoBehaviour
         {
             itemHold.enabled = false;
         }
+
+
     }
 
     void HandleItems()
     {
+        int clicked = -1;
+
+        if (Input.GetMouseButton(0))
+        {
+            clicked = 0;
+        }
+        else if (Input.GetMouseButtonDown(1))
+        {
+            clicked = 1;
+        }
+
+        // Do right click logic
         if (currentItemPackage.item != null)
         {
             if (swinging && !itemHold.enabled && !currentItemPackage.item.itemData.hideOnUse)
@@ -283,19 +318,22 @@ public class Player : MonoBehaviour
 
             DoDynamicLighting();
 
-            if (Input.GetMouseButton(0))
+            if (clicked == 0)
             {
-                itemHold.sprite = currentItemPackage.item.itemData.itemSprite;
-                a.speed = 7f - (currentItemPackage.item.itemData.useTime * 10);
-
-                if (currentItemPackage.item.actionOnUse == PlayerAction.swing && !swinging)
+                if (!OverActiveUI())
                 {
-                    a.Play(swingAnimationHash);
-                }
+                    itemHold.sprite = currentItemPackage.item.itemData.itemSprite;
+                    a.speed = (swingAnimation.length / currentItemPackage.item.itemData.animationTime);
 
-                if (canUse)
-                {
-                    UseItem();
+                    if (currentItemPackage.item.actionOnUse == PlayerAction.swing && !swinging)
+                    {
+                        a.Play(swingAnimationHash);
+                    }
+
+                    if (canUse)
+                    {
+                        UseItem();
+                    }
                 }
             }
         }
@@ -313,6 +351,55 @@ public class Player : MonoBehaviour
                 Destroy(dynamicLight);
             }
         }
+
+        if (clicked == 1)
+        {
+            if (!OverActiveUI())
+            {
+                var mousePosition = cam.ScreenToWorldPoint(Input.mousePosition);
+                Vector2Int blockPosition = new Vector2Int((int)mousePosition.x, (int)mousePosition.y);
+
+                if (CanBeUsingChest(blockPosition))
+                {
+                    wm.TryInteractAt(blockPosition.x, blockPosition.y, ref currentChest);
+                }
+            }
+        }
+    }
+
+    bool CanBeUsingChest(Vector2Int chestPos)
+    {
+        if (Vector2.Distance(transform.position, chestPos) > reach)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    bool OverActiveUI()
+    {
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            PointerEventData pointer = new PointerEventData(EventSystem.current);
+            pointer.position = Input.mousePosition;
+
+            List<RaycastResult> raycastResults = new List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointer, raycastResults);
+
+            if (raycastResults.Count > 0)
+            {
+                foreach (var go in raycastResults)
+                {
+                    if (go.gameObject.activeSelf)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     void HandleInputs()
@@ -321,7 +408,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            transform.position = new Vector3(wg.worldWidth / 2, wg.highestTiles[wg.worldWidth / 2] + 2);
+            //transform.position = new Vector3(wg.worldWidth / 2, wg.highestTiles[wg.worldWidth / 2] + 2);
         }
     }
 
@@ -339,7 +426,7 @@ public class Player : MonoBehaviour
 
     void DoJump()
     {
-        isGrounded = Physics2D.OverlapBox(feetPosition.position, new Vector2(.725f, .4f), 0, groundLayer);
+        isGrounded = Physics2D.OverlapBox(feetPosition.position, new Vector2(.725f, .3f), 0, groundLayer);
 
         if (isGrounded && Input.GetKeyDown(KeyCode.Space))
         {

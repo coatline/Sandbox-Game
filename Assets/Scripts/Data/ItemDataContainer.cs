@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public enum Condition
@@ -50,15 +51,21 @@ public enum ItemType
 }
 
 [CreateAssetMenu(fileName = "New Item", menuName = "Item")]
+[System.Serializable]
 
 public class ItemDataContainer : ScriptableObject
 {
     public ItemData itemData;
-    public ItemType itemType;
     public TileData tileData;
     public WeaponData weaponData;
+    public ItemType itemType;
     public PlayerAction actionOnUse;
-    
+
+    private void OnValidate()
+    {
+        EditorUtility.SetDirty(this);
+    }
+
 }
 
 [System.Serializable]
@@ -67,21 +74,26 @@ public class ItemData
 {
     [Header("Data")]
     public SoundData useSound;
+    public float animationTime;
     public float useTime;
     public bool generateCollider;
     public short maxStack;
     public short value;
-    public short id;
     [Header("Light")]
     public bool emitsLight;
     public Color emitColor;
     [Header("Visuals")]
     public Sprite itemSprite;
     public Sprite heldSprite;
+    public bool showPlacement;
     public bool showOnSelect;
     public bool hideOnUse;
     [Header("Text")]
-    public string itemName;
     public string description;
     public string rarity;
+
+    [HideInInspector]
+    public string itemName;
+    [HideInInspector]
+    public short id;
 }

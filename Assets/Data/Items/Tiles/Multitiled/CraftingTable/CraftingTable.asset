@@ -14,21 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemData:
     useSound: {fileID: 0}
+    animationTime: 0.3
     useTime: 0.25
     generateCollider: 0
     maxStack: 999
     value: 0
-    id: 15
     emitsLight: 0
     emitColor: {r: 0, g: 0, b: 0, a: 0}
     itemSprite: {fileID: -2849796041330913305, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
-    heldSprite: {fileID: 0}
+    heldSprite: {fileID: -2849796041330913305, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
+    showPlacement: 1
     showOnSelect: 0
-    hideOnUse: 0
-    itemName: CraftingTable
+    hideOnUse: 1
     description: 
     rarity: 
-  itemType: 6
+    itemName: CraftingTable
+    id: 5
   tileData:
     itemDroppedOnBreak:
       item: {fileID: 11400000}
@@ -38,19 +39,24 @@ MonoBehaviour:
     tile: {fileID: 0}
     attachToLayer: 0
     placeOnLayer: 1
-    breakSound: {fileID: 0}
+    breakSound: {fileID: 11400000, guid: 7d70bc61218e7c045bac6cb861ff2ea7, type: 2}
+    hitSound: {fileID: 0}
     interactable: 0
     otherAttachTo: []
+    placeBehindForeground: 0
     noAttachToBackground: 1
     noAttachToCeiling: 1
     noAttachToWalls: 1
     noPlaceOnFloor: 0
+    canFloat: 0
     partOfMultiTileData:
       itemStructurePartOf: {fileID: 0}
       relativePosition: {x: 0, y: 0}
     multiBlockStructure: {fileID: 11400000, guid: d6490bfee2f167f429e32a288360087b, type: 2}
     isPartOfMultiTile: 0
+    isChest: 0
     hideBreakingGraphic: 1
+    cementBlockBelow: 0
     treeTile: 0
   weaponData:
     damageType: 0
@@ -62,4 +68,5 @@ MonoBehaviour:
       strength: 0
     criticalStrikeChance: 0
     damageVal: 0
+  itemType: 6
   actionOnUse: 1

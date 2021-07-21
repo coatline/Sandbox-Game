@@ -14,21 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemData:
     useSound: {fileID: 11400000, guid: 7d70bc61218e7c045bac6cb861ff2ea7, type: 2}
+    animationTime: 0
     useTime: 0.25
     generateCollider: 0
     maxStack: 0
     value: 0
-    id: 8
     emitsLight: 0
     emitColor: {r: 0, g: 0, b: 0, a: 0}
     itemSprite: {fileID: 0}
     heldSprite: {fileID: 0}
+    showPlacement: 0
     showOnSelect: 0
     hideOnUse: 0
-    itemName: TreeStumpLeft
     description: 
     rarity: 
-  itemType: 6
+    itemName: TreeStumpLeft
+    id: 13
   tileData:
     itemDroppedOnBreak:
       item: {fileID: 11400000, guid: 6d89c77261d7c344d966341fa441f874, type: 2}
@@ -39,18 +40,23 @@ MonoBehaviour:
     attachToLayer: 1
     placeOnLayer: 1
     breakSound: {fileID: 11400000, guid: 4b2177dd51bc29a428160dfb14f1d61e, type: 2}
+    hitSound: {fileID: 0}
     interactable: 0
     otherAttachTo: []
+    placeBehindForeground: 0
     noAttachToBackground: 0
     noAttachToCeiling: 0
     noAttachToWalls: 0
     noPlaceOnFloor: 0
+    canFloat: 0
     partOfMultiTileData:
       itemStructurePartOf: {fileID: 0}
       relativePosition: {x: 0, y: 0}
     multiBlockStructure: {fileID: 0}
     isPartOfMultiTile: 0
+    isChest: 0
     hideBreakingGraphic: 1
+    cementBlockBelow: 1
     treeTile: 1
   weaponData:
     damageType: 0
@@ -62,4 +68,5 @@ MonoBehaviour:
       strength: 0
     criticalStrikeChance: 0
     damageVal: 0
+  itemType: 6
   actionOnUse: 1

@@ -6,6 +6,7 @@ public class TilemapCollisionManager : MonoBehaviour
 {
     Queue<BoxCollider2D> collidersInQueue;
     [SerializeField] WorldGenerator wg;
+    [SerializeField] WorldModifier wm;
     [SerializeField] int initialColliders;
     BoxCollider2D[,] colliders;
 
@@ -50,7 +51,7 @@ public class TilemapCollisionManager : MonoBehaviour
     {
         if (x < 0 || x >= wg.worldWidth || y < 0 || y >= wg.worldHeight) { return; }
 
-        if (wg.blockMap[x, y, 0] == 0)
+        if (GD.wd.blockMap[x, y, 0] == 0)
         {
             if (colliders[x, y] != null)
             {
@@ -82,13 +83,13 @@ public class TilemapCollisionManager : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (wg.blockModifiedAt == -Vector2Int.one) { return; }
+        if (wm.blockModifiedAt == -Vector2Int.one) { return; }
 
-        var x = wg.blockModifiedAt.x;
-        var y = wg.blockModifiedAt.y;
+        var x = wm.blockModifiedAt.x;
+        var y = wm.blockModifiedAt.y;
 
         UpdateColliderAt(x, y);
 
-        wg.blockModifiedAt = -Vector2Int.one;
+        wm.blockModifiedAt = -Vector2Int.one;
     }
 }

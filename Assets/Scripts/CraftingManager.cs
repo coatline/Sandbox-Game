@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class CraftingManager : MonoBehaviour
 {
+    [SerializeField] AnimationCurve alphaDropoff;
     [SerializeField] CraftingSlot slotPrefab;
     [SerializeField] InventoryManager im;
     [SerializeField] List<RecipeData> recipes;
@@ -12,6 +13,8 @@ public class CraftingManager : MonoBehaviour
     [SerializeField] RectTransform rt;
     [SerializeField] CursorBehavior c;
     List<CraftingSlot> craftableSlots;
+    [Range(2, 8)]
+    [SerializeField] int viewDist;
     int selectedSlotIndex;
 
     void Start()
@@ -20,42 +23,35 @@ public class CraftingManager : MonoBehaviour
 
         for (int i = 0; i < recipes.Count; i++)
         {
-            var craftingSlot = Instantiate(slotPrefab, transform);
+            var craftingSlot = Instantiate(slotPrefab, glg.transform);
             craftingSlot.recipe = recipes[i];
             craftableSlots.Add(craftingSlot);
-            craftableSlots[i].AddItem(recipes[i].product.count, recipes[i].product.item);
+            craftableSlots[i].TryModifyItem(recipes[i].product);
+            craftingSlot.SetAlpha(0);
         }
 
-        //Invoke("u", .1f);
+        ScrollSlot(0);
     }
 
     public void TryCraft(RecipeData recipe)
     {
-        var slots = im.CanCraft(recipe);
+        List<InventorySlot> slots = im.CanCraft(recipe);
 
         if (slots != null)
         {
             for (int i = 0; i < recipe.ingredients.Length; i++)
             {
-                slots[i].RemoveCount(recipe.ingredients[i].count);
+                slots[i].TryModifyItem(recipe.ingredients[i], .1f, true);
             }
 
-            if (c.itemPackage.item == null)
+            if (c.CurrentItem == null)
             {
-                c.TakeItem(new ItemPackage(recipe.product.item, recipe.product.count));
+                c.TryModifyItem(recipe.product);
             }
-            else if (c.itemPackage.item == recipe.product.item)
+            else if (c.CurrentItem == recipe.product.item)
             {
-                c.TakeItem(new ItemPackage(recipe.product.item, recipe.product.count + c.itemPackage.count));
+                c.TryModifyItem(recipe.product);
             }
-        }
-    }
-
-    void u()
-    {
-        for (int k = 0; k < recipes.Count; k++)
-        {
-            craftableSlots[k].transform.SetParent(transform);
         }
     }
 
@@ -63,6 +59,8 @@ public class CraftingManager : MonoBehaviour
     {
         if (im.canEditInventory)
         {
+            rt.gameObject.SetActive(true);
+
             var scrollInput = Input.mouseScrollDelta.y;
 
             if (scrollInput < 0)
@@ -78,6 +76,24 @@ public class CraftingManager : MonoBehaviour
                 ScrollSlot(-1);
             }
         }
+        else
+        {
+            rt.gameObject.SetActive(false);
+        }
+    }
+
+    int RelativeSlotIndex(int dir)
+    {
+        int newindex = selectedSlotIndex + dir;
+
+        if (newindex >= craftableSlots.Count) { return newindex - craftableSlots.Count; }
+        else if (newindex < 0) { return craftableSlots.Count + newindex; }
+        else { return newindex; }
+    }
+
+    CraftingSlot SlotFromIndex(int index)
+    {
+        return craftableSlots[index];
     }
 
     void ScrollSlot(int direction)
@@ -94,6 +110,8 @@ public class CraftingManager : MonoBehaviour
 
         newSlot.SelectSlot();
 
+        SetSurroundingSlotAlphas();
+
         //if (newSlot.itemPackage.item)
         //{
         //    currentItemText.text = newSlot.itemPackage.item.itemName;
@@ -102,5 +120,23 @@ public class CraftingManager : MonoBehaviour
         //{
         //    currentItemText.text = "";
         //}
+    }
+
+    void SetSurroundingSlotAlphas()
+    {
+        for (int i = -viewDist; i <= viewDist; i++)
+        {
+            var slot = SlotFromIndex(RelativeSlotIndex(i));
+
+            if (Mathf.Abs(RelativeSlotIndex(i) - selectedSlotIndex) > viewDist)
+            {
+                slot.SetAlpha(0);
+                continue;
+            }
+
+            float a = 0;
+            a = alphaDropoff.Evaluate(1 - ((float)Mathf.Abs(i) / (float)viewDist));
+            slot.SetAlpha(a);
+        }
     }
 }

@@ -14,21 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemData:
     useSound: {fileID: 0}
-    useTime: 0.05
+    animationTime: 0.25
+    useTime: 0.125
     generateCollider: 1
     maxStack: 1
     value: 0
-    id: 0
     emitsLight: 0
     emitColor: {r: 0, g: 0, b: 0, a: 0}
     itemSprite: {fileID: -5474853141888705257, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
     heldSprite: {fileID: 0}
+    showPlacement: 0
     showOnSelect: 0
     hideOnUse: 0
-    itemName: 
     description: 
     rarity: 
-  itemType: 3
+    itemName: Hammer
+    id: 25
   tileData:
     itemDroppedOnBreak:
       item: {fileID: 0}
@@ -39,18 +40,23 @@ MonoBehaviour:
     attachToLayer: 0
     placeOnLayer: 0
     breakSound: {fileID: 0}
+    hitSound: {fileID: 0}
     interactable: 0
     otherAttachTo: []
+    placeBehindForeground: 0
     noAttachToBackground: 0
     noAttachToCeiling: 0
     noAttachToWalls: 0
     noPlaceOnFloor: 0
+    canFloat: 0
     partOfMultiTileData:
       itemStructurePartOf: {fileID: 0}
       relativePosition: {x: 0, y: 0}
     multiBlockStructure: {fileID: 0}
     isPartOfMultiTile: 0
+    isChest: 0
     hideBreakingGraphic: 0
+    cementBlockBelow: 0
     treeTile: 0
   weaponData:
     damageType: 0
@@ -62,4 +68,5 @@ MonoBehaviour:
       strength: 1
     criticalStrikeChance: 5
     damageVal: 4
+  itemType: 3
   actionOnUse: 1

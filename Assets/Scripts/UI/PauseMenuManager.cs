@@ -5,8 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenuManager : MonoBehaviour
 {
-    [SerializeField] InventoryManager im;
-    [SerializeField] WorldGenerator wg;
+    //[SerializeField] InventoryManager im;
+    //[SerializeField] WorldGenerator wg;
+    [SerializeField] SaveManager sm;
     GameObject settingsHolder;
     GameObject settingsButton;
 
@@ -28,11 +29,10 @@ public class PauseMenuManager : MonoBehaviour
 
     public void SaveAndExit()
     {
-        im.Save();
-        wg.Save();
+        sm.TrySaveAll();
 
-        SaveData.currentPlayer = null;
-        SaveData.currentWorld = null;
+        GD.currentPlayer = null;
+        GD.currentWorld = null;
 
         SceneManager.LoadScene(0);
     }
@@ -40,13 +40,5 @@ public class PauseMenuManager : MonoBehaviour
     public void Resume()
     {
         TogglePauseMenu();
-    }
-
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            ToggleSettingsButton();
-        }
     }
 }

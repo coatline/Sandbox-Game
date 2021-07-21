@@ -35,8 +35,23 @@ public class PlayerSaveData
         }
 
         string json = File.ReadAllText(Path.Combine(Application.persistentDataPath, fileName));
-        var sg = JsonUtility.FromJson<PlayerSaveData>(json);
-        return sg;
+        var save = JsonUtility.FromJson<PlayerSaveData>(json);
+
+        for (int i = 0; i < save.inventoryItems.Count; i++)
+        {
+            ItemPackage package = save.inventoryItems[i];
+
+            if (package.count > 0)
+            {
+                if (package.item == null)
+                {
+                    Debug.LogError("WHAT HAPPENED TO THIS ITEM");
+                    Debug.LogError("IT IS GONE");
+                }
+            }
+        }
+
+        return save;
     }
 
     public static void Delete(string playerName)

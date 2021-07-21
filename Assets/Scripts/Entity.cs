@@ -118,7 +118,7 @@ public class Entity : MonoBehaviour
         health -= dmg;
 
         // Knockback
-        rb.AddForce(dir * 750);
+        rb.AddForce(dir * 550);
 
         if (health <= 0) { Kill(); }
     }

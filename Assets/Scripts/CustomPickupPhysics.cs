@@ -28,7 +28,7 @@ public class CustomPickupPhysics : MonoBehaviour
             bc.enabled = false;
         }
 
-        if (wg.blockMap[(int)transform.position.x, (int)transform.position.y, 0] == 0)
+        if (GD.wd.blockMap[(int)transform.position.x, (int)transform.position.y, 0] == 0)
         {
             transform.Translate(new Vector3(0, -1 * Time.deltaTime, 0));
         }

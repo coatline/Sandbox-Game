@@ -7,7 +7,6 @@ public class ParallaxEffect : MonoBehaviour
     [SerializeField] Vector2 parallaxEffectMultiplier;
     [SerializeField] bool infiniteHorizontal;
     [SerializeField] bool infiniteVertical;
-    [SerializeField] WorldGenerator wg;
 
     Transform cameraTransform;
     Vector3 lastCameraPosition;
@@ -22,9 +21,9 @@ public class ParallaxEffect : MonoBehaviour
         sr = GetComponent<SpriteRenderer>();
         Sprite sprite = sr.sprite;
         Texture2D texture = sprite.texture;
-        transform.position = new Vector3(cameraTransform.position.x, (wg.worldHeight / 2f) + textureUnitSizeY / 2);
         textureUnitSizeX = texture.width / sprite.pixelsPerUnit;
         textureUnitSizeY = texture.height / sprite.pixelsPerUnit;
+        transform.position = new Vector3(cameraTransform.position.x, (GD.wd.worldHeight / 2f) + textureUnitSizeY / 2f);
     }
 
     private void LateUpdate()

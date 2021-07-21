@@ -14,21 +14,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemData:
     useSound: {fileID: 11400000, guid: 7d70bc61218e7c045bac6cb861ff2ea7, type: 2}
+    animationTime: 0.5
     useTime: 0.25
     generateCollider: 0
     maxStack: 999
     value: 0
-    id: 5
     emitsLight: 1
     emitColor: {r: 1, g: 1, b: 0.9019608, a: 0}
     itemSprite: {fileID: -7097341274207599037, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
     heldSprite: {fileID: 986209299252633420, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
+    showPlacement: 0
     showOnSelect: 1
     hideOnUse: 0
-    itemName: Torch
     description: 
     rarity: 
-  itemType: 6
+    itemName: Torch
+    id: 22
   tileData:
     itemDroppedOnBreak:
       item: {fileID: 11400000}
@@ -39,20 +40,25 @@ MonoBehaviour:
     attachToLayer: 0
     placeOnLayer: 1
     breakSound: {fileID: 11400000, guid: 7d70bc61218e7c045bac6cb861ff2ea7, type: 2}
+    hitSound: {fileID: 0}
     interactable: 0
     otherAttachTo:
     - {fileID: 11400000, guid: 77b3aab8535db884e99045073d3108c8, type: 2}
     - {fileID: 11400000, guid: b062730f5fd7c93468fb109e1625910b, type: 2}
+    placeBehindForeground: 0
     noAttachToBackground: 0
     noAttachToCeiling: 0
     noAttachToWalls: 0
     noPlaceOnFloor: 0
+    canFloat: 0
     partOfMultiTileData:
       itemStructurePartOf: {fileID: 0}
       relativePosition: {x: 0, y: 0}
     multiBlockStructure: {fileID: 0}
     isPartOfMultiTile: 0
+    isChest: 0
     hideBreakingGraphic: 0
+    cementBlockBelow: 0
     treeTile: 0
   weaponData:
     damageType: 0
@@ -64,4 +70,5 @@ MonoBehaviour:
       strength: 0
     criticalStrikeChance: 0
     damageVal: 0
+  itemType: 6
   actionOnUse: 1

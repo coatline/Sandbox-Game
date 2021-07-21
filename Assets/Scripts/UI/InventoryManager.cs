@@ -1,20 +1,27 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
-[DefaultExecutionOrder(-10)]
+
+[DefaultExecutionOrder(1)]
 public class InventoryManager : MonoBehaviour
 {
     [SerializeField] List<ItemPackage> startingItems;
+
+    //[SerializeField] delegate inventoryToggled;
+    [SerializeField] UnityEvent inventoryToggled;
+    //[SerializeField] UnityEvent inventoryToggled;
     [SerializeField] InventorySlot slotPrefab;
     [SerializeField] TMP_Text currentItemText;
-    [SerializeField] Vector2Int inventorySize;
     GameObject extendedInventoryHolder;
+    public Vector2Int inventorySize;
+    public InventorySlot[,] slotMap;
     public bool canEditInventory;
-    InventorySlot[,] slotMap;
     int selectedSlotIndex;
     Player player;
 
@@ -23,11 +30,11 @@ public class InventoryManager : MonoBehaviour
     void Awake()
     {
         bool newPlayer = true;
-        savable = (SaveData.currentPlayer != null);
+        savable = (GD.currentPlayer != null);
 
         if (savable)
         {
-            newPlayer = (SaveData.currentPlayer.inventoryItems.Count == 0);
+            newPlayer = (GD.currentPlayer.inventoryItems.Count == 0);
         }
 
         slotMap = new InventorySlot[inventorySize.x, inventorySize.y];
@@ -42,7 +49,7 @@ public class InventoryManager : MonoBehaviour
                 {
                     if (startingItems.Count > 0)
                     {
-                        slotMap[x, y].AddItem(startingItems[0].count, startingItems[0].item);
+                        slotMap[x, y].CurrentItemPackage = startingItems[0];
                         startingItems.RemoveAt(0);
                     }
                 }
@@ -60,31 +67,13 @@ public class InventoryManager : MonoBehaviour
         ScrollSlot(0);
         //LayoutRebuilder.ForceRebuildLayoutImmediate(GetComponent<RectTransform>());
         //ToggleExtendedInventory();
-        Invoke("ToggleExtendedInventory", .2f);
+        Invoke("ToggleExtendedInventory", .25f);
     }
 
     private void Start()
     {
         player = FindObjectOfType<Player>();
-        player.SetItemAndSlot(slotMap[selectedSlotIndex, 0].itemPackage, slotMap[selectedSlotIndex, 0]);
-    }
-
-    public void Save()
-    {
-        if (!savable) { return; }
-        print("Saving inventory");
-        List<ItemPackage> items = new List<ItemPackage>();
-        int count = 0;
-
-        for (int y = 0; y < inventorySize.y; y++)
-            for (int x = 0; x < inventorySize.x; x++)
-            {
-                if (slotMap[x, y].itemPackage.item != null) { count++; }
-                items.Add(slotMap[x, y].itemPackage);
-            }
-
-        print($"Saved {count} items");
-        SaveData.currentPlayer.Save(items);
+        player.SetItemAndSlot(slotMap[selectedSlotIndex, 0].CurrentItemPackage, slotMap[selectedSlotIndex, 0]);
     }
 
     //List<KeyValuePair<ItemDataContainer, InventorySlot>> inventoryItem = new List<KeyValuePair<ItemDataContainer, InventorySlot>>();
@@ -104,7 +93,7 @@ public class InventoryManager : MonoBehaviour
         for (int x = 0; x < inventorySize.x; x++)
             for (int y = 0; y < inventorySize.y; y++)
             {
-                if (slotMap[x, y].itemPackage.item == recipe.ingredients[i].item && slotMap[x,y].itemPackage.count >= recipe.ingredients[i].count)
+                if (slotMap[x, y].CurrentItem == recipe.ingredients[i].item && Extensions.CanAddItem(slotMap[x, y].CurrentItemPackage, recipe.ingredients[i], true) == 0)
                 {
                     slotsWithIngredients.Add(slotMap[x, y]);
                     goto NextIngredient;
@@ -120,14 +109,16 @@ public class InventoryManager : MonoBehaviour
         for (int y = 0; y < inventorySize.y; y++)
             for (int x = 0; x < inventorySize.x; x++)
             {
-                ItemPackage package = SaveData.currentPlayer.inventoryItems[x + (y * inventorySize.x)];
-                slotMap[x, y].AddItem(package.count, package.item);
+                ItemPackage package = GD.currentPlayer.inventoryItems[x + (y * inventorySize.x)];
+                if (package.count > 0)
+                {
+                    if (package.item == null)
+                    {
+                        Debug.LogError("WHAT HAPPENED TO THIS ITEM");
+                    }
+                }
+                slotMap[x, y].TryModifyItem(package);
             }
-    }
-
-    private void OnApplicationQuit()
-    {
-        Save();
     }
 
     public void AddItem(ItemPackage newItemPackage)
@@ -141,24 +132,35 @@ public class InventoryManager : MonoBehaviour
             {
                 InventorySlot slot = slotMap[x, y];
 
-                if (!seenEmpty && slot.itemPackage.item == null)
+                if (!seenEmpty && slot.CurrentItem == null)
                 {
                     emptyIndex = new Vector2Int(x, y);
                     seenEmpty = true;
+                    continue;
                 }
 
-                if (slot.itemPackage.item == newItemPackage.item && slot.itemPackage.count + newItemPackage.count <= slot.itemPackage.item.itemData.maxStack)
+                int overflow = slot.TryModifyItem(newItemPackage);
+
+                if (overflow == -1)
                 {
-                    // Stack the items into one slot
-                    slot.AddItem(newItemPackage.count);
+                    continue;
+                }
+                else if (overflow == 0)
+                {
                     return;
                 }
+                else
+                {
+                    newItemPackage.count -= newItemPackage.count - overflow;
+                    continue;
+                }
+
             }
         }
 
         if (seenEmpty)
         {
-            slotMap[emptyIndex.x, emptyIndex.y].AddItem(newItemPackage.count, newItemPackage.item);
+            slotMap[emptyIndex.x, emptyIndex.y].TryModifyItem(newItemPackage);
         }
         else
         {
@@ -166,10 +168,12 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    void ToggleExtendedInventory()
+    public void ToggleExtendedInventory()
     {
         extendedInventoryHolder.SetActive(!extendedInventoryHolder.activeSelf);
         canEditInventory = extendedInventoryHolder.activeSelf;
+
+        inventoryToggled.Invoke();
 
         if (extendedInventoryHolder.transform.childCount == 0)
         {
@@ -183,7 +187,7 @@ public class InventoryManager : MonoBehaviour
         }
     }
 
-    void ScrollSlot(int direction)
+    public void ScrollSlot(int direction)
     {
         slotMap[selectedSlotIndex, 0].DeSelectSlot();
 
@@ -196,9 +200,9 @@ public class InventoryManager : MonoBehaviour
 
         newSlot.SelectSlot();
 
-        if (newSlot.itemPackage.item)
+        if (newSlot.CurrentItem)
         {
-            currentItemText.text = newSlot.itemPackage.item.itemData.itemName;
+            currentItemText.text = newSlot.CurrentItem.itemData.itemName;
         }
         else
         {
@@ -207,7 +211,7 @@ public class InventoryManager : MonoBehaviour
 
         if (player)
         {
-            player.SetItemAndSlot(slotMap[selectedSlotIndex, 0].itemPackage, slotMap[selectedSlotIndex, 0]);
+            player.SetItemAndSlot(slotMap[selectedSlotIndex, 0].CurrentItemPackage, slotMap[selectedSlotIndex, 0]);
         }
     }
 

@@ -49,7 +49,7 @@ TextureImporter:
     second: PickaxeSTone
   - first:
       213: 4354781316875873519
-    second: Blocks_15
+    second: ChestLeft
   - first:
       213: -3828748445219874928
     second: Sword
@@ -136,13 +136,13 @@ TextureImporter:
     second: TableTopRight
   - first:
       213: -1610482729617942329
-    second: LeavesLM
+    second: ChestRight
   - first:
       213: -6615166614792116592
     second: PlayerIdle
   - first:
       213: -9086423209051200666
-    second: Lighting
+    second: ChestFull
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -730,10 +730,10 @@ TextureImporter:
       name: PickaxeSTone
       rect:
         serializedVersion: 2
-        x: 168
-        y: 620
+        x: 150
+        y: 615
         width: 16
-        height: 19
+        height: 24
       alignment: 9
       pivot: {x: 0.49861717, y: 0.08166504}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -743,27 +743,6 @@ TextureImporter:
       bones: []
       spriteID: 42a55be35ba1ac300800000000000000
       internalID: 273060093152811556
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Blocks_15
-      rect:
-        serializedVersion: 2
-        x: 120
-        y: 534
-        width: 26
-        height: 94
-      alignment: 9
-      pivot: {x: 0.4615385, y: 0.041237112}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: fece4eaf88a4f6c30800000000000000
-      internalID: 4354781316875873519
       vertices: []
       indices: 
       edges: []
@@ -856,12 +835,12 @@ TextureImporter:
       name: Axe
       rect:
         serializedVersion: 2
-        x: 169
-        y: 598
-        width: 12
-        height: 21
+        x: 140
+        y: 586
+        width: 16
+        height: 24
       alignment: 9
-      pivot: {x: 0.33333334, y: 0.0952381}
+      pivot: {x: 0.37018394, y: 0.08909861}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -877,10 +856,10 @@ TextureImporter:
       name: Hammer
       rect:
         serializedVersion: 2
-        x: 168
-        y: 574
+        x: 164
+        y: 581
         width: 12
-        height: 20
+        height: 24
       alignment: 9
       pivot: {x: 0.4166667, y: 0.1}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -898,8 +877,8 @@ TextureImporter:
       name: Sword
       rect:
         serializedVersion: 2
-        x: 168
-        y: 545
+        x: 147
+        y: 549
         width: 11
         height: 24
       alignment: 9
@@ -1155,7 +1134,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1176,7 +1155,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1184,6 +1163,69 @@ TextureImporter:
       bones: []
       spriteID: 6d80f432b1a55e980800000000000000
       internalID: -8510296848243685162
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ChestLeft
+      rect:
+        serializedVersion: 2
+        x: 317
+        y: 590
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fece4eaf88a4f6c30800000000000000
+      internalID: 4354781316875873519
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ChestRight
+      rect:
+        serializedVersion: 2
+        x: 333
+        y: 590
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7c898387d7a66a9e0800000000000000
+      internalID: -1610482729617942329
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: ChestFull
+      rect:
+        serializedVersion: 2
+        x: 317
+        y: 590
+        width: 32
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 66363a9bb3a86e180800000000000000
+      internalID: -9086423209051200666
       vertices: []
       indices: 
       edges: []

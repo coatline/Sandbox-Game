@@ -4,7 +4,13 @@ using UnityEngine;
 
 public class SelectableSlot : SlotUI
 {
-    bool selected;
+    public Color selectedBackgroundColor;
+    public bool selected;
+
+    public override void Start()
+    {
+        UpdateImage();
+    }
 
     public void SelectSlot()
     {
@@ -17,22 +23,15 @@ public class SelectableSlot : SlotUI
     {
         base.UpdateImage();
 
-        if (!selected)
+        if (selected)
         {
-            if (itemPackage.item != null)
-            {
-                backgroundSr.color = filledBackgroundColor;
-            }
-            else
-            {
-                backgroundSr.color = normalBackgroundColor;
-            }
+            backgroundSr.color = selectedBackgroundColor;
         }
     }
 
     public void DeSelectSlot()
     {
-        if (itemPackage.item != null)
+        if (CurrentItem!= null)
         {
             backgroundSr.color = filledBackgroundColor;
         }

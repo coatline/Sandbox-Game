@@ -48,13 +48,14 @@ SpriteAtlas:
     - {fileID: 2800000, guid: 751a1cf3d62041e40ba2b96144981d8e, type: 3}
     - {fileID: 2800000, guid: 485f797898a5f124496213bf29f036e2, type: 3}
     - {fileID: 2800000, guid: 2bdbff6f8b629934780447730c6f0f50, type: 3}
-    totalSpriteSurfaceArea: 63346
+    totalSpriteSurfaceArea: 62186
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
   - {fileID: 1503016370545623098, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
+  - {fileID: 4354781316875873519, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
   - {fileID: 4828723151013041807, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
   - {fileID: 1775686116614827342, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
   - {fileID: 6979630779368465708, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
@@ -66,6 +67,7 @@ SpriteAtlas:
   - {fileID: -3828748445219874928, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
   - {fileID: -7254671725847690978, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
   - {fileID: -620117825420460677, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
+  - {fileID: -1610482729617942329, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
   - {fileID: 4893722272501744342, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
   - {fileID: -637004521647427473, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
   - {fileID: -6615166614792116592, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
@@ -86,12 +88,12 @@ SpriteAtlas:
   - {fileID: -7940799869362492285, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
   - {fileID: 1489830567317918739, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
   - {fileID: 1833374003608817324, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
-  - {fileID: 4354781316875873519, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
   - {fileID: -2318941221067292905, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
   - {fileID: 7266596302296298328, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
   - {fileID: -6460359424736439037, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
   - {fileID: -7097341274207599037, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
   - {fileID: 38433539612607256, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
+  - {fileID: -9086423209051200666, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
   - {fileID: -1511360000684178966, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
   - {fileID: -2445883823613288998, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
   - {fileID: 273060093152811556, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
@@ -258,6 +260,7 @@ SpriteAtlas:
   - {fileID: -8718066856865981694, guid: 2bdbff6f8b629934780447730c6f0f50, type: 3}
   m_PackedSpriteNamesToIndex:
   - redtorch
+  - ChestLeft
   - CraftingTableLeft
   - StumpRight
   - Axe
@@ -269,6 +272,7 @@ SpriteAtlas:
   - Sword
   - CraftingTableRight
   - MiddleStumpwithrightstump
+  - ChestRight
   - Red Flower
   - Table
   - PlayerIdle
@@ -289,12 +293,12 @@ SpriteAtlas:
   - BlockBreaking8
   - greentorch
   - Yellow Flower
-  - Blocks_15
   - Blocks_13
   - Blocks_12
   - Blocks_11
   - Blocks_10
   - bluetorch
+  - ChestFull
   - TrunkMiddle
   - Torch
   - PickaxeSTone

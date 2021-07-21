@@ -6,7 +6,7 @@ public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] CameraFollowWithBarriers cam;
     [SerializeField] Enemy enemyPrefab;
-    [SerializeField] WorldGenerator wg;
+    [SerializeField] WorldLoader wl;
     [SerializeField] DayNightCycle dnc;
     [SerializeField] int spawnCap;
     public float spawnDelay;
@@ -16,7 +16,7 @@ public class EnemySpawner : MonoBehaviour
     void Start()
     {
         player = FindObjectOfType<Player>();
-        spawnRange = (wg.chunkSize * wg.excessChunksToLoad) + cam.CameraSizeInUnits().x;
+        spawnRange = (wl.chunkSize * wl.excessChunksToLoad) + cam.CameraSizeInUnits().x;
         StartCoroutine(Spawn());
     }
 
@@ -30,9 +30,9 @@ public class EnemySpawner : MonoBehaviour
 
             Vector3 position = cam.transform.position + new Vector3(spawnRange, 0, 10);
 
-            if (position.y < wg.worldHeight && position.y >= 0 && position.x < wg.worldWidth && position.x >= 0)
+            if (position.y < GD.wd.worldHeight && position.y >= 0 && position.x < GD.wd.worldWidth && position.x >= 0)
             {
-                while (wg.blockMap[(int)position.x, (int)position.y, 0] != 0)
+                while (GD.wd.blockMap[(int)position.x, (int)position.y, 0] != 0)
                 {
                     position.y++;
                 }

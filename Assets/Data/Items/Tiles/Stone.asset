@@ -13,22 +13,23 @@ MonoBehaviour:
   m_Name: Stone
   m_EditorClassIdentifier: 
   itemData:
-    useSound: {fileID: 0}
+    useSound: {fileID: 11400000, guid: aa6bf59d8a431b546893ca41b82f904b, type: 2}
+    animationTime: 0.3
     useTime: 0.25
     generateCollider: 0
     maxStack: 999
     value: 0
-    id: 3
     emitsLight: 0
     emitColor: {r: 0, g: 0, b: 0, a: 0}
     itemSprite: {fileID: -3848607359157971786, guid: 751a1cf3d62041e40ba2b96144981d8e, type: 3}
     heldSprite: {fileID: 0}
+    showPlacement: 0
     showOnSelect: 0
     hideOnUse: 0
-    itemName: Stone
     description: 
     rarity: 
-  itemType: 6
+    itemName: Stone
+    id: 21
   tileData:
     itemDroppedOnBreak:
       item: {fileID: 11400000}
@@ -38,19 +39,24 @@ MonoBehaviour:
     tile: {fileID: 11400000, guid: ef106a8a704b97945b869e875e254e56, type: 2}
     attachToLayer: 0
     placeOnLayer: 0
-    breakSound: {fileID: 0}
+    breakSound: {fileID: 11400000, guid: aa6bf59d8a431b546893ca41b82f904b, type: 2}
+    hitSound: {fileID: 0}
     interactable: 0
     otherAttachTo: []
+    placeBehindForeground: 0
     noAttachToBackground: 0
     noAttachToCeiling: 0
     noAttachToWalls: 0
     noPlaceOnFloor: 0
+    canFloat: 0
     partOfMultiTileData:
       itemStructurePartOf: {fileID: 0}
       relativePosition: {x: 0, y: 0}
     multiBlockStructure: {fileID: 0}
     isPartOfMultiTile: 0
+    isChest: 0
     hideBreakingGraphic: 0
+    cementBlockBelow: 0
     treeTile: 0
   weaponData:
     damageType: 0
@@ -62,4 +68,5 @@ MonoBehaviour:
       strength: 0
     criticalStrikeChance: 0
     damageVal: 0
+  itemType: 6
   actionOnUse: 1

@@ -8,7 +8,7 @@ public class GenerateColliders : MonoBehaviour
     [SerializeField] int tilemapLayer;
     [SerializeField] int checkWidth;
     [SerializeField] int checkHeight;
-    WorldGenerator wg;
+    WorldModifier wm;
     Dictionary<Vector2Int, BoxCollider2D> colliders;
     List<Vector2Int> colliderPositions;
     GameObject colHolder;
@@ -17,7 +17,7 @@ public class GenerateColliders : MonoBehaviour
 
     void Start()
     {
-        wg = FindObjectOfType<WorldGenerator>();
+        wm = FindObjectOfType<WorldModifier>();
 
         //colliders = new BoxCollider2D[checkWidth, checkHeight];
         colliders = new Dictionary<Vector2Int, BoxCollider2D>();
@@ -45,8 +45,10 @@ public class GenerateColliders : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (Vector2.Distance(transform.position, new Vector2Int((int)transform.position.x, (int)transform.position.y)) < .5f && wg.blockModifiedAt == -Vector2Int.one) { return; }
-        if (colliders==null) { return; }
+        if (Vector2.Distance(transform.position, new Vector2Int((int)transform.position.x, (int)transform.position.y)) < .5f && wm.blockModifiedAt == -Vector2Int.one) { return; }
+
+        if (colliders == null) { return; }
+
         int checkPosX = (int)transform.position.x - checkWidth / 2;
         int checkPosY = (int)transform.position.y - checkHeight / 2;
 
@@ -55,13 +57,13 @@ public class GenerateColliders : MonoBehaviour
             int x = colliderPositions[i].x;
             int y = colliderPositions[i].y;
 
-            if (checkPosX + x >= wg.worldWidth || checkPosY + y >= wg.worldHeight || checkPosX + x < 0 || checkPosY + y < 0) { continue; }
+            if (checkPosX + x >= GD.wd.worldWidth || checkPosY + y >= GD.wd.worldHeight || checkPosX + x < 0 || checkPosY + y < 0) { continue; }
 
             BoxCollider2D bc;
 
             if (colliders.TryGetValue(new Vector2Int(x, y), out bc))
             {
-                if (wg.blockMap[checkPosX + x, checkPosY + y, 0] != 0)
+                if (GD.wd.blockMap[checkPosX + x, checkPosY + y, 0] != 0)
                 {
                     bc.enabled = true;
                     bc.offset = new Vector2(checkPosX + x + .5f, checkPosY + y + .5f);
@@ -78,6 +80,9 @@ public class GenerateColliders : MonoBehaviour
         }
 
         previousPosition = transform.position;
+
+        //what if there are multiple colliders and this one gets to it first the other collider will not get an update
+        wm.blockModifiedAt = -Vector2Int.one;
     }
 
     private void OnDestroy()

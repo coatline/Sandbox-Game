@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d1b619879215644ebbceea07f700cec, type: 3}
+  m_Name: StoneHit
+  m_EditorClassIdentifier: 
+  sound:
+    clips:
+    - {fileID: 8300000, guid: bbd0590c15672d146a6caa682bd18710, type: 3}
+    - {fileID: 8300000, guid: 10536b14a62e0ea41ba635779aed1603, type: 3}
+    - {fileID: 8300000, guid: 74039fa0d1bde054794f7a8142bcc8a3, type: 3}
+    - {fileID: 8300000, guid: f145e7a93d11d1b4785ef2bea213ccb0, type: 3}
+    - {fileID: 8300000, guid: 41f6cce71c17e75468f89714a5eaca92, type: 3}

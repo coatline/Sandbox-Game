@@ -5,15 +5,10 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class SaveData
-{
-    public static PlayerSaveData currentPlayer;
-    public static WorldSaveData currentWorld;
-}
-
 public class SaveUIManager : MonoBehaviour
 {
     [SerializeField] GameObject playerProfilePrefab;
+    [SerializeField] SaveManager sm;
     [SerializeField] WorldGenerator wg;
     [SerializeField] GameObject worldProfilePrefab;
     [SerializeField] RectTransform playerProfileHolder;
@@ -24,23 +19,26 @@ public class SaveUIManager : MonoBehaviour
     [SerializeField] TMP_InputField worldNameText;
     [SerializeField] Button createWorldButton;
     [SerializeField] Vector2Int defaultWorldSize;
-    GameData gameData;
+    UserData userData;
 
     void Start()
     {
-        gameData = GameData.Load();
-        gameData.Save();
+        GD.currentWorld = null;
+        GD.currentPlayer = null;
 
-        for (int i = 0; i < gameData.playerNames.Count; i++)
+        userData = UserData.Load();
+        userData.Save();
+        
+        for (int i = 0; i < userData.playerNames.Count; i++)
         {
-            PlayerSaveData.Load(gameData.playerNames[i]);
-            AddPlayerSlot(gameData.playerNames[i]);
+            PlayerSaveData.Load(userData.playerNames[i]);
+            AddPlayerSlot(userData.playerNames[i]);
         }
 
-        for (int j = 0; j < gameData.worldNames.Count; j++)
+        for (int j = 0; j < userData.worldNames.Count; j++)
         {
-            WorldSaveData.Load(gameData.worldNames[j]);
-            AddWorldSlot(gameData.worldNames[j]);
+            WorldSaveData.Load(userData.worldNames[j]);
+            AddWorldSlot(userData.worldNames[j]);
         }
 
         worldHeightText.text = defaultWorldSize.y.ToString();
@@ -81,7 +79,7 @@ public class SaveUIManager : MonoBehaviour
     void AddWorldSlot(string _name)
     {
         var worldProfile = Instantiate(worldProfilePrefab, worldProfileHolder);
-        worldProfileHolder.sizeDelta += new Vector2(0,worldProfileHolder.GetComponent<GridLayoutGroup>().cellSize.y);
+        worldProfileHolder.sizeDelta += new Vector2(0, worldProfileHolder.GetComponent<GridLayoutGroup>().cellSize.y);
         var worldNameText = worldProfile.transform.GetChild(0).GetComponent<TMP_Text>();
 
         worldNameText.text = _name;
@@ -105,8 +103,8 @@ public class SaveUIManager : MonoBehaviour
     public void DeletePlayer(string _name, GameObject saveSlot)
     {
         PlayerSaveData.Delete(_name);
-        gameData.playerNames.Remove(_name);
-        gameData.Save();
+        userData.playerNames.Remove(_name);
+        userData.Save();
         Destroy(saveSlot);
         playerProfileHolder.sizeDelta -= new Vector2(0, worldProfileHolder.GetComponent<GridLayoutGroup>().cellSize.y);
     }
@@ -114,21 +112,21 @@ public class SaveUIManager : MonoBehaviour
     public void DeleteWorld(string _name, GameObject saveSlot)
     {
         WorldSaveData.Delete(_name);
-        gameData.worldNames.Remove(_name);
-        gameData.Save();
+        userData.worldNames.Remove(_name);
+        userData.Save();
         Destroy(saveSlot);
-        worldProfileHolder.sizeDelta -= new Vector2(0,worldProfileHolder.GetComponent<GridLayoutGroup>().cellSize.y);
+        worldProfileHolder.sizeDelta -= new Vector2(0, worldProfileHolder.GetComponent<GridLayoutGroup>().cellSize.y);
     }
 
     public void SelectPlayer(string _name)
     {
-        SaveData.currentPlayer = PlayerSaveData.Load(_name);
+        GD.currentPlayer = PlayerSaveData.Load(_name);
         screenManager.SwitchScreen(3);
     }
 
     public void StartWithWorld(string _name)
     {
-        SaveData.currentWorld = WorldSaveData.Load(_name);
+        GD.currentWorld = WorldSaveData.Load(_name);
         SceneManager.LoadScene(1);
     }
 
@@ -137,26 +135,31 @@ public class SaveUIManager : MonoBehaviour
         int increment = 0;
         string originalName = _name;
 
-        while (gameData.worldNames.Contains(_name))
+        while (userData.worldNames.Contains(_name))
         {
             increment++;
             _name = originalName + $" {increment}";
         }
 
         AddWorldSlot(_name);
+
         var newWorldSave = WorldSaveData.Load(_name);
-        Random.InitState(Random.Range(0,99999999));
+
+        Random.InitState(Random.Range(0, 99999999));
+
         newWorldSave.worldName = _name;
 
-        var blockData = wg.GenerateNewBlockData(width, height);
-        //var trees = new SerializableTreeDict (wg.trees);
+        wg.GenerateNewBlockData(width, height);
 
-        print($"Creating world with a width of {width} and a height of {height}. The blockData we are going to be using is {blockData}. \nThere are {/*wg.trees.Count*/null} trees and we will be using {/*trees*/null}. The highestTiles we will be using is {wg.highestTiles.ToArray()}.");
-        newWorldSave.Save(width, height, new float[0], blockData, /*new SerializableTreeDict(wg.trees),*/ wg.highestTiles.ToArray());
-        gameData.worldNames.Add(_name);
-        gameData.Save();
+        newWorldSave.data = GD.wd;
+
+        print($"Creating world with a width of {width} and a height of {height}.");
+        sm.TrySaveWorld(newWorldSave);
+
+        userData.worldNames.Add(_name);
+        userData.Save();
+
         screenManager.SwitchScreen(3);
-        //PlayerSaveData.Load(_name);
     }
 
     public void CreatePlayer(TMP_Text text)
@@ -166,7 +169,7 @@ public class SaveUIManager : MonoBehaviour
         int increment = 0;
         string originalName = _name;
 
-        while (gameData.playerNames.Contains(_name))
+        while (userData.playerNames.Contains(_name))
         {
             increment++;
             _name = originalName + $" {increment}";
@@ -179,8 +182,8 @@ public class SaveUIManager : MonoBehaviour
         newPlayerSave._name = _name;
         newPlayerSave.Save(new List<ItemPackage>());
 
-        gameData.playerNames.Add(_name);
-        gameData.Save();
+        userData.playerNames.Add(_name);
+        userData.Save();
 
         screenManager.SwitchScreen(1);
         //PlayerSaveData.Load(_name);

@@ -7,6 +7,7 @@ using UnityEngine;
 [System.Serializable]
 public class Structure : ScriptableObject
 {
+    [HideInInspector]
     public string _name;
     public byte width;
     public byte height;

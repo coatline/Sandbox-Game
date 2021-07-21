@@ -60,6 +60,7 @@ MonoBehaviour:
   feetPosition: {fileID: 8005720686574745082}
   itemHold: {fileID: 3228810202485694445}
   itemHoldCollider: {fileID: 7205989070838047365}
+  swingAnimation: {fileID: 7400000, guid: 0f39855dd22caf648919bfcce14adb19, type: 2}
   groundLayer:
     serializedVersion: 2
     m_Bits: 8
@@ -355,7 +356,7 @@ GameObject:
   m_Layer: 0
   m_Name: CurrentItem
   m_TagString: PlayerAttack
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 7422848464349959988, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -412,7 +413,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
