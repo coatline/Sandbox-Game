@@ -41,6 +41,7 @@ public enum Buff
 
 public enum ItemType
 {
+    none,
     rangedWeapon,
     meleeWeapon,
     projectile,
@@ -65,7 +66,6 @@ public class ItemDataContainer : ScriptableObject
     {
         EditorUtility.SetDirty(this);
     }
-
 }
 
 [System.Serializable]
@@ -94,6 +94,6 @@ public class ItemData
 
     [HideInInspector]
     public string itemName;
-    [HideInInspector]
+    //[HideInInspector]
     public short id;
 }

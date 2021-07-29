@@ -3,12 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class ItemDataEditor : MonoBehaviour
 {
     [SerializeField] List<ItemDataContainer> items;
     [SerializeField] List<Structure> structures;
-    [SerializeField] List<RuleTile> ruleTiles;
+    [SerializeField] List<TileBase> ruleTiles;
 
     [InspectorButton("ClearItemList", ButtonWidth = 175)]
     [SerializeField] bool ClearItems;

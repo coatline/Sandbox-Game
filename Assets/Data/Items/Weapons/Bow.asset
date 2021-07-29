@@ -10,26 +10,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fa09bd11f12393d44bcf30c9b64de8af, type: 3}
-  m_Name: Nothing
+  m_Name: Bow
   m_EditorClassIdentifier: 
   itemData:
-    useSound: {fileID: 0}
-    animationTime: 0.5
-    useTime: 0.25
-    generateCollider: 0
-    maxStack: 999
+    useSound: {fileID: 11400000, guid: adbc4c393bcadb6489c8cea1d00f07ac, type: 2}
+    animationTime: 0.3
+    useTime: 0.3
+    generateCollider: 1
+    maxStack: 1
     value: 0
     emitsLight: 0
     emitColor: {r: 0, g: 0, b: 0, a: 0}
-    itemSprite: {fileID: 0}
+    itemSprite: {fileID: -3828748445219874928, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
     heldSprite: {fileID: 0}
     showPlacement: 0
     showOnSelect: 0
     hideOnUse: 0
     description: 
     rarity: 
-    itemName: Nothing
-    id: 0
+    itemName: Bow
+    id: 27
   tileData:
     itemDroppedOnBreak:
       item: {fileID: 0}
@@ -59,14 +59,14 @@ MonoBehaviour:
     cementBlockBelow: 0
     treeTile: 0
   weaponData:
-    damageType: 0
+    damageType: 1
     rangedData:
       enemiesPassThroughCount: 0
     toolData:
       worldLayer: 0
       toolType: 0
-      strength: 0
-    criticalStrikeChance: 0
-    damageVal: 0
-  itemType: 6
-  actionOnUse: 0
+      strength: 1
+    criticalStrikeChance: 25
+    damageVal: 7
+  itemType: 1
+  actionOnUse: 2

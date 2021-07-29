@@ -180,7 +180,7 @@ public class SaveUIManager : MonoBehaviour
         var newPlayerSave = PlayerSaveData.Load(_name);
 
         newPlayerSave._name = _name;
-        newPlayerSave.Save(new List<ItemPackage>());
+        newPlayerSave.Save(new List<string>());
 
         userData.playerNames.Add(_name);
         userData.Save();

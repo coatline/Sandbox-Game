@@ -7,18 +7,14 @@ public class Enemy : Entity
     [HideInInspector]
     public Player player;
 
-    public override void Start()
-    {
-    }
-
-    void Update()
-    {
-        DoMovement();
-    }
-
     public override void Move()
     {
-        float dir = (player.transform.position - transform.position).normalized.x;
+        MoveTowards(player.transform.position);
+    }
+
+    public void MoveTowards(Vector3 pos)
+    {
+        float dir = (pos - transform.position).normalized.x;
         rb.velocity = new Vector2(dir * speed, rb.velocity.y);
     }
 

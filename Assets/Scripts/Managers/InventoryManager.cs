@@ -24,12 +24,12 @@ public class InventoryManager : MonoBehaviour
     public bool canEditInventory;
     int selectedSlotIndex;
     Player player;
-
     bool savable;
+    bool newPlayer;
 
     void Awake()
     {
-        bool newPlayer = true;
+        newPlayer = true;
         savable = (GD.currentPlayer != null);
 
         if (savable)
@@ -37,6 +37,20 @@ public class InventoryManager : MonoBehaviour
             newPlayer = (GD.currentPlayer.inventoryItems.Count == 0);
         }
 
+        if (slotMap == null)
+        {
+            InstantiateSlots();
+        }
+
+        extendedInventoryHolder = new GameObject("Extended Inventory Holder");
+        extendedInventoryHolder.transform.SetParent(transform);
+
+        ScrollSlot(0);
+        Invoke("ToggleExtendedInventory", .25f);
+    }
+
+    public void InstantiateSlots()
+    {
         slotMap = new InventorySlot[inventorySize.x, inventorySize.y];
 
         for (int y = 0; y < inventorySize.y; y++)
@@ -55,19 +69,6 @@ public class InventoryManager : MonoBehaviour
                 }
             }
         }
-
-        if (savable && !newPlayer)
-        {
-            LoadItems();
-        }
-
-        extendedInventoryHolder = new GameObject("Extended Inventory Holder");
-        extendedInventoryHolder.transform.SetParent(transform);
-
-        ScrollSlot(0);
-        //LayoutRebuilder.ForceRebuildLayoutImmediate(GetComponent<RectTransform>());
-        //ToggleExtendedInventory();
-        Invoke("ToggleExtendedInventory", .25f);
     }
 
     private void Start()
@@ -101,24 +102,6 @@ public class InventoryManager : MonoBehaviour
             }
 
         return null;
-    }
-
-
-    void LoadItems()
-    {
-        for (int y = 0; y < inventorySize.y; y++)
-            for (int x = 0; x < inventorySize.x; x++)
-            {
-                ItemPackage package = GD.currentPlayer.inventoryItems[x + (y * inventorySize.x)];
-                if (package.count > 0)
-                {
-                    if (package.item == null)
-                    {
-                        Debug.LogError("WHAT HAPPENED TO THIS ITEM");
-                    }
-                }
-                slotMap[x, y].TryModifyItem(package);
-            }
     }
 
     public void AddItem(ItemPackage newItemPackage)

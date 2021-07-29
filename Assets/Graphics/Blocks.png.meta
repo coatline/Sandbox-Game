@@ -143,6 +143,9 @@ TextureImporter:
   - first:
       213: -9086423209051200666
     second: ChestFull
+  - first:
+      213: 188922552538148467
+    second: Owl
   externalObjects: {}
   serializedVersion: 11
   mipmaps:
@@ -1176,7 +1179,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1197,7 +1200,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1218,7 +1221,7 @@ TextureImporter:
         width: 32
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -1226,6 +1229,27 @@ TextureImporter:
       bones: []
       spriteID: 66363a9bb3a86e180800000000000000
       internalID: -9086423209051200666
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Owl
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 513
+        width: 15
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 37ea8128f003f9200800000000000000
+      internalID: 188922552538148467
       vertices: []
       indices: 
       edges: []

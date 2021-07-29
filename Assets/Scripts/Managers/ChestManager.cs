@@ -88,7 +88,7 @@ public class ChestManager : MonoBehaviour
             }
         }
 
-        Debug.Log("Did not choose an item for some reason");
+        //Debug.Log("Did not choose an item for some reason");
         return new ItemPackage();
     }
 }

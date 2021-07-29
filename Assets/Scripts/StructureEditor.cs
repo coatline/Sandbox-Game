@@ -51,7 +51,7 @@ public class StructureEditor : MonoBehaviour
         for (int x = 0; x < structureToEdit.width; x++)
             for (int y = 0; y < structureToEdit.height; y++)
             {
-                var tile = (RuleTile)tilemap.GetTile(new Vector3Int(x, y, 0));
+                var tile = (TileBase)tilemap.GetTile(new Vector3Int(x, y, 0));
 
                 for (int i = 0; i < itemData.Count; i++)
                 {
@@ -65,14 +65,14 @@ public class StructureEditor : MonoBehaviour
         for (int x = 0; x < structureToEdit.width; x++)
             for (int y = 0; y < structureToEdit.height; y++)
             {
-                structureToEdit.structureData[x + (y * structureToEdit.width)] = TilesIndex((RuleTile)tilemap.GetTile(new Vector3Int(x, y, 0)));
+                structureToEdit.structureData[x + (y * structureToEdit.width)] = TilesIndex((TileBase)tilemap.GetTile(new Vector3Int(x, y, 0)));
             }
 
         structureToEdit.tiles = this.tiles;
         EditorUtility.SetDirty(structureToEdit);
     }
 
-    int TilesIndex(RuleTile tile)
+    int TilesIndex(TileBase tile)
     {
         for (int i = 0; i < tiles.Count; i++)
         {

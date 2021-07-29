@@ -7,15 +7,15 @@ public class PlayerSaveData
 {
     const string FILE_NAME = "player_{0}.json";
 
-    public List<ItemPackage> inventoryItems;
+    public List<string> inventoryItems;
     public string _name;
 
     protected PlayerSaveData()
     {
-        inventoryItems = new List<ItemPackage>();
+        inventoryItems = new List<string>();
     }
 
-    public void Save(List<ItemPackage> inventoryItems)
+    public void Save(List<string> inventoryItems)
     {
         this.inventoryItems = inventoryItems;
 
@@ -36,20 +36,6 @@ public class PlayerSaveData
 
         string json = File.ReadAllText(Path.Combine(Application.persistentDataPath, fileName));
         var save = JsonUtility.FromJson<PlayerSaveData>(json);
-
-        for (int i = 0; i < save.inventoryItems.Count; i++)
-        {
-            ItemPackage package = save.inventoryItems[i];
-
-            if (package.count > 0)
-            {
-                if (package.item == null)
-                {
-                    Debug.LogError("WHAT HAPPENED TO THIS ITEM");
-                    Debug.LogError("IT IS GONE");
-                }
-            }
-        }
 
         return save;
     }

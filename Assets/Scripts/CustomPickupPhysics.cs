@@ -5,20 +5,17 @@ using UnityEngine;
 public class CustomPickupPhysics : MonoBehaviour
 {
     BoxCollider2D bc;
-    WorldGenerator wg;
     Player player;
+    float speed = 2f;
 
     void Start()
     {
         bc = GetComponent<BoxCollider2D>();
         player = FindObjectOfType<Player>();
-        wg = FindObjectOfType<WorldGenerator>();
     }
 
     void Update()
     {
-        //transform.position
-
         if (Vector3.Distance(player.transform.position, transform.position) < 3f)
         {
             bc.enabled = true;
@@ -28,9 +25,15 @@ public class CustomPickupPhysics : MonoBehaviour
             bc.enabled = false;
         }
 
+        speed += Time.deltaTime*3;
+
         if (GD.wd.blockMap[(int)transform.position.x, (int)transform.position.y, 0] == 0)
         {
-            transform.Translate(new Vector3(0, -1 * Time.deltaTime, 0));
+            transform.Translate(new Vector3(0, -speed * Time.deltaTime, 0), Space.World);
+        }
+        else
+        {
+            speed = 0;
         }
     }
 }

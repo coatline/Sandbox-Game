@@ -29,7 +29,7 @@ MonoBehaviour:
     description: 
     rarity: 
     itemName: Torch
-    id: 22
+    id: 16
   tileData:
     itemDroppedOnBreak:
       item: {fileID: 11400000}
@@ -70,5 +70,5 @@ MonoBehaviour:
       strength: 0
     criticalStrikeChance: 0
     damageVal: 0
-  itemType: 6
+  itemType: 7
   actionOnUse: 1

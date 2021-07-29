@@ -29,7 +29,7 @@ MonoBehaviour:
     description: 
     rarity: 
     itemName: Hammer
-    id: 25
+    id: 24
   tileData:
     itemDroppedOnBreak:
       item: {fileID: 0}
@@ -68,5 +68,5 @@ MonoBehaviour:
       strength: 1
     criticalStrikeChance: 5
     damageVal: 4
-  itemType: 3
+  itemType: 4
   actionOnUse: 1

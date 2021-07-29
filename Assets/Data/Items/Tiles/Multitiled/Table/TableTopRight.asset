@@ -29,7 +29,7 @@ MonoBehaviour:
     description: 
     rarity: 
     itemName: TableTopRight
-    id: 12
+    id: 14
   tileData:
     itemDroppedOnBreak:
       item: {fileID: 0}
@@ -68,5 +68,5 @@ MonoBehaviour:
       strength: 0
     criticalStrikeChance: 0
     damageVal: 0
-  itemType: 6
+  itemType: 7
   actionOnUse: 1

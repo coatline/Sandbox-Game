@@ -12,8 +12,10 @@ public class InventorySlot : SelectableSlot, IPointerClickHandler, IPointerDownH
     InventoryManager im;
     bool rightMouseDown;
 
-    private void Start()
+    public override void Start()
     {
+        base.Start();
+
         im = FindObjectOfType<InventoryManager>();
         cursor = FindObjectOfType<CursorBehavior>();
     }

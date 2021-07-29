@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3024590363601915483}
   - component: {fileID: -5950935772551705473}
+  - component: {fileID: 5359518156114264128}
+  - component: {fileID: 6927490815900829120}
   - component: {fileID: -3961418860899705576}
   - component: {fileID: 8161488080005865931}
   - component: {fileID: 3024590363601915480}
@@ -53,22 +55,58 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03a21c1723a34134e9cff7b07bd60f86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  movementSpeed: 11
-  jumpForce: 11.6
-  jumpTime: 0.226
-  fallingSpeedCap: 35
   feetPosition: {fileID: 8005720686574745082}
-  itemHold: {fileID: 3228810202485694445}
-  itemHoldCollider: {fileID: 7205989070838047365}
-  swingAnimation: {fileID: 7400000, guid: 0f39855dd22caf648919bfcce14adb19, type: 2}
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 8
+  worldCollider: {fileID: 2070676890923848221}
+  rb: {fileID: 3024590363601915477}
+  fallingSpeedCap: 35
+  invincibilityTime: 0.1
+  health: 100
+  speed: 10
+  jb: {fileID: 6927490815900829120}
+  jumpTime: 0.338
+  hi: {fileID: 5359518156114264128}
   reach: 7
-  backgroundTilemap: {fileID: 0}
-  blockTilemap: {fileID: 0}
-  swinging: 0
-  idle: 0
+  currentChest: {x: 0, y: 0}
+--- !u!114 &5359518156114264128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3024590363601915481}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89169d2b51409ab46b6742eda33c644c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemHoldCollider: {fileID: 7205989070838047365}
+  itemHold: {fileID: 3228810202485694445}
+  swingAnimation: {fileID: 7400000, guid: 0f39855dd22caf648919bfcce14adb19, type: 2}
+  shootAnimation: {fileID: 7400000, guid: b8c1828cf01ab5542828df2d815e103e, type: 2}
+  audioS: {fileID: 1695229896600222128}
+  a: {fileID: -5140171676514247021}
+  e: {fileID: -5950935772551705473}
+  reach: 6
+  currentItemPackage:
+    item: {fileID: 0}
+    count: 0
+  animating: 0
+  currentSlot: {fileID: 0}
+--- !u!114 &6927490815900829120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3024590363601915481}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1d8dfb722cbfe5f428f14ec0ac5f683b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  feetPosition: {fileID: 8005720686574745082}
+  rb: {fileID: 3024590363601915477}
+  jumpForce: 13
 --- !u!114 &-3961418860899705576
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -336,7 +374,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4486241809603478556}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.37, z: 0}
+  m_LocalPosition: {x: 0, y: -0.93, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3024590363601915483}

@@ -29,7 +29,7 @@ MonoBehaviour:
     description: 
     rarity: 
     itemName: Grass
-    id: 20
+    id: 3
   tileData:
     itemDroppedOnBreak:
       item: {fileID: 11400000, guid: c7decb64c4d48f04b912d806d3c2e203, type: 2}
@@ -68,5 +68,5 @@ MonoBehaviour:
       strength: 0
     criticalStrikeChance: 0
     damageVal: 0
-  itemType: 6
+  itemType: 7
   actionOnUse: 1

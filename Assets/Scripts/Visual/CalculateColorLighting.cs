@@ -130,7 +130,7 @@ public class CalculateColorLighting : MonoBehaviour
                         }
                     }
                 }
-                else if (mgtile.itemData.emitsLight)
+                else if (mgtile && mgtile.itemData.emitsLight)
                 {
                     lightValues[x, y] = Color.white;
                     toEmit[x, y] = 1;
@@ -163,7 +163,7 @@ public class CalculateColorLighting : MonoBehaviour
     }
 
     Color[,] singleLightEmission;
-    List<int[]> lightFillQueue = new List<int[]>();
+    List<Vector2Int> lightFillQueue = new List<Vector2Int>();
 
     void EmitLight(int rootX, int rootY, Color color)
     {
@@ -204,33 +204,32 @@ public class CalculateColorLighting : MonoBehaviour
         }
 
         singleLightEmission[lightRadius, lightRadius] = color;
-        lightFillQueue.Add(new int[] { rootX, rootY });
+        lightFillQueue.Add(new Vector2Int(rootX, rootY));
 
         while (lightFillQueue.Count > 0)
         {
-            int[] currentTile = lightFillQueue[0];
+            Vector2Int tile = lightFillQueue[0];
             lightFillQueue.RemoveAt(0);
-            int x = currentTile[0];
-            int y = currentTile[1];
 
-            int currentLayer = Mathf.Max(Mathf.Abs(x - rootX), Mathf.Abs(y - rootY));
+            int currentLayer = Mathf.Max(Mathf.Abs(tile.x - rootX), Mathf.Abs(tile.y - rootY));
 
             bool willPassOn = false;
-            Color currentColor = lightValues[x, y];
-            Color targetColor = singleLightEmission[lightRadius + x - rootX, lightRadius + y - rootY];
+            Color currentColor = lightValues[tile.x, tile.y];
+            Color targetColor = singleLightEmission[lightRadius + tile.x - rootX, lightRadius + tile.y - rootY];
 
             if ((targetColor.r > lowestLightLevel || targetColor.g > lowestLightLevel || targetColor.b > lowestLightLevel) &&
                 (targetColor.r > currentColor.r || targetColor.g > currentColor.g || targetColor.b > currentColor.b))
             {
-                lightValues[x, y] = (new Color(Mathf.Max(currentColor.r, targetColor.r), Mathf.Max(currentColor.g, targetColor.g), Mathf.Max(currentColor.b, targetColor.b)));
+                lightValues[tile.x, tile.y] = (new Color(Mathf.Max(currentColor.r, targetColor.r), Mathf.Max(currentColor.g, targetColor.g), Mathf.Max(currentColor.b, targetColor.b)));
                 willPassOn = true;
             }
 
-            if (!(x == rootX && y == rootY) && !willPassOn) { continue; }
+            // If it is not the root emmission and it is not going to pass on then go back
+            if (!(tile.x == rootX && tile.y == rootY) && !willPassOn) { continue; }
 
-            for (int nx = x - 1; nx <= x + 1; nx++)
+            for (int nx = tile.x - 1; nx <= tile.x + 1; nx++)
             {
-                for (int ny = y - 1; ny <= y + 1; ny++)
+                for (int ny = tile.y - 1; ny <= tile.y + 1; ny++)
                 {
                     var worldPosX = nx + lightingPosition.x;
                     var worldPosY = ny + lightingPosition.y;
@@ -245,11 +244,11 @@ public class CalculateColorLighting : MonoBehaviour
 
                         if (GD.wd.blockMap[worldPosX, worldPosY, 0] == 0)
                         {
-                            dropOff = (nx != x && ny != y) ? airDiagonalDropOff : airDropoff;
+                            dropOff = (nx != tile.x && ny != tile.y) ? airDiagonalDropOff : airDropoff;
                         }
                         else
                         {
-                            dropOff = (nx != x && ny != y) ? blockDiagonalDropOff : blockDropoff;
+                            dropOff = (nx != tile.x && ny != tile.y) ? blockDiagonalDropOff : blockDropoff;
                         }
 
                         int emitX = lightRadius + nx - rootX;
@@ -257,7 +256,7 @@ public class CalculateColorLighting : MonoBehaviour
 
                         if (singleLightEmission[emitX, emitY].r + singleLightEmission[emitX, emitY].g + singleLightEmission[emitX, emitY].b == 0)
                         {
-                            lightFillQueue.Add(new int[] { nx, ny });
+                            lightFillQueue.Add(new Vector2Int(nx, ny));
                         }
 
                         singleLightEmission[emitX, emitY].r = Mathf.Max(targetColor.r * dropOff, singleLightEmission[emitX, emitY].r);

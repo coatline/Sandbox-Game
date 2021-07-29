@@ -93,9 +93,6 @@ public class WorldLoader : MonoBehaviour
 
         player = Instantiate(playerPrefab, new Vector3(worldWidth / 2, GD.wd.highestTiles[worldWidth / 2] + 2, 0), Quaternion.identity);
 
-        player.blockTilemap = foregroundTilemap;
-        player.backgroundTilemap = midgroundTilemap;
-
         var script = mainCamera.GetComponent<CameraFollowWithBarriers>();
         mainCamera.transform.position = player.transform.position - new Vector3(0, 0, 10);
 

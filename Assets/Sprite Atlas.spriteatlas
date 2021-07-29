@@ -48,7 +48,7 @@ SpriteAtlas:
     - {fileID: 2800000, guid: 751a1cf3d62041e40ba2b96144981d8e, type: 3}
     - {fileID: 2800000, guid: 485f797898a5f124496213bf29f036e2, type: 3}
     - {fileID: 2800000, guid: 2bdbff6f8b629934780447730c6f0f50, type: 3}
-    totalSpriteSurfaceArea: 62186
+    totalSpriteSurfaceArea: 62471
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -79,6 +79,7 @@ SpriteAtlas:
   - {fileID: 7799809764336630643, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
   - {fileID: 894039873071032581, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
   - {fileID: -7641105520071801511, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
+  - {fileID: 188922552538148467, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
   - {fileID: -8137063433491503359, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
   - {fileID: 212898485578975189, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
   - {fileID: 6741266914263454366, guid: c753aad11830e8345941c2cb323ecdfe, type: 3}
@@ -284,6 +285,7 @@ SpriteAtlas:
   - BreakingBlock1
   - BreakingBlock3
   - BreakingBlock2
+  - Owl
   - BreakingBlock4
   - TableLeft
   - BlockBreaking7

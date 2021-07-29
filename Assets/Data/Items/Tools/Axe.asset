@@ -29,7 +29,7 @@ MonoBehaviour:
     description: 
     rarity: 
     itemName: Axe
-    id: 24
+    id: 23
   tileData:
     itemDroppedOnBreak:
       item: {fileID: 0}
@@ -68,5 +68,5 @@ MonoBehaviour:
       strength: 1
     criticalStrikeChance: 5
     damageVal: 3
-  itemType: 3
+  itemType: 4
   actionOnUse: 1
