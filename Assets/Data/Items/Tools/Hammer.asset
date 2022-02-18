@@ -28,7 +28,6 @@ MonoBehaviour:
     hideOnUse: 0
     description: 
     rarity: 
-    itemName: Hammer
     id: 24
   tileData:
     itemDroppedOnBreak:

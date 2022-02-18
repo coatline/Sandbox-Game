@@ -28,7 +28,6 @@ MonoBehaviour:
     hideOnUse: 0
     description: 
     rarity: 
-    itemName: Pickaxe
     id: 25
   tileData:
     itemDroppedOnBreak:

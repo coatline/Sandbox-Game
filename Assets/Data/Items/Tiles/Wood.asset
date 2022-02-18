@@ -28,7 +28,6 @@ MonoBehaviour:
     hideOnUse: 0
     description: 
     rarity: 
-    itemName: Wood
     id: 22
   tileData:
     itemDroppedOnBreak:

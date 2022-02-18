@@ -5,11 +5,11 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     [SerializeField] CameraFollowWithBarriers cam;
+    [SerializeField] Vector2 spawnDelay;
     [SerializeField] Enemy enemyPrefab;
-    [SerializeField] WorldLoader wl;
     [SerializeField] DayNightCycle dnc;
+    [SerializeField] WorldLoader wl;
     [SerializeField] int spawnCap;
-    public float spawnDelay;
     float spawnRange;
     Player player;
 
@@ -17,12 +17,16 @@ public class EnemySpawner : MonoBehaviour
     {
         player = FindObjectOfType<Player>();
         spawnRange = (wl.chunkSize * wl.excessChunksToLoad) + cam.CameraSizeInUnits().x;
+    }
+
+    public void Night()
+    {
         StartCoroutine(Spawn());
     }
 
     IEnumerator Spawn()
     {
-        yield return new WaitForSeconds(Random.Range(2f, 4f));
+        yield return new WaitForSeconds(Random.Range(spawnDelay.x, spawnDelay.y));
 
         if (transform.childCount < spawnCap)
         {
@@ -43,10 +47,5 @@ public class EnemySpawner : MonoBehaviour
         }
 
         StartCoroutine(Spawn());
-    }
-
-    void Update()
-    {
-
     }
 }

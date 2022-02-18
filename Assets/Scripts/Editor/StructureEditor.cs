@@ -5,7 +5,6 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-
 public class StructureEditor : MonoBehaviour
 {
     [SerializeField] Structure structureToEdit;

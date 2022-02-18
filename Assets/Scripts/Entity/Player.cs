@@ -91,6 +91,11 @@ public class Player : Entity
             hi.currentSlot = newSlot;
         }
 
+        UpdateCursorImage();
+    }
+
+    void UpdateCursorImage()
+    {
         if (hi.currentItemPackage.item != null)
         {
             if (cursor)
@@ -109,7 +114,6 @@ public class Player : Entity
         {
             cursor.EndDisplayPlacement();
         }
-
     }
 
     void RightClick()
@@ -133,6 +137,8 @@ public class Player : Entity
             Vector3 mpos = cam.ScreenToWorldPoint(Input.mousePosition);
             Vector2Int pos = new Vector2Int((int)mpos.x, (int)mpos.y);
             hi.UseItem(pos);
+
+            UpdateCursorImage();
         }
     }
 

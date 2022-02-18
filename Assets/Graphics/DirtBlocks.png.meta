@@ -165,6 +165,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -1240,6 +1241,54 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      DirtBlocks_24: -2750895814916951583
+      DirtBlocks_36: -5871215039833705621
+      DirtBlocks_25: -7063583847127195265
+      DirtBlocks_27: -3519506228617333925
+      DirtBlocks_30: 262377995717193040
+      DirtBlocks_12: -1426296022560259704
+      DirtBlocks_44: 2939957054142273085
+      DirtBlocks_22: 2751373837226300245
+      DirtBlocks_18: 7095722820893983824
+      DirtBlocks_33: 2865325703688304295
+      DirtBlocks_4: 1490617014228315602
+      DirtBlocks_45: 2936350974179271773
+      DirtBlocks_1: -5113774426408615524
+      DirtBlocks_35: 1523476485629610389
+      DirtBlocks_21: 3524070008021925390
+      DirtBlocks_2: 5747526866948262015
+      DirtBlocks_6: 6580671932665437679
+      DirtBlocks_42: -7252015431964506443
+      DirtBlocks_20: 4022925894982037378
+      DirtBlocks_11: -5422366971917888871
+      DirtBlocks_32: 6968905749481602318
+      DirtBlocks_8: 6056038734475058979
+      DirtBlocks_31: 3069411614605551677
+      DirtBlocks_15: 1593666956826984962
+      DirtBlocks_0: 996336144960630187
+      DirtBlocks_10: 7989068410176310771
+      DirtBlocks_17: -1344485970832043712
+      DirtBlocks_28: -4611680983311641125
+      DirtBlocks_3: 5866101581890566343
+      DirtBlocks_9: 4187463618892858416
+      DirtBlocks_13: 5455361069038690352
+      DirtBlocks_19: 7216555227210144912
+      DirtBlocks_39: -1221980198292938105
+      DirtBlocks_16: -4666757981100732762
+      DirtBlocks_43: -8940087096332250535
+      DirtBlocks_14: -9019435492658126779
+      DirtBlocks_40: -4946736030453425571
+      DirtBlocks_7: -4877122478169303848
+      DirtBlocks_29: -9199230840080140650
+      DirtBlocks_23: -2063140318006928809
+      DirtBlocks_37: -8573389215770195256
+      DirtBlocks_5: -3294497075719297199
+      DirtBlocks_46: -9114669758429600104
+      DirtBlocks_34: -2892198455717035850
+      DirtBlocks_26: -960416024539626413
+      DirtBlocks_41: -1866656400253081052
+      DirtBlocks_38: -868545436960593577
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

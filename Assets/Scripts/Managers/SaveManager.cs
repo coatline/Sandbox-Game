@@ -103,13 +103,17 @@ public class SaveManager : MonoBehaviour
         {
             if (char.IsNumber(itemString[i]))
             {
-                count += (int)(Mathf.Pow(10, i)) * (int)char.GetNumericValue(itemString[i]);
                 digits++;
             }
             else
             {
                 break;
             }
+        }
+
+        for (int i = 0; i < digits; i++)
+        {
+            count += (int)(Mathf.Pow(10, digits - 1 - i)) * (int)char.GetNumericValue(itemString[i]);
         }
 
         itemString = itemString.Remove(0, digits + 1);

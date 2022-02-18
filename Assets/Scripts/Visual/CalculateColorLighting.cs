@@ -18,11 +18,10 @@ public class CalculateColorLighting : MonoBehaviour
     float airDropoff;
     float blockDropoff;
     float lowestLightLevel;
-    public bool drawTiles;
     Vector2Int frameSize;
-    bool running;
+    public bool running;
 
-    public void StartLighting(Vector2Int frameSize, int lightRadius, float airDropoff, float blockDropoff, float lowestLightLevel)
+    public void StartupLighting(Vector2Int frameSize, int lightRadius, float airDropoff, float blockDropoff, float lowestLightLevel)
     {
         this.frameSize = frameSize;
         this.lowestLightLevel = lowestLightLevel;
@@ -30,20 +29,18 @@ public class CalculateColorLighting : MonoBehaviour
         this.lightRadius = lightRadius;
         this.airDropoff = airDropoff;
 
-        if (running) return;
-        running = true;
+        //if (running) return;
 
         Setup();
 
-        lightingThread = new Thread(Run);
-        lightingThread.Start();
+        StartThread();
+        //lightingThread = new Thread(Run);
+        //lightingThread.Start();
     }
 
     //TODO: maybe use alpha of this array to depict whether or not it will emit light for a nice memory saving
     Color[,] lightValues;
     byte[,] toEmit;
-    //public byte[,] fgblockMap;
-    //public byte[,] mgblockMap;
 
     public Vector2Int lightingPosition;
     Thread lightingThread;
@@ -60,32 +57,39 @@ public class CalculateColorLighting : MonoBehaviour
         singleLightEmission = new Color[lightRadius * 2 + 1, lightRadius * 2 + 1];
     }
 
-    private void OnDestroy()
+    //private void OnDestroy()
+    //{
+    //    if (lightingThread != null && lightingThread.IsAlive)
+    //    {
+    //        lightingThread.Abort();
+    //    }
+    //}
+
+    public void StartThread()
     {
-        if (lightingThread != null && lightingThread.IsAlive)
+        if (running)
         {
-            lightingThread.Abort();
+            return;
         }
+
+        running = true;
+
+        ThreadPool.QueueUserWorkItem(new WaitCallback(Run));
     }
 
-    public void Run()
+    public void Run(object a)
     {
-        while (true)
-        {
-            if (drawTiles) { continue; }
+        // Generate lighting values to render onto my texture.
 
-            // Generate lighting values to render onto my texture.
+        DoLighting();
 
-            DoLighting();
+        // Generate the pixels to render using those values.
 
-            // Generate the pixels to render using those values.
+        SetTexturePixels();
 
-            SetTexturePixels();
+        // Signal that you are finished
 
-            // Signal that you are finished
-
-            drawTiles = true;
-        }
+        running = false;
     }
 
     void SetTexturePixels()

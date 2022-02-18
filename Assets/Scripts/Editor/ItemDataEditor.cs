@@ -34,7 +34,6 @@ public class ItemDataEditor : MonoBehaviour
     {
         for (int i = 0; i < items.Count; i++)
         {
-            items[i].itemData.itemName = items[i].name;
             EditorUtility.SetDirty(items[i]);
         }
 

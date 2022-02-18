@@ -4,9 +4,11 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-[DefaultExecutionOrder(-200)]
+[DefaultExecutionOrder(-2000)]
 public class DataManager : MonoBehaviour
 {
+    [SerializeField] ItemDataContainer[] items;
+    [SerializeField] Structure[] structures;
     static DataManager instance;
 
     public static DataManager D
@@ -22,34 +24,48 @@ public class DataManager : MonoBehaviour
         }
     }
 
-    ItemDataContainer[] items;
-    Structure[] structures;
+    //ItemDataContainer[] items;
 
     Dictionary<string, Structure> structureFromName;
-    Dictionary<string, short> itemIDfromName;
+    Dictionary<string, short> itemsIDfromName;
 
     private void Awake()
     {
-        instance = this;
+        if (!instance)
+        {
+            instance = this;
+        }
+        else if (instance == this) { return; }
+        else if (this != instance)
+        {
+            Destroy(gameObject);
+            return;
+        }
+
         structureFromName = new Dictionary<string, Structure>();
-        itemIDfromName = new Dictionary<string, short>();
+        itemsIDfromName = new Dictionary<string, short>();
 
         int tiles = 0;
         int weapons = 0;
         int tools = 0;
 
-        var it = AssetDatabase.FindAssets("t:ItemDataContainer");
+        //for (int p = 0; p < items.Length; p++)
+        //{
+        //    if (items[p].name == "Nothing")
+        //    {
+        //        var z = items[0];
+        //        items[0] = items[p];
+        //        items[p] = z;
+        //        break;
+        //    }
+        //}
 
-        items = new ItemDataContainer[it.Length + 1];
-
-        for (int j = 0; j < it.Length; j++)
+        for (int j = 0; j < this.items.Length; j++)
         {
-            items[j] = AssetDatabase.LoadAssetAtPath<ItemDataContainer>(AssetDatabase.GUIDToAssetPath(it[j]));
-            var item = items[j];
-            item.itemData.id = (short)(j);
-            item.itemData.itemName = items[j].name;
+            var item = this.items[j];
+            //item.itemData.id = (short)(j);
 
-            itemIDfromName.Add(item.itemData.itemName, (short)(j));
+            itemsIDfromName.Add(item.name, (short)(j));
 
             if (item.itemType == ItemType.block)
             {
@@ -65,19 +81,14 @@ public class DataManager : MonoBehaviour
             }
         }
 
-        var st = AssetDatabase.FindAssets("t:Structure");
-
-        structures = new Structure[st.Length];
-
-        for (int j = 0; j < st.Length; j++)
+        for (int j = 0; j < structures.Length; j++)
         {
-            structures[j] = AssetDatabase.LoadAssetAtPath<Structure>(AssetDatabase.GUIDToAssetPath(st[j]));
             structures[j]._name = structures[j].name;
             structureFromName.Add(structures[j]._name, structures[j]);
         }
 
         //Debug.Log($"Database updated! It now contains {itemIDfromName.Count} items.\n{tiles} of them are tiles. {weapons} of them are weapons. {tools} of them are tools.");
-        DontDestroyOnLoad(this.gameObject);
+        //DontDestroyOnLoad(this.gameObject);
     }
 
     public Structure GetStructure(string n)
@@ -87,18 +98,19 @@ public class DataManager : MonoBehaviour
 
     public short GetItemID(string n)
     {
-        return itemIDfromName[n];
+        return itemsIDfromName[n];
     }
 
     public TileBase GetTile(int id)
     {
         if (id == 0) { return null; }
+        //if (items[id].itemType != ItemType.block) { print(items[id].name); }
         return items[id].tileData.tile;
     }
 
     public ItemDataContainer GetItem(string n)
     {
-        return items[itemIDfromName[n]];
+        return items[itemsIDfromName[n]];
     }
 
     public ItemDataContainer GetItem(int i)

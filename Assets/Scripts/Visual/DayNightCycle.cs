@@ -5,6 +5,7 @@ using UnityEngine;
 
 public enum TimeOfDay
 {
+    none,
     day,
     dusk,
     dawn,
@@ -18,6 +19,7 @@ public class DayNightCycle : MonoBehaviour
     [SerializeField] CalculateColorLighting ccl;
     [SerializeField] float timeScale;
     [SerializeField] TMP_Text timeText;
+    [SerializeField] EnemySpawner es;
 
     // Animation curves?
 
@@ -48,14 +50,12 @@ public class DayNightCycle : MonoBehaviour
         {
             InitializeLight();
         }
+
+        timeOfDay = TimeOfDay.none;
     }
 
     void LoadLight()
     {
-        years = GD.wd.td.years;
-        days = GD.wd.td.days;
-        hours = GD.wd.td.hours;
-        minutes = GD.wd.td.minutes;
         backgroundOverlay.color = GD.wd.td.currentOverlayColor;
         ccl.ambientColor = GD.wd.td.currentLightingColor;
         //skyBackground.color = GD.wD.currentOverlayColor;
@@ -64,20 +64,16 @@ public class DayNightCycle : MonoBehaviour
     void InitializeLight()
     {
         // This is to set the target colors
-        timeOfDay = TimeOfDay.dawn;
+        timeOfDay = TimeOfDay.night;
 
         backgroundOverlay.color = skyDayColor;
         ccl.ambientColor = dayLightColor;
-        hours = 8;
+        GD.wd.td.hours = 8;
     }
 
     //change sorting order of backgrounds and alpha value of them to fade them in and out
 
     float seconds;
-    int minutes;
-    int hours;
-    int days;
-    int years;
 
     private void Update()
     {
@@ -91,48 +87,58 @@ public class DayNightCycle : MonoBehaviour
 
         if (seconds >= 60)
         {
-            timeText.text = $"Day {days}\n{hours}:{minutes.ToString("00")}";
+            timeText.text = $"Day {GD.wd.td.days}\n{GD.wd.td.hours}:{GD.wd.td.minutes.ToString("00")}";
             seconds = 0;
-            minutes++;
+            GD.wd.td.minutes++;
         }
-        if (minutes >= 60)
+        if (GD.wd.td.minutes >= 60)
         {
-            minutes = 0;
-            hours++;
+            GD.wd.td.minutes = 0;
+            GD.wd.td.hours++;
         }
-        if (hours >= 24)
+        if (GD.wd.td.hours >= 24)
         {
-            hours = 1;
-            days++;
+            GD.wd.td.hours = 1;
+            GD.wd.td.days++;
         }
-        if (days >= 365)
+        if (GD.wd.td.days >= 365)
         {
-            years++;
+            GD.wd.td.years++;
         }
 
-        if (hours >= 8 && hours < 19)
+        if (GD.wd.td.hours >= 8 && GD.wd.td.hours < 19)
         {
+            if (timeOfDay == TimeOfDay.day) { return; }
+
             timeOfDay = TimeOfDay.day;
+            es.StopAllCoroutines();
 
             targetLightColor = dayLightColor;
             targetSkyColor = skyDayColor;
         }
-        else if (hours >= 19 && hours < 20)
+        else if (GD.wd.td.hours >= 19 && GD.wd.td.hours < 20)
         {
+            if (timeOfDay == TimeOfDay.dusk) { return; }
+
             timeOfDay = TimeOfDay.dusk;
 
             targetLightColor = duskLightColor;
             targetSkyColor = skyDuskColor;
         }
-        else if ((hours >= 20 || hours < 7))
+        else if ((GD.wd.td.hours >= 20 || GD.wd.td.hours < 7))
         {
+            if (timeOfDay == TimeOfDay.night) { return; }
+
             timeOfDay = TimeOfDay.night;
+            es.Night();
 
             targetLightColor = nightLightColor;
             targetSkyColor = skyNightColor;
         }
-        else if (hours >= 7 && hours < 8)
+        else if (GD.wd.td.hours >= 7 && GD.wd.td.hours < 8)
         {
+            if (timeOfDay == TimeOfDay.dawn) { return; }
+
             timeOfDay = TimeOfDay.dawn;
 
             targetLightColor = dawnLightColor;
@@ -147,8 +153,6 @@ public class DayNightCycle : MonoBehaviour
         GD.wd.td.currentOverlayColor = Color.Lerp(backgroundOverlay.color, targetSkyColor/* + new Color(0, 0, 0, 1)*/, (Time.fixedDeltaTime / 5000) * timeScale);
         backgroundOverlay.color = GD.wd.td.currentOverlayColor;
         ccl.ambientColor = GD.wd.td.currentLightingColor;
-        //skyBackground.color = backgroundOverlay.color;
-        //backgroundOverlay.color = new Color(0, 0, 0, 1 - skyBackground.r);
     }
 }
 

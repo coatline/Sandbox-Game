@@ -168,6 +168,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -1264,6 +1265,55 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      TableTopRight: -8510296848243685162
+      ChestRight: -1610482729617942329
+      Red Flower: 4893722272501744342
+      HoldingTorch: 986209299252633420
+      Torch: -2445883823613288998
+      redtorch: 1503016370545623098
+      CraftingTableLeft: 4828723151013041807
+      Blocks_9: 6373870660395215810
+      Treetop1: 1515622694917723629
+      MiddleStumpwithleftstump: 959900962684980225
+      StumpMiddle: 4627212743430372070
+      MiddleStumpwithrightstump: -620117825420460677
+      CraftingTableFull: -2849796041330913305
+      Blocks_11: -6460359424736439037
+      Owl: 188922552538148467
+      ChestLeft: 4354781316875873519
+      BreakingBlock3: 894039873071032581
+      Blocks_12: 7266596302296298328
+      Table: -637004521647427473
+      BlockBreaking5: -102654197464639098
+      CraftingTableRight: -7254671725847690978
+      TableTopLeft: 8519844070910222411
+      greentorch: 1489830567317918739
+      TableLeft: 212898485578975189
+      Blocks_13: -2318941221067292905
+      Yellow Flower: 1833374003608817324
+      BreakingBlock4: -8137063433491503359
+      bluetorch: 38433539612607256
+      TableRigth: 7673338932271465318
+      Stumpleft: 848483762394598852
+      BlockBreaking7: 6741266914263454366
+      Hammer: -5474853141888705257
+      PlayerIdle: -6615166614792116592
+      ChestFull: -9086423209051200666
+      Blocks_10: -7097341274207599037
+      TrunkMiddle: -1511360000684178966
+      BlockBreaking6: 2191923513518390880
+      Sword: -3828748445219874928
+      PlayerWalk2: -2230640015494873224
+      BreakingBlock1: 7799809764336630643
+      BlockBreaking8: -7940799869362492285
+      BreakingBlock2: -7641105520071801511
+      PlayerWalk3: -8506558392696655332
+      StumpRight: 1775686116614827342
+      PlayerWalk4: 6608634889621467271
+      Axe: 6979630779368465708
+      PlayerWalk1: 5937300090042828850
+      PickaxeSTone: 273060093152811556
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

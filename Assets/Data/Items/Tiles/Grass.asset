@@ -28,8 +28,7 @@ MonoBehaviour:
     hideOnUse: 0
     description: 
     rarity: 
-    itemName: Grass
-    id: 3
+    id: 19
   tileData:
     itemDroppedOnBreak:
       item: {fileID: 11400000, guid: c7decb64c4d48f04b912d806d3c2e203, type: 2}

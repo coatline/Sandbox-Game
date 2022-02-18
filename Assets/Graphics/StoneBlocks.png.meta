@@ -165,6 +165,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -1240,6 +1241,54 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      StoneBlocks_3: -7770984344463871143
+      StoneBlocks_10: -1108196468437753112
+      StoneBlocks_1: -6518392389907643513
+      StoneBlocks_23: 8329895569661739421
+      StoneBlocks_15: -5934901583311256100
+      StoneBlocks_35: -196242972303549252
+      StoneBlocks_13: -1060884359498922846
+      StoneBlocks_22: -4815925207943618458
+      StoneBlocks_20: -831166067974404831
+      StoneBlocks_42: 3871497840158858619
+      StoneBlocks_28: -9060401435926204469
+      StoneBlocks_38: -7732646127817180950
+      StoneBlocks_26: -5279230981919764722
+      StoneBlocks_6: 8112717212795413615
+      StoneBlocks_19: -8062475460901088327
+      StoneBlocks_25: -2027982564003995251
+      StoneBlocks_7: -5398792781599736127
+      StoneBlocks_30: -955146558245701987
+      StoneBlocks_37: 3121986385104935904
+      StoneBlocks_21: -1424898543925630050
+      StoneBlocks_41: 3383775620845549343
+      StoneBlocks_24: -8539781116073841990
+      StoneBlocks_31: -3848607359157971786
+      StoneBlocks_44: 522041413114328848
+      StoneBlocks_8: -3291154048550040376
+      StoneBlocks_39: -4361036692186904357
+      StoneBlocks_12: -4208309362753960768
+      StoneBlocks_45: 1023412569669189051
+      StoneBlocks_5: -8031259046601704796
+      StoneBlocks_2: 6141017125787504598
+      StoneBlocks_18: -3772457240867046718
+      StoneBlocks_11: 4304599925033928471
+      StoneBlocks_32: 6072686186553791334
+      StoneBlocks_33: -9055452132667962479
+      StoneBlocks_36: -2382826670903367620
+      StoneBlocks_16: 848002843862607357
+      StoneBlocks_34: -4652036045343622584
+      StoneBlocks_46: 910669416908294250
+      StoneBlocks_4: 1488579268759529313
+      StoneBlocks_14: 8819424400106893977
+      StoneBlocks_0: -4807159549334520511
+      StoneBlocks_17: -8232803582411136285
+      StoneBlocks_29: 1254570095773140779
+      StoneBlocks_27: -8009911415829209232
+      StoneBlocks_40: -2510885882908814180
+      StoneBlocks_9: 3263941405821201110
+      StoneBlocks_43: 6606316177874371072
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

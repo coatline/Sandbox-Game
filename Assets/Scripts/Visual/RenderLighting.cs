@@ -49,7 +49,7 @@ public class RenderLighting : MonoBehaviour
 
         ccl = GetComponent<CalculateColorLighting>();
         ccl.lightingPosition = new Vector2Int((int)transform.position.x, (int)transform.position.y);
-        ccl.StartLighting(frameSize, lightRadius, airDropoff, blockDropoff, lowestLightLevel);
+        ccl.StartupLighting(frameSize, lightRadius, airDropoff, blockDropoff, lowestLightLevel);
     }
 
     void SetMinLightRadius()
@@ -100,15 +100,11 @@ public class RenderLighting : MonoBehaviour
     }
 
     Vector2Int theoreticalPosition;
-    Stopwatch sw = new Stopwatch();
 
     void Update()
     {
-        if (ccl.drawTiles)
+        if (!ccl.running)
         {
-            //print(sw.ElapsedMilliseconds);
-            //sw.Reset();
-
             if (ccl.lightingPosition == theoreticalPosition)
             {
                 UpdateTexture(ccl.pixels);
@@ -138,8 +134,7 @@ public class RenderLighting : MonoBehaviour
                 }
             }
 
-            ccl.drawTiles = false;
-            //sw.Start();
+            ccl.StartThread();
         }
 
         if (Input.GetKey(KeyCode.P))

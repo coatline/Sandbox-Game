@@ -165,6 +165,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -1240,6 +1241,54 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      GrassBlocks_8: -2405322433528718887
+      GrassBlocks_16: 2069516503454993330
+      GrassBlocks_7: 7293870833096313287
+      GrassBlocks_15: -2627288423399955022
+      GrassBlocks_23: 1445542069640182924
+      GrassBlocks_21: -8726165826477934142
+      GrassBlocks_29: -450957575984581674
+      GrassBlocks_4: -4621683589355149
+      GrassBlocks_18: -3859233868471507190
+      GrassBlocks_11: -2362201261995476019
+      GrassBlocks_0: -8260380548525928408
+      GrassBlocks_6: -7415022105560179608
+      GrassBlocks_43: 2309720147251481329
+      GrassBlocks_32: 6622418446555197338
+      GrassBlocks_41: -6595235312601141949
+      GrassBlocks_2: -3288015508302677397
+      GrassBlocks_13: 8948307964922733540
+      GrassBlocks_17: 5815958130753752349
+      GrassBlocks_26: 6270981596739320018
+      GrassBlocks_30: -5731626090083469706
+      GrassBlocks_9: 8747596741448265038
+      GrassBlocks_10: -8748447795324358748
+      GrassBlocks_12: -4527500499027930104
+      GrassBlocks_40: -8914111661622068319
+      GrassBlocks_38: -5281577580839065134
+      GrassBlocks_36: -6254499564248115267
+      GrassBlocks_31: -7981621989889312606
+      GrassBlocks_14: 7162216106102805674
+      GrassBlocks_19: 7461398470313614528
+      GrassBlocks_1: 6341531141991834364
+      GrassBlocks_37: 2951602879538969388
+      GrassBlocks_24: -6707254665441924564
+      GrassBlocks_5: 8574872661983530422
+      GrassBlocks_45: 7042170399996239388
+      GrassBlocks_33: -5147868662538687516
+      GrassBlocks_42: -1104078538550946098
+      GrassBlocks_34: 1842591609445315370
+      GrassBlocks_28: -8633003668072839040
+      GrassBlocks_22: 8095620846803252029
+      GrassBlocks_3: 2389029428711974912
+      GrassBlocks_20: -3067169634343607736
+      GrassBlocks_25: 3450713591962927384
+      GrassBlocks_44: 7048081075603923125
+      GrassBlocks_46: 8049946467504890538
+      GrassBlocks_35: 5408645886584220991
+      GrassBlocks_39: -912344692116888970
+      GrassBlocks_27: -8087791248626349989
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

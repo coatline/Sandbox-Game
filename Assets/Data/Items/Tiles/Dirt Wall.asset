@@ -28,8 +28,7 @@ MonoBehaviour:
     hideOnUse: 0
     description: 
     rarity: 
-    itemName: Dirt Wall
-    id: 1
+    id: 17
   tileData:
     itemDroppedOnBreak:
       item: {fileID: 0}

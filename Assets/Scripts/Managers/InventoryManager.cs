@@ -185,7 +185,7 @@ public class InventoryManager : MonoBehaviour
 
         if (newSlot.CurrentItem)
         {
-            currentItemText.text = newSlot.CurrentItem.itemData.itemName;
+            currentItemText.text = newSlot.CurrentItem.name;
         }
         else
         {

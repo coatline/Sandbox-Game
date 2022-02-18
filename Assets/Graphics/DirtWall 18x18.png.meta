@@ -72,6 +72,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -496,6 +497,23 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      DirtWall 18x18_13: 8143318153775816394
+      DirtWall 18x18_7: 1152130045707236021
+      DirtWall 18x18_9: -3909365892502622665
+      DirtWall 18x18_8: 3846293415785529966
+      DirtWall 18x18_0: -6371951640596664817
+      DirtWall 18x18_15: -6985366909899130146
+      DirtWall 18x18_14: -4015102963467472145
+      DirtWall 18x18_1: 91919205893121994
+      DirtWall 18x18_3: -4518256800774802065
+      DirtWall 18x18_2: -8700777381162999127
+      DirtWall 18x18_12: 279057947544161700
+      DirtWall 18x18_5: -4258180918070903169
+      DirtWall 18x18_11: -1317728323887240752
+      DirtWall 18x18_4: -2816506928598213091
+      DirtWall 18x18_6: -7483797691770006697
+      DirtWall 18x18_10: -2241178978260966658
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

@@ -191,4 +191,5 @@ public class InventorySlot : SelectableSlot, IPointerClickHandler, IPointerDownH
             }
         }
     }
+
 }

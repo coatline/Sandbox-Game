@@ -165,6 +165,7 @@ TextureImporter:
   streamingMipmaps: 0
   streamingMipmapsPriority: 0
   vTOnly: 0
+  ignoreMasterTextureLimit: 0
   grayScaleToAlpha: 0
   generateCubemap: 6
   cubemapConvolution: 0
@@ -1240,6 +1241,54 @@ TextureImporter:
     edges: []
     weights: []
     secondaryTextures: []
+    nameFileIdTable:
+      WoodBlocks_18: 1301973332091729962
+      WoodBlocks_25: 8877959204161603296
+      WoodBlocks_3: -2718236110994137671
+      WoodBlocks_6: -8251711086505284703
+      WoodBlocks_23: 3260427971440232979
+      WoodBlocks_9: 3238736989428223652
+      WoodBlocks_35: 3314667137188106490
+      WoodBlocks_43: 4826933905982310319
+      WoodBlocks_20: -5991446291449117778
+      WoodBlocks_26: -1175529791784696395
+      WoodBlocks_34: -3391086601860689777
+      WoodBlocks_21: 6322049158928331180
+      WoodBlocks_45: 7732224999834107436
+      WoodBlocks_10: -4545203189858647682
+      WoodBlocks_42: -5393679438558098617
+      WoodBlocks_12: -9024512099755505252
+      WoodBlocks_29: -4901537689967662269
+      WoodBlocks_16: -6110022471045664812
+      WoodBlocks_1: 5062572658477143496
+      WoodBlocks_2: 7599497092920439358
+      WoodBlocks_46: 3506375832621388203
+      WoodBlocks_37: 3944605726638824037
+      WoodBlocks_36: -1023471826246522822
+      WoodBlocks_4: -2621378865258644602
+      WoodBlocks_24: -8275600336456467625
+      WoodBlocks_44: -3110738421782938148
+      WoodBlocks_22: 934504892198205384
+      WoodBlocks_28: 5130457096448649382
+      WoodBlocks_7: -4038752723061186360
+      WoodBlocks_17: -4961169159580726896
+      WoodBlocks_38: 3040819231788183700
+      WoodBlocks_30: 1774410407991035300
+      WoodBlocks_0: 5604831183846464037
+      WoodBlocks_41: -7490138185720402222
+      WoodBlocks_5: 1806378044649653351
+      WoodBlocks_11: -3039215425407996555
+      WoodBlocks_15: 6172738223412093080
+      WoodBlocks_39: 8409485409175326033
+      WoodBlocks_27: -7282762708188776543
+      WoodBlocks_32: -7337280104157756637
+      WoodBlocks_13: -8897339712615971622
+      WoodBlocks_8: 3487706731852464637
+      WoodBlocks_33: -2460766673938930742
+      WoodBlocks_14: 247723877342932096
+      WoodBlocks_40: 8195739448145921396
+      WoodBlocks_19: -8718066856865981694
+      WoodBlocks_31: 9016455088205929372
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

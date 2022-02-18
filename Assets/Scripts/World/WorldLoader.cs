@@ -214,7 +214,6 @@ public class WorldLoader : MonoBehaviour
             {
                 for (int y = bottomLeftChunkLoadCoordinate.y; y <= topRightChunkLoadCoordinate.y; y++)
                 {
-                    //test if i need this heere
                     if (y < 0 || y >= chunksOnY) { continue; }
 
                     Chunk chunk = chunks[new Vector2Int(bottomLeftChunkLoadCoordinate.x, y)];

@@ -28,8 +28,7 @@ MonoBehaviour:
     hideOnUse: 1
     description: 
     rarity: 
-    itemName: Table
-    id: 10
+    id: 8
   tileData:
     itemDroppedOnBreak:
       item: {fileID: 11400000}

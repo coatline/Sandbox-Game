@@ -28,8 +28,7 @@ MonoBehaviour:
     hideOnUse: 0
     description: 
     rarity: 
-    itemName: Stone
-    id: 15
+    id: 20
   tileData:
     itemDroppedOnBreak:
       item: {fileID: 11400000}

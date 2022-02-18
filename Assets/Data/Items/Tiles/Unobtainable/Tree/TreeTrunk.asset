@@ -28,8 +28,7 @@ MonoBehaviour:
     hideOnUse: 0
     description: 
     rarity: 
-    itemName: TreeTrunk
-    id: 21
+    id: 16
   tileData:
     itemDroppedOnBreak:
       item: {fileID: 11400000, guid: 6d89c77261d7c344d966341fa441f874, type: 2}
@@ -68,5 +67,5 @@ MonoBehaviour:
       strength: 0
     criticalStrikeChance: 0
     damageVal: 0
-  itemType: 6
+  itemType: 7
   actionOnUse: 1

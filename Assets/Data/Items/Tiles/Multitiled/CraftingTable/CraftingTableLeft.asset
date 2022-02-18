@@ -28,8 +28,7 @@ MonoBehaviour:
     hideOnUse: 0
     description: 
     rarity: 
-    itemName: CraftingTableLeft
-    id: 8
+    id: 5
   tileData:
     itemDroppedOnBreak:
       item: {fileID: 0}

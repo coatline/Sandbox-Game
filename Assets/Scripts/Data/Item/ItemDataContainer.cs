@@ -64,7 +64,9 @@ public class ItemDataContainer : ScriptableObject
 
     private void OnValidate()
     {
+#if UNITY_EDITOR
         EditorUtility.SetDirty(this);
+#endif
     }
 }
 
@@ -92,8 +94,5 @@ public class ItemData
     public string description;
     public string rarity;
 
-    [HideInInspector]
-    public string itemName;
-    //[HideInInspector]
     public short id;
 }
