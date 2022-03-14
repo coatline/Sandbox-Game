@@ -5,6 +5,7 @@
 **/[Oo]bj/
 **/[Bb]uild/
 **/[Bb]uilds/
+**/[Ll]ogs/**
 
 # Unity3D generated meta files
 *.pidb.meta
@@ -55,4 +56,4 @@ screenshots/**
 *.blend1*
 
 # (this ignores the incremental compiler Logs)
-*/Logs/**
+
