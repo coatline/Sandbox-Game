@@ -188,7 +188,7 @@ public class CalculateColorLighting : MonoBehaviour
                 }
             }
 
-            //9 because it counts itself
+            // 9 because it counts itself
             if (skys >= 9)
             {
                 return;
@@ -247,13 +247,9 @@ public class CalculateColorLighting : MonoBehaviour
                         float dropOff;
 
                         if (GD.wd.blockMap[worldPosX, worldPosY, 0] == 0)
-                        {
                             dropOff = (nx != tile.x && ny != tile.y) ? airDiagonalDropOff : airDropoff;
-                        }
                         else
-                        {
                             dropOff = (nx != tile.x && ny != tile.y) ? blockDiagonalDropOff : blockDropoff;
-                        }
 
                         int emitX = lightRadius + nx - rootX;
                         int emitY = lightRadius + ny - rootY;
