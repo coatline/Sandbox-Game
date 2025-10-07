@@ -216,7 +216,7 @@ public class Player : Entity
     void Inputs()
     {
         moveInputs = Input.GetAxis("Horizontal");
-        rb.velocity = new Vector2(moveInputs * speed, rb.velocity.y);
+        rb.linearVelocity = new Vector2(moveInputs * speed, rb.linearVelocity.y);
 
         if (Input.GetMouseButton(0))
         {

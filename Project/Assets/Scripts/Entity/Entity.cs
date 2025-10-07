@@ -19,11 +19,11 @@ public class Entity : MonoBehaviour
 
     protected void FaceMovement()
     {
-        if (rb.velocity.x > 0)
+        if (rb.linearVelocity.x > 0)
         {
             transform.rotation = Quaternion.Euler(0, 0, 0);
         }
-        else if (rb.velocity.x < 0)
+        else if (rb.linearVelocity.x < 0)
         {
             transform.rotation = Quaternion.Euler(0, 180, 0);
         }
@@ -31,9 +31,9 @@ public class Entity : MonoBehaviour
 
     protected void Orient()
     {
-        if (rb.velocity.y < -fallingSpeedCap)
+        if (rb.linearVelocity.y < -fallingSpeedCap)
         {
-            rb.velocity = new Vector2(rb.velocity.x, -fallingSpeedCap);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, -fallingSpeedCap);
         }
 
         if (invincible)

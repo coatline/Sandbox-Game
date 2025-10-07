@@ -15,7 +15,7 @@ public class Enemy : Entity
     public void MoveTowards(Vector3 pos)
     {
         float dir = (pos - transform.position).normalized.x;
-        rb.velocity = new Vector2(dir * speed, rb.velocity.y);
+        rb.linearVelocity = new Vector2(dir * speed, rb.linearVelocity.y);
     }
 
     public override void OnTriggerEnter2D(Collider2D collision)

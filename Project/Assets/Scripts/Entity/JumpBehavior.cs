@@ -17,6 +17,6 @@ public class JumpBehavior : MonoBehaviour
 
     public void Jump(float multiplier = 1)
     {
-        rb.velocity = new Vector2(rb.velocity.x, jumpForce * multiplier);
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce * multiplier);
     }
 }
